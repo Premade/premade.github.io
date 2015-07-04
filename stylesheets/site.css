@@ -1,0 +1,14 @@
+/* line 3, ../sass/site.sass */
+.block-img {
+  width: 200px;
+}
+
+/* line 6, ../sass/site.sass */
+.preview-list {
+  height: 200px;
+  background-color: #000;
+}
+/* line 9, ../sass/site.sass */
+.preview-list .block-img {
+  width: 100%;
+}
