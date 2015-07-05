@@ -27,6 +27,20 @@ $(function() {
 		model: App.Models.Block
 	});
 
+	App.Models.Type = Parse.Object.extend('Type');
+
+	App.Collections.Types = Parse.Collection.extend({
+		model: App.Models.Type,
+		query: (new Parse.Query(App.Models.Type)).ascending('order')
+	});
+
+	App.Models.Series = Parse.Object.extend('Series');
+
+	App.Collections.CurrSeries = Parse.Collection.extend({
+		model: App.Models.Series,
+		query: (new Parse.Query(App.Models.Series)).equalTo('user', Parse.User.current())
+	});
+
 	App.Views.Landing = Parse.View.extend({
 
 		template: Handlebars.compile($('#landing-tpl').html()),
@@ -43,7 +57,6 @@ $(function() {
 
 		render: function(){
 			var collection = { blocks: this.collection.toJSON() };
-			console.log(collection.blocks[0].img);
 			this.$el.html(this.template(collection));
 
 			this.$el.find('.block-img').draggable({
@@ -71,14 +84,112 @@ $(function() {
 
 	});
 
+	App.Views.Login = Parse.View.extend({
+
+		template: Handlebars.compile($('#login-tpl').html()),
+
+		events: {
+			'submit .login-form': 'login'
+		},
+
+		login: function(e) {
+			e.preventDefault();
+
+			var data = $(e.target).serializeArray(),
+				username = data[0].value,
+				password = data[1].value;
+
+			Parse.User.logIn(username, password, {
+				success: function(user) {
+					Parse.history.navigate('#/dev', { trigger: true });
+				},
+				error: function(user, error) {
+					alert(error.message);
+				}
+			});
+
+		},
+
+		render: function(){
+			this.$el.html(this.template());
+		}
+	});
+
+	App.Views.Dev = Parse.View.extend({
+
+		template: Handlebars.compile($('#dev-tpl').html()),
+
+		render: function(){
+			this.$el.html(this.template());
+		}
+
+	});
+
+	App.Views.Block = Parse.View.extend({
+
+		template: Handlebars.compile($('#add-block-tpl').html()),
+
+		render: function(){
+			this.$el.html(this.template());
+			this.loadTypes();
+			this.loadSeries();
+		},
+
+		loadTypes: function(){
+			var self = this;
+			App.types.fetch().then(function(types){
+				App.fn.renderView({
+					View: App.Views.Select,
+					$container: self.$el.find('.add-block-type'),
+					data: { 
+						collection: types,
+						label: 'Type',
+						field: 'type'
+					}
+				});
+			});
+		},
+
+		loadSeries: function(){
+			var self = this;
+			App.currSeries.fetch().then(function(series){
+				App.fn.renderView({
+					View: App.Views.Select,
+					$container: self.$el.find('.add-block-series'),
+					data: { 
+						collection: series,
+						label: 'Block Series',
+						field: 'series'
+					}
+				});
+			});
+		}
+
+	});
+
+	App.Views.Select = Parse.View.extend({
+
+		template: Handlebars.compile($('#select-tpl').html()),
+
+		render: function(){
+			var data = { 
+				items: this.collection.toJSON(),
+				label: this.options.label,
+				field: this.options.field
+			};
+			this.$el.html(this.template(data));
+		}
+
+	});
+
 	App.Router = Parse.Router.extend({
 
 		initialize: function(options){
 			App.blocks = new App.Collections.Blocks();
+			App.types = new App.Collections.Types();
+			App.currSeries = new App.Collections.CurrSeries();
 			// BlogApp.blog = new BlogApp.Models.Blog();
-			// BlogApp.blogs = new BlogApp.Collections.Blogs();
 			// BlogApp.category = new BlogApp.Models.Category();
-			// BlogApp.categories = new BlogApp.Collections.Categories();
 			// BlogApp.query = {
 			// 	blog: new Parse.Query(BlogApp.Models.Blog),
 			// 	category: new Parse.Query(BlogApp.Models.Category)
@@ -91,7 +202,10 @@ $(function() {
 
 		routes: {
 			'': 'landing',
-			'new': 'new'
+			'new': 'new',
+			'login': 'login',
+			'dev': 'dev',
+			'add-block': 'addBlock'
 		},
 
 		landing: function() {
@@ -107,6 +221,28 @@ $(function() {
 					data: { collection: blocks }
 				});
 			})
+		},
+
+		login: function() {
+			App.fn.renderView({
+				View: App.Views.Login
+			});
+		},
+
+		dev: function() {
+			App.fn.checkLogin();
+			var currentUser = Parse.User.current();
+			App.fn.renderView({
+				View: App.Views.Dev,
+				data: { model: currentUser }
+			});
+		},
+
+		addBlock: function() {
+			App.fn.checkLogin();
+			App.fn.renderView({
+				View: App.Views.Block,
+			});
 		}
 
 	});
@@ -123,6 +259,15 @@ $(function() {
 			return view.el.outerHTML;
 		} else {
 			$container.html(view.el);
+		}
+	};
+
+	App.fn.checkLogin = function() {
+		var currentUser = Parse.User.current();
+		if (!currentUser) {
+			Parse.history.navigate('#/login', { trigger: true });
+		} else {
+			return;
 		}
 	};
 

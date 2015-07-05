@@ -38,6 +38,64 @@
 		<a href="#/">Back</a>
 	</script>
 
+	<script id="login-tpl" type="text/x-handlebars-template">
+		<form class="login-form">
+			<input type="text" name="username" placeholder="Username" required="required" autofocus="">
+			<input type="password" name="password" placeholder="Password" required="required">
+			<button type="submit">Sign in</button>
+		</form>
+	</script>
+
+	<script id="dev-tpl" type="text/x-handlebars-template">
+		<a href="#/add">Add Block</a>
+	</script>
+
+	<script id="add-block-tpl" type="text/x-handlebars-template">
+		<form class="add-block-form">
+			<div class="form-group add-block-type"></div>
+			<div class="form-group add-block-series"></div>
+			<div class="form-group">
+				<label for="name">Block Name</label>
+				<input class="form-control" id="name" placeholder="">
+			</div>
+			<div class="form-group">
+				<label for="img">Preview Image</label>
+				<input type="file" id="img">
+				<p class="help-block">600px wide, smaller than 2MB</p>
+			</div>
+			<div class="form-group">
+				<label for="html">HTML</label>
+				<textarea class="form-control" id="html" rows="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="css">CSS</label>
+				<textarea class="form-control" id="css" rows="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="content">Default Content</label>
+				<textarea class="form-control" id="content" rows="3"></textarea>
+				<p class="help-block">in JSON</p>
+			</div>
+			</div>
+			<div class="form-group">
+				<label for="help">Helper Text</label>
+				<textarea class="form-control" id="help" rows="3"></textarea>
+				<p class="help-block">in JSON</p>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-default">Add</button>
+			</div>
+		</form>
+	</script>
+
+	<script id="select-tpl" type="text/x-handlebars-template">
+		<label for="{{field}}">{{label}}</label>
+		<select class="form-control" id="{{field}}">
+			{{#each items}}
+				<option value="{{objectId}}">{{name}}</option>
+			{{/each}}
+		</select>
+	</script>
 
 	<!-- Javascript -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
