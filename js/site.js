@@ -21,7 +21,34 @@ $(function() {
 
 	}))({el: document.body});
 
-	App.Models.Block = Parse.Object.extend('Block');
+	App.Models.Block = Parse.Object.extend('Block', {
+
+		preProcess: function(data) {
+
+			data.type = new App.Models.Type().set('objectId', data.type);
+			data.series = new App.Models.Series().set('objectId', data.series);
+			data.content = jQuery.parseJSON(data.content);
+			data.help = jQuery.parseJSON(data.help);
+			data.user = this.get('user') || Parse.User.current();
+
+			if (data.file) {
+				data.img = new App.Models.Image().uploadAsBlockPreview(data, this);
+			} else {
+				this.update(data);
+			}
+
+		},
+
+		update: function(data) {
+			this.set(data).save(null,{
+				success: function(block) {
+					console.log(block);
+				}, error: function(block, error) {
+					console.log(error);
+				}
+			});
+		}
+	});
 
 	App.Collections.Blocks = Parse.Collection.extend({
 		model: App.Models.Block
@@ -39,6 +66,33 @@ $(function() {
 	App.Collections.CurrSeries = Parse.Collection.extend({
 		model: App.Models.Series,
 		query: (new Parse.Query(App.Models.Series)).equalTo('user', Parse.User.current())
+	});
+
+	App.Models.Image = Parse.Object.extend('Image', {
+		uploadAsBlockPreview: function(data, block) {
+
+			var self = this,
+				file = data.file,
+				parseFile = new Parse.File(file.name, file);
+
+			parseFile.save().then(function() {
+
+				self.set({
+					url: parseFile,
+					uploader: Parse.User.current()
+				}).save(null, {
+					success: function(img) {
+						data.img = img;
+						data.imgURL = data.img.get('url').url();
+						data.file = null;
+						block.update(data);
+					}, error: function(img, error) {
+						console.log(error);
+					}
+				});
+
+			});
+		}
 	});
 
 	App.Views.Landing = Parse.View.extend({
@@ -125,9 +179,28 @@ $(function() {
 
 	});
 
-	App.Views.Block = Parse.View.extend({
+	App.Views.UpdateBlock = Parse.View.extend({
 
-		template: Handlebars.compile($('#add-block-tpl').html()),
+		template: Handlebars.compile($('#update-block-tpl').html()),
+
+		events: {
+			'submit .update-block-form': 'submit'
+		},
+
+		submit: function(e){
+			e.preventDefault();
+			this.model = this.model || new App.Models.Block();
+			this.model.preProcess({
+				type:		this.$el.find('#update-block-type').val(),
+				series:		this.$el.find('#update-block-series').val(),
+				name:		this.$el.find('#update-block-name').val(),
+				file:		this.$el.find('#update-block-file')[0].files[0],
+				html:		this.$el.find('#update-block-html').val(),
+				css:		this.$el.find('#update-block-css').val(),
+				content:	this.$el.find('#update-block-content').val(),
+				help:		this.$el.find('#update-block-help').val()
+			});
+		},
 
 		render: function(){
 			this.$el.html(this.template());
@@ -140,7 +213,7 @@ $(function() {
 			App.types.fetch().then(function(types){
 				App.fn.renderView({
 					View: App.Views.Select,
-					$container: self.$el.find('.add-block-type'),
+					$container: self.$el.find('.update-block-type'),
 					data: { 
 						collection: types,
 						label: 'Type',
@@ -155,7 +228,7 @@ $(function() {
 			App.currSeries.fetch().then(function(series){
 				App.fn.renderView({
 					View: App.Views.Select,
-					$container: self.$el.find('.add-block-series'),
+					$container: self.$el.find('.update-block-series'),
 					data: { 
 						collection: series,
 						label: 'Block Series',
@@ -241,7 +314,7 @@ $(function() {
 		addBlock: function() {
 			App.fn.checkLogin();
 			App.fn.renderView({
-				View: App.Views.Block,
+				View: App.Views.UpdateBlock,
 			});
 		}
 

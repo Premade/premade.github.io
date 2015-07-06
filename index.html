@@ -50,36 +50,36 @@
 		<a href="#/add">Add Block</a>
 	</script>
 
-	<script id="add-block-tpl" type="text/x-handlebars-template">
-		<form class="add-block-form">
-			<div class="form-group add-block-type"></div>
-			<div class="form-group add-block-series"></div>
+	<script id="update-block-tpl" type="text/x-handlebars-template">
+		<form class="update-block-form">
+			<div class="form-group update-block-type"></div>
+			<div class="form-group update-block-series"></div>
 			<div class="form-group">
-				<label for="name">Block Name</label>
-				<input class="form-control" id="name" placeholder="">
+				<label for="update-block-name">Block Name</label>
+				<input class="form-control" id="update-block-name" placeholder="" name="name">
 			</div>
 			<div class="form-group">
-				<label for="img">Preview Image</label>
-				<input type="file" id="img">
+				<label for="update-block-file">Preview Image</label>
+				<input type="file" id="update-block-file" name="img">
 				<p class="help-block">600px wide, smaller than 2MB</p>
 			</div>
 			<div class="form-group">
-				<label for="html">HTML</label>
-				<textarea class="form-control" id="html" rows="3"></textarea>
+				<label for="update-block-html">HTML</label>
+				<textarea class="form-control" id="update-block-html" name="html" rows="3"></textarea>
 			</div>
 			<div class="form-group">
-				<label for="css">CSS</label>
-				<textarea class="form-control" id="css" rows="3"></textarea>
+				<label for="update-block-css">CSS</label>
+				<textarea class="form-control" id="update-block-css" name="css" rows="3"></textarea>
 			</div>
 			<div class="form-group">
-				<label for="content">Default Content</label>
-				<textarea class="form-control" id="content" rows="3"></textarea>
+				<label for="update-block-content">Default Content</label>
+				<textarea class="form-control" id="update-block-content" name="content" rows="3"></textarea>
 				<p class="help-block">in JSON</p>
 			</div>
 			</div>
 			<div class="form-group">
-				<label for="help">Helper Text</label>
-				<textarea class="form-control" id="help" rows="3"></textarea>
+				<label for="update-block-help">Helper Text</label>
+				<textarea class="form-control" id="update-block-help" name="help" rows="3"></textarea>
 				<p class="help-block">in JSON</p>
 			</div>
 			<div class="form-group">
@@ -89,8 +89,8 @@
 	</script>
 
 	<script id="select-tpl" type="text/x-handlebars-template">
-		<label for="{{field}}">{{label}}</label>
-		<select class="form-control" id="{{field}}">
+		<label for="update-block-{{field}}">{{label}}</label>
+		<select class="form-control" id="update-block-{{field}}" name="{{field}}">
 			{{#each items}}
 				<option value="{{objectId}}">{{name}}</option>
 			{{/each}}
