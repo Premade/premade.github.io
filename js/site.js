@@ -63,7 +63,11 @@ $(function() {
 
 	App.Models.Series = Parse.Object.extend('Series');
 
-	App.Collections.CurrSeries = Parse.Collection.extend({
+	App.Collections.Series =  Parse.Collection.extend({
+		model: App.Models.Series
+	});
+
+	App.Collections.UserSeries =  Parse.Collection.extend({
 		model: App.Models.Series,
 		query: (new Parse.Query(App.Models.Series)).equalTo('user', Parse.User.current())
 	});
@@ -107,11 +111,30 @@ $(function() {
 
 	App.Views.EditBlocks = Parse.View.extend({
 
-		template: Handlebars.compile($('#edit-blocks-tpl').html()),
+		template: Handlebars.compile($('#page-edit-tpl').html()),
+
+		className: 'page-edit-tpl',
 
 		render: function(){
-			var collection = { blocks: this.collection.toJSON() };
-			this.$el.html(this.template(collection));
+			var self = this;
+				collection = { blocks: self.collection.toJSON() };
+			
+			self.$el.html(self.template(collection));
+
+			// Load Types
+			App.fn.loadComponent({
+				collection: App.types,
+				View: App.fn.generateView({
+					templateId: '#page-edit-type',
+					type: 'collection'
+				}),
+				$container: self.$el.find('.page-edit-types')
+			});
+
+			self.enableDrag();
+		},
+
+		enableDrag: function(){
 
 			this.$el.find('.block-img').draggable({
 				appendTo: "body",
@@ -203,38 +226,31 @@ $(function() {
 		},
 
 		render: function(){
-			this.$el.html(this.template());
-			this.loadTypes();
-			this.loadSeries();
-		},
-
-		loadTypes: function(){
+			
 			var self = this;
-			App.types.fetch().then(function(types){
-				App.fn.renderView({
-					View: App.Views.Select,
-					$container: self.$el.find('.update-block-type'),
-					data: { 
-						collection: types,
-						label: 'Type',
-						field: 'type'
-					}
-				});
+
+			self.$el.html(self.template());
+
+			// Load Types
+			App.fn.loadComponent({
+				collection: App.types,
+				View: App.Views.Select,
+				$container: self.$el.find('.update-block-type'),
+				data: {
+					label: 'Type',
+					field: 'type'
+				}
 			});
-		},
 
-		loadSeries: function(){
-			var self = this;
-			App.currSeries.fetch().then(function(series){
-				App.fn.renderView({
-					View: App.Views.Select,
-					$container: self.$el.find('.update-block-series'),
-					data: { 
-						collection: series,
-						label: 'Block Series',
-						field: 'series'
-					}
-				});
+			// Load User Series
+			App.fn.loadComponent({
+				collection: App.userSeries,
+				View: App.Views.Select,
+				$container: self.$el.find('.update-block-series'),
+				data: {
+					label: 'Block Series',
+					field: 'series'
+				}
 			});
 		}
 
@@ -252,7 +268,6 @@ $(function() {
 			};
 			this.$el.html(this.template(data));
 		}
-
 	});
 
 	App.Router = Parse.Router.extend({
@@ -260,7 +275,9 @@ $(function() {
 		initialize: function(options){
 			App.blocks = new App.Collections.Blocks();
 			App.types = new App.Collections.Types();
-			App.currSeries = new App.Collections.CurrSeries();
+			App.series = new App.Collections.Series();
+			App.userSeries = new App.Collections.UserSeries();
+
 			// BlogApp.blog = new BlogApp.Models.Blog();
 			// BlogApp.category = new BlogApp.Models.Category();
 			// BlogApp.query = {
@@ -320,6 +337,31 @@ $(function() {
 
 	});
 
+	App.fn.checkLogin = function() {
+		var currentUser = Parse.User.current();
+		if (!currentUser) {
+			Parse.history.navigate('#/login', { trigger: true });
+		} else {
+			return;
+		}
+	};
+
+	App.fn.generateView = function(options) {
+		console.log(options);
+		return Parse.View.extend({
+			template: Handlebars.compile($(options.templateId).html()),
+			render: function() {
+				var data;
+				if (options.type === 'collection') {
+					data = { items: this.collection.toJSON() };
+					data = _.extend({}, options.data, data);
+					console.log(data);
+				}
+				this.$el.html(this.template(data));
+			}
+		});
+	};
+
 	// Render View Function - render data in a View Object
 	App.fn.renderView = function(options) {
 		var View = options.View, // type of View
@@ -335,14 +377,23 @@ $(function() {
 		}
 	};
 
-	App.fn.checkLogin = function() {
-		var currentUser = Parse.User.current();
-		if (!currentUser) {
-			Parse.history.navigate('#/login', { trigger: true });
-		} else {
-			return;
-		}
-	};
+	App.fn.loadComponent = function(options) {
+
+		// TODO - Check don't fetch if fetched
+		// console.log(options.collection);
+
+		options.collection.fetch().then(function(collection){
+
+			var data = {collection: collection};
+			data = _.extend({}, options.data, data);
+
+			App.fn.renderView({
+				View: options.View,
+				$container: options.$container,
+				data: data
+			});
+		});
+	}
 
 	App.start();
 

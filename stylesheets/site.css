@@ -1,14 +1,21 @@
-/* line 3, ../sass/site.sass */
+/* line 5, ../sass/site.sass */
 .block-img {
-  width: 200px;
+  width: 100%;
 }
 
-/* line 6, ../sass/site.sass */
+/* line 8, ../sass/site.sass */
 .preview-list {
   height: 200px;
-  background-color: #000;
+  background-color: #ccc;
 }
-/* line 9, ../sass/site.sass */
+/* line 11, ../sass/site.sass */
 .preview-list .block-img {
   width: 100%;
+}
+
+/* line 14, ../sass/site.sass */
+.page-edit-side {
+  min-height: calc(100vh - 70px);
+  background-color: #111;
+  padding: 15px;
 }

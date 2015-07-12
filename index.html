@@ -18,13 +18,24 @@
 		<a href="#/new">New</a>
 	</script>
 
-	<script id="edit-blocks-tpl" type="text/x-handlebars-template">
+	<script id="page-edit-tpl" type="text/x-handlebars-template">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-3">
+					<h1>Premade</h1>
+				</div>
+				<div class="col-sm-9">
+					
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3 page-edit-side">
+					<ul class="page-edit-types"></ul>
+					<!--
 					{{#each blocks}}
 						<img class="block-img" src="{{imgURL}}" alt="{{name}}" data-id="{{objectId}}"/>
 					{{/each}}
+					-->
 				</div>
 				<div class="col-sm-9">
 					Previews
@@ -33,9 +44,11 @@
 			</div>
 		</div>
 	</script>
-
-	<script id="edit-content-tpl" type="text/x-handlebars-template">
-		<a href="#/">Back</a>
+	
+	<script id="page-edit-type" type="text/x-handlebars-template">
+		{{#each items}}
+			<li data-id="{{objectId}}" class="page-edit-type">{{name}}</li>
+		{{/each}}
 	</script>
 
 	<script id="login-tpl" type="text/x-handlebars-template">
@@ -100,6 +113,7 @@
 	<!-- Javascript -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 	<script src="//www.parsecdn.com/js/parse-1.4.2.min.js"></script>
 	<script src="//cdn.jsdelivr.net/handlebarsjs/3.0.3/handlebars.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
