@@ -21,7 +21,7 @@
 	<script id="page-edit-tpl" type="text/x-handlebars-template">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-sm-3">
+				<div class="col-sm-3 page-edit-brand">
 					<h1>Premade</h1>
 				</div>
 				<div class="col-sm-9">
@@ -31,11 +31,11 @@
 			<div class="row">
 				<div class="col-sm-3 page-edit-side">
 					<ul class="page-edit-types"></ul>
-					<!--
 					{{#each blocks}}
-						<img class="block-img" src="{{imgURL}}" alt="{{name}}" data-id="{{objectId}}"/>
+						<li class="page-edit-block" id={{objectId}}>
+							<img class="block-img" src="{{imgURL}}" alt="{{name}}" data-id="{{objectId}}"/>
+						</li>
 					{{/each}}
-					-->
 				</div>
 				<div class="col-sm-9">
 					Previews
@@ -47,7 +47,10 @@
 	
 	<script id="page-edit-type" type="text/x-handlebars-template">
 		{{#each items}}
-			<li data-id="{{objectId}}" class="page-edit-type">{{name}}</li>
+			<li data-id="{{objectId}}" class="page-edit-type">
+				<div class="page-edit-type-label">{{name}}</div>
+				<ul class="page-edit-blocks" id="{{objectId}}"></ul>
+			</li>
 		{{/each}}
 	</script>
 

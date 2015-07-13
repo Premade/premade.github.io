@@ -1,21 +1,27 @@
-/* line 5, ../sass/site.sass */
+/* line 7, ../sass/site.sass */
 .block-img {
   width: 100%;
 }
 
-/* line 8, ../sass/site.sass */
+/* line 10, ../sass/site.sass */
 .preview-list {
   height: 200px;
   background-color: #ccc;
 }
-/* line 11, ../sass/site.sass */
+/* line 13, ../sass/site.sass */
 .preview-list .block-img {
   width: 100%;
 }
 
-/* line 14, ../sass/site.sass */
+/* line 16, ../sass/site.sass */
+.page-edit-brand,
 .page-edit-side {
-  min-height: calc(100vh - 70px);
   background-color: #111;
+  color: #fff;
   padding: 15px;
+}
+
+/* line 22, ../sass/site.sass */
+.page-edit-blocks {
+  display: none;
 }

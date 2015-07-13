@@ -1,6 +1,8 @@
 @import "compass"
 
 $padding: 15px
+$sideBgColor: #111
+$sideColor: #fff
 
 .block-img
 	width: 100%
@@ -11,9 +13,11 @@ $padding: 15px
 	.block-img
 		width: 100%
 
+.page-edit-brand,
 .page-edit-side
-	min-height: calc(100vh - 70px)
-	background-color: #111
+	background-color: $sideBgColor
+	color: $sideColor
 	padding: $padding
 
-	
+.page-edit-blocks
+	display: none

@@ -116,9 +116,9 @@ $(function() {
 		className: 'page-edit-tpl',
 
 		render: function(){
-			var self = this;
+			var self = this,
 				collection = { blocks: self.collection.toJSON() };
-			
+
 			self.$el.html(self.template(collection));
 
 			// Load Types
@@ -128,7 +128,12 @@ $(function() {
 					templateId: '#page-edit-type',
 					type: 'collection'
 				}),
-				$container: self.$el.find('.page-edit-types')
+				$container: self.$el.find('.page-edit-types'),
+				callback: function(types) {
+					_.each(collection.blocks, function(block, i) {
+						$('#' + block.objectId).appendTo($('#' + block.type.objectId));
+					});
+				}
 			});
 
 			self.enableDrag();
@@ -392,6 +397,8 @@ $(function() {
 				$container: options.$container,
 				data: data
 			});
+
+			options.callback(collection);
 		});
 	}
 
