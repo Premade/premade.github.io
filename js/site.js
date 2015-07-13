@@ -115,6 +115,14 @@ $(function() {
 
 		className: 'page-edit-tpl',
 
+		events: {
+			'mouseenter .types': 'showSide2',
+			'mouseleave .types': 'hideSide2',
+			'mouseenter .side-2': 'showSide2',
+			'mouseleave .side-2': 'hideSide2',
+			'mouseenter .type': 'showType',
+		},
+
 		render: function(){
 			var self = this,
 				collection = { blocks: self.collection.toJSON() };
@@ -126,10 +134,17 @@ $(function() {
 				collection: App.types,
 				View: App.fn.generateView({
 					templateId: '#page-edit-type',
-					type: 'collection'
+					type: 'collection',
+					tagName: 'ul'
 				}),
-				$container: self.$el.find('.page-edit-types'),
+				$container: self.$el.find('.types'),
 				callback: function(types) {
+					_.each(types, function(type, i){
+						$('<ul>')
+							.attr('id', types.at(i).id)
+							.addClass('blocks')
+							.appendTo(self.$el.find('.side-2'));
+					});
 					_.each(collection.blocks, function(block, i) {
 						$('#' + block.objectId).appendTo($('#' + block.type.objectId));
 					});
@@ -137,6 +152,20 @@ $(function() {
 			});
 
 			self.enableDrag();
+		},
+
+		showSide2: function() {
+			this.$el.find('.side-2').addClass('show');
+		},
+
+		hideSide2: function() {
+			this.$el.find('.side-2').removeClass('show');
+		},
+
+		showType: function(e) {
+			var id = $(e.target).closest('.type').data('id');
+			this.$el.find('.blocks').hide();
+			this.$el.find('#'+ id).show();
 		},
 
 		enableDrag: function(){
@@ -352,9 +381,10 @@ $(function() {
 	};
 
 	App.fn.generateView = function(options) {
-		console.log(options);
 		return Parse.View.extend({
 			template: Handlebars.compile($(options.templateId).html()),
+			tagName: options.tagName || 'div',
+			className: options.className || null,
 			render: function() {
 				var data;
 				if (options.type === 'collection') {

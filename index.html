@@ -19,37 +19,35 @@
 	</script>
 
 	<script id="page-edit-tpl" type="text/x-handlebars-template">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-3 page-edit-brand">
-					<h1>Premade</h1>
-				</div>
-				<div class="col-sm-9">
-					
-				</div>
+
+		<div class="container-fluid page-edit">
+			<div class="side">
+				<h1 class="logo">Premade</h1>
+				<div class="types"></div>
 			</div>
-			<div class="row">
-				<div class="col-sm-3 page-edit-side">
-					<ul class="page-edit-types"></ul>
-					{{#each blocks}}
-						<li class="page-edit-block" id={{objectId}}>
-							<img class="block-img" src="{{imgURL}}" alt="{{name}}" data-id="{{objectId}}"/>
-						</li>
-					{{/each}}
+			<div class="side-2">
+				{{#each blocks}}
+					<li class="block" id={{objectId}}>
+						<img class="block-img" src="{{imgURL}}" alt="{{name}}" data-id="{{objectId}}"/>
+					</li>
+				{{/each}}
+			</div>
+			<div class="main">
+				<div class="title">
+					<h2>Project Name</h2>
 				</div>
-				<div class="col-sm-9">
-					Previews
+				<div class="preview">
 					<ul class="preview-list"></ul>
 				</div>
 			</div>
 		</div>
+
 	</script>
 	
 	<script id="page-edit-type" type="text/x-handlebars-template">
 		{{#each items}}
-			<li data-id="{{objectId}}" class="page-edit-type">
-				<div class="page-edit-type-label">{{name}}</div>
-				<ul class="page-edit-blocks" id="{{objectId}}"></ul>
+			<li class="type" data-id="{{objectId}}">
+				<div class="type-label">{{name}}</div>
 			</li>
 		{{/each}}
 	</script>
