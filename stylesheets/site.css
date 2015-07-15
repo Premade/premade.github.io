@@ -1,42 +1,46 @@
 /*! Typebase.less v0.1.0 | MIT License */
 /* Setup */
-/* line 15, ../sass/_type.sass */
+/* line 16, ../sass/_type.sass */
 html {
   /* Change default typefaces here */
   font-family: "Helvetica Neue";
-  font-size: 112.5%;
+  font-size: 100%;
   -webkit-font-smoothing: antialiased;
 }
 
-/* line 29, ../sass/_type.sass */
+/* line 30, ../sass/_type.sass */
 p, ul {
-  font-size: 112.5%;
+  font-size: 100%;
 }
 
 /* Copy & Lists */
-/* line 33, ../sass/_type.sass */
+/* line 34, ../sass/_type.sass */
 p {
   line-height: 1.5rem;
   margin-top: 1.5rem;
   margin-bottom: 0;
 }
-
 /* line 38, ../sass/_type.sass */
+p:first-child {
+  margin-top: 0;
+}
+
+/* line 41, ../sass/_type.sass */
 ul, ol {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 41, ../sass/_type.sass */
+/* line 44, ../sass/_type.sass */
 ul li, ol li {
   line-height: 1.5rem;
 }
-/* line 43, ../sass/_type.sass */
+/* line 46, ../sass/_type.sass */
 ul ul, ul ol, ol ul, ol ol {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* line 47, ../sass/_type.sass */
+/* line 50, ../sass/_type.sass */
 blockquote {
   line-height: 1.5rem;
   margin-top: 1.5rem;
@@ -44,7 +48,7 @@ blockquote {
 }
 
 /* Headings */
-/* line 53, ../sass/_type.sass */
+/* line 56, ../sass/_type.sass */
 h1, h2, h3, h4, h5, h6 {
   /* Change heading typefaces here */
   font-family: "Helvetica Neue";
@@ -53,64 +57,64 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.5rem;
 }
 
-/* line 60, ../sass/_type.sass */
+/* line 63, ../sass/_type.sass */
 h1 {
   font-size: 1rem;
 }
 
-/* line 62, ../sass/_type.sass */
+/* line 65, ../sass/_type.sass */
 h2 {
   font-size: 1rem;
   font-weight: normal;
 }
 
-/* line 65, ../sass/_type.sass */
+/* line 68, ../sass/_type.sass */
 h3 {
   font-size: 1.414rem;
 }
 
-/* line 67, ../sass/_type.sass */
+/* line 70, ../sass/_type.sass */
 h4 {
   font-size: 0.707rem;
 }
 
-/* line 69, ../sass/_type.sass */
+/* line 72, ../sass/_type.sass */
 h5 {
   font-size: 0.47133rem;
 }
 
-/* line 71, ../sass/_type.sass */
+/* line 74, ../sass/_type.sass */
 h6 {
   font-size: 0.3535rem;
 }
 
 /* Tables */
-/* line 75, ../sass/_type.sass */
+/* line 78, ../sass/_type.sass */
 table {
   margin-top: 1.5rem;
   border-spacing: 0px;
   border-collapse: collapse;
 }
-/* line 80, ../sass/_type.sass */
+/* line 83, ../sass/_type.sass */
 table td, table th {
   padding: 0;
-  line-height: 27px;
+  line-height: 21px;
 }
 
 /* Code blocks */
-/* line 85, ../sass/_type.sass */
+/* line 88, ../sass/_type.sass */
 code {
   vertical-align: bottom;
 }
 
 /* Leading paragraph text */
-/* line 90, ../sass/_type.sass */
+/* line 93, ../sass/_type.sass */
 .lead {
   font-size: 1.414rem;
 }
 
 /* Hug a the block above you */
-/* line 94, ../sass/_type.sass */
+/* line 97, ../sass/_type.sass */
 .hug {
   margin-top: 0;
 }
@@ -135,33 +139,28 @@ ul {
 /* line 24, ../sass/site.sass */
 .page-edit .side {
   z-index: 2;
-  width: 200px;
+  width: 300px;
   padding: 0.75rem 0;
 }
 /* line 28, ../sass/site.sass */
-.page-edit .logo,
-.page-edit .types {
-  padding: 0 15px;
-}
-/* line 31, ../sass/site.sass */
 .page-edit .logo {
-  padding-bottom: 1.5rem;
+  padding: 0 15px 0.75rem;
+}
+/* line 30, ../sass/site.sass */
+.page-edit .types,
+.page-edit .theme-curr {
+  padding: 0.75rem 15px;
 }
 /* line 33, ../sass/site.sass */
-.page-edit .type {
-  line-height: 2rem;
+.page-edit .logo,
+.page-edit .theme-curr {
+  border-bottom: 1px #eee solid;
 }
-/* line 35, ../sass/site.sass */
-.page-edit .type:hover .type-label {
-  opacity: 0.5;
-  cursor: pointer;
-}
-/* line 38, ../sass/site.sass */
+/* line 36, ../sass/site.sass */
 .page-edit .side-2 {
   z-index: 1;
-  left: 200px;
+  left: 300px;
   width: 300px;
-  padding: 0 15px;
   -moz-transform: translateX(-100%);
   -ms-transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
@@ -171,30 +170,38 @@ ul {
   -webkit-transition: -webkit-transform 0.35s;
   transition: transform 0.35s;
 }
-/* line 45, ../sass/site.sass */
+/* line 42, ../sass/site.sass */
 .page-edit .side-2.show {
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
   transform: translateX(0);
 }
-/* line 47, ../sass/site.sass */
-.page-edit .blocks {
+/* line 44, ../sass/site.sass */
+.page-edit .theme {
+  padding: 0.75rem 15px;
+}
+/* line 46, ../sass/site.sass */
+.page-edit .theme-img {
+  width: 100%;
+}
+/* line 48, ../sass/site.sass */
+.page-edit .blocks-temp {
   display: none;
 }
-/* line 49, ../sass/site.sass */
+/* line 50, ../sass/site.sass */
 .page-edit .block {
   margin: 0.75rem 0;
 }
-/* line 51, ../sass/site.sass */
+/* line 52, ../sass/site.sass */
 .page-edit .block-img {
   width: 100%;
 }
-/* line 53, ../sass/site.sass */
+/* line 54, ../sass/site.sass */
 .page-edit .main {
-  padding: 0.75rem 0 0.75rem 200px;
+  padding: 0.75rem 0 0.75rem 300px;
 }
-/* line 55, ../sass/site.sass */
+/* line 56, ../sass/site.sass */
 .page-edit .title {
   margin-left: -15px;
   margin-right: -15px;

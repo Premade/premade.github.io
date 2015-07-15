@@ -23,15 +23,13 @@
 		<div class="container-fluid page-edit">
 			<div class="side">
 				<h1 class="logo">Premade</h1>
+				<div class="theme-curr">
+					Theme: <span class="theme-name">{{name}}</span>
+				</div>
 				<div class="types"></div>
+				<div class="blocks-temp"></div>
 			</div>
-			<div class="side-2">
-				{{#each blocks}}
-					<li class="block" id={{objectId}}>
-						<img class="block-img" src="{{imgURL}}" alt="{{name}}" data-id="{{objectId}}"/>
-					</li>
-				{{/each}}
-			</div>
+			<div class="side-2"></div>
 			<div class="main">
 				<div class="title">
 					<h2>Project Name</h2>
@@ -44,10 +42,31 @@
 
 	</script>
 	
-	<script id="page-edit-type" type="text/x-handlebars-template">
+	<script id="page-edit-blocks" type="text/x-handlebars-template">
+		{{#each items}}
+			<li class="block" id={{objectId}}>
+				<img class="block-img" src="{{imgUrl}}" alt="{{name}}" data-id="{{objectId}}"/>
+			</li>
+		{{/each}}
+	</script>
+	
+	<script id="page-edit-types" type="text/x-handlebars-template">
 		{{#each items}}
 			<li class="type" data-id="{{objectId}}">
 				<div class="type-label">{{name}}</div>
+				<ul class="blocks"id="{{objectId}}"></ul>
+			</li>
+		{{/each}}
+	</script>
+
+	<script id="page-edit-themes" type="text/x-handlebars-template">
+		{{#each items}}
+			<li class="theme" data-id="{{objectId}}">
+				<img class="theme-img" src="{{imgUrl}}" alt="{{name}}"/>
+				<div class="theme-name">{{name}}</div>
+				<div class="theme-author">
+					Created By: <a href="{{authorUrl}}">{{author}}</a>
+				</div>
 			</li>
 		{{/each}}
 	</script>
@@ -67,7 +86,7 @@
 	<script id="update-block-tpl" type="text/x-handlebars-template">
 		<form class="update-block-form">
 			<div class="form-group update-block-type"></div>
-			<div class="form-group update-block-series"></div>
+			<div class="form-group update-block-theme"></div>
 			<div class="form-group">
 				<label for="update-block-name">Block Name</label>
 				<input class="form-control" id="update-block-name" placeholder="" name="name">

@@ -1,7 +1,8 @@
 /*! Typebase.less v0.1.0 | MIT License */
 
 // Typesetting variables. Edit these!
-$baseFontSize: 18 // in pixels. This would result in 22px on desktop
+$currFontSize: 14 // from Bootstrap
+$baseFontSize: 14 // in pixels. This would result in 18px on desktop
 $baseLineHeight: 1.5 // how large the line height is as a multiple of font size
 $leading: $baseLineHeight * 1rem
 $headFont: 'Helvetica Neue'
@@ -15,7 +16,7 @@ $scale: 1.414
 html
 	/* Change default typefaces here */
 	font-family: $bodyFont
-	font-size: $baseFontSize / 16 * 100%
+	font-size: $baseFontSize / $currFontSize * 100%
 
 	// Make everything look a little nicer in webkit
 	-webkit-font-smoothing: antialiased
@@ -27,13 +28,15 @@ html
 	// text-size-adjust: auto
 
 p, ul
-	font-size: $baseFontSize / 16 * 100%
+	font-size: $baseFontSize / $currFontSize * 100%
 
 /* Copy & Lists */
 p
 	line-height: $leading
 	margin-top: $leading
 	margin-bottom: 0
+	&:first-child
+		margin-top: 0
 
 ul, ol
 	margin-top: 0

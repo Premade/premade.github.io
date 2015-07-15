@@ -26,7 +26,7 @@ $(function() {
 		preProcess: function(data) {
 
 			data.type = new App.Models.Type().set('objectId', data.type);
-			data.series = new App.Models.Series().set('objectId', data.series);
+			data.theme = new App.Models.Theme().set('objectId', data.theme);
 			data.content = jQuery.parseJSON(data.content);
 			data.help = jQuery.parseJSON(data.help);
 			data.user = this.get('user') || Parse.User.current();
@@ -61,15 +61,15 @@ $(function() {
 		query: (new Parse.Query(App.Models.Type)).ascending('order')
 	});
 
-	App.Models.Series = Parse.Object.extend('Series');
+	App.Models.Theme = Parse.Object.extend('Theme');
 
-	App.Collections.Series =  Parse.Collection.extend({
-		model: App.Models.Series
+	App.Collections.Themes =  Parse.Collection.extend({
+		model: App.Models.Theme
 	});
 
-	App.Collections.UserSeries =  Parse.Collection.extend({
-		model: App.Models.Series,
-		query: (new Parse.Query(App.Models.Series)).equalTo('user', Parse.User.current())
+	App.Collections.UserThemes =  Parse.Collection.extend({
+		model: App.Models.Theme,
+		query: (new Parse.Query(App.Models.Theme)).equalTo('user', Parse.User.current())
 	});
 
 	App.Models.Image = Parse.Object.extend('Image', {
@@ -87,7 +87,7 @@ $(function() {
 				}).save(null, {
 					success: function(img) {
 						data.img = img;
-						data.imgURL = data.img.get('url').url();
+						data.imgUrl = data.img.get('url').url();
 						data.file = null;
 						block.update(data);
 					}, error: function(img, error) {
@@ -109,49 +109,104 @@ $(function() {
 
 	});
 
-	App.Views.EditBlocks = Parse.View.extend({
+	App.Views.EditPage = Parse.View.extend({
 
 		template: Handlebars.compile($('#page-edit-tpl').html()),
 
 		className: 'page-edit-tpl',
 
 		events: {
-			'mouseenter .types': 'showSide2',
-			'mouseleave .types': 'hideSide2',
+			'mouseenter .theme-curr': 'showSide2',
+			'mouseleave .theme-curr': 'hideSide2',
 			'mouseenter .side-2': 'showSide2',
 			'mouseleave .side-2': 'hideSide2',
-			'mouseenter .type': 'showType',
+			'click .theme': 'changeTheme'
 		},
 
 		render: function(){
-			var self = this,
-				collection = { blocks: self.collection.toJSON() };
 
-			self.$el.html(self.template(collection));
+			var self = this;
 
-			// Load Types
+			self.currTheme = self.options.theme;
+
+			self.$el.html(self.template(self.currTheme.attributes));
+
+			// Load Theme
+			self.loadThemes();
+			self.loadBlocks(self.collection);
+		},
+
+		loadThemes: function() {
+			var self = this;
+			App.fn.loadComponent({
+				collection: App.themes,
+				$container: self.$el.find('.side-2'),
+				View: App.fn.generateView({
+					templateId: '#page-edit-themes',
+					type: 'collection',
+					tagName: 'ul',
+				})
+			});
+		},
+
+		loadBlocks: function(blocks) {
+			var self = this;
+			App.fn.loadComponent({
+				collection: blocks,
+				$container: self.$el.find('.blocks-temp'),
+				View: App.fn.generateView({
+					templateId: '#page-edit-blocks',
+					type: 'collection',
+					tagName: 'ul',
+				}),
+				callback: function(blocks) {
+					self.loadTypes(blocks);
+					self.enableDrag();
+				}
+			});
+		},
+
+		loadTypes: function(blocks) {
+			var self = this;
 			App.fn.loadComponent({
 				collection: App.types,
+				$container: self.$el.find('.types'),
 				View: App.fn.generateView({
-					templateId: '#page-edit-type',
+					templateId: '#page-edit-types',
 					type: 'collection',
 					tagName: 'ul'
 				}),
-				$container: self.$el.find('.types'),
 				callback: function(types) {
-					_.each(types, function(type, i){
-						$('<ul>')
-							.attr('id', types.at(i).id)
-							.addClass('blocks')
-							.appendTo(self.$el.find('.side-2'));
+					_.each(blocks, function(b, i) {
+						var block = blocks.at(i);
+						$('#' + block.id).appendTo($('#' + block.get('type').id));
 					});
-					_.each(collection.blocks, function(block, i) {
-						$('#' + block.objectId).appendTo($('#' + block.type.objectId));
+					_.each(self.$el.find('.blocks'), function(block, i) {
+						if ($(block).find('.block').length === 0) {
+							$(block).parent().hide();
+						}
 					});
 				}
 			});
+		},
 
-			self.enableDrag();
+		changeTheme: function (e) {
+			var self = this,
+				id = $(e.target).closest('.theme').data('id');
+
+			if (id === self.currTheme.id) return;
+
+			var themeQuery = new Parse.Query(App.Models.Theme);
+
+			themeQuery
+				.equalTo("objectId", id)
+				.first()
+				.then(function(theme) {
+					self.currTheme = theme;
+					App.fn.findThemeBlocks(theme, function(blocks){
+						self.loadBlocks(blocks);
+					});
+				});
 		},
 
 		showSide2: function() {
@@ -249,7 +304,7 @@ $(function() {
 			this.model = this.model || new App.Models.Block();
 			this.model.preProcess({
 				type:		this.$el.find('#update-block-type').val(),
-				series:		this.$el.find('#update-block-series').val(),
+				theme:		this.$el.find('#update-block-theme').val(),
 				name:		this.$el.find('#update-block-name').val(),
 				file:		this.$el.find('#update-block-file')[0].files[0],
 				html:		this.$el.find('#update-block-html').val(),
@@ -280,10 +335,10 @@ $(function() {
 			App.fn.loadComponent({
 				collection: App.userSeries,
 				View: App.Views.Select,
-				$container: self.$el.find('.update-block-series'),
+				$container: self.$el.find('.update-block-theme'),
 				data: {
-					label: 'Block Series',
-					field: 'series'
+					label: 'Theme',
+					field: 'theme'
 				}
 			});
 		}
@@ -309,8 +364,8 @@ $(function() {
 		initialize: function(options){
 			App.blocks = new App.Collections.Blocks();
 			App.types = new App.Collections.Types();
-			App.series = new App.Collections.Series();
-			App.userSeries = new App.Collections.UserSeries();
+			App.themes = new App.Collections.Themes();
+			App.userThemes = new App.Collections.UserThemes();
 
 			// BlogApp.blog = new BlogApp.Models.Blog();
 			// BlogApp.category = new BlogApp.Models.Category();
@@ -339,12 +394,23 @@ $(function() {
 		},
 
 		new: function() {
-			App.blocks.fetch().then(function(blocks){
-				App.fn.renderView({
-					View: App.Views.EditBlocks,
-					data: { collection: blocks }
+			// Get Default Theme
+			var themeQuery = new Parse.Query(App.Models.Theme);
+
+			themeQuery
+				.equalTo("isDefault", true)
+				.first()
+				.then(function(theme) {
+					App.fn.findThemeBlocks(theme, function(blocks){
+						App.fn.renderView({
+							View: App.Views.EditPage,
+							data: { 
+								collection: blocks,
+								theme: theme
+							}
+						});
+					});
 				});
-			})
 		},
 
 		login: function() {
@@ -387,11 +453,16 @@ $(function() {
 			className: options.className || null,
 			render: function() {
 				var data;
-				if (options.type === 'collection') {
-					data = { items: this.collection.toJSON() };
-					data = _.extend({}, options.data, data);
-					console.log(data);
+				switch(options.type) {
+					case 'model':
+						data = this.model.toJSON();
+						break;
+					case 'collection':
+						data = { items: this.collection.toJSON() };
+						break;
 				}
+				data = _.extend({}, options.data, data);
+				console.log(data);
 				this.$el.html(this.template(data));
 			}
 		});
@@ -428,8 +499,22 @@ $(function() {
 				data: data
 			});
 
-			options.callback(collection);
+			if (options.callback) options.callback(collection);
 		});
+	}
+
+	App.fn.findThemeBlocks = function(theme, callback) {
+		var Blocks = Parse.Collection.extend({
+				model: App.Models.Block,
+				query: (new Parse.Query(App.Models.Block)).equalTo('theme', theme)
+			}),
+			blocks = new Blocks();
+
+			blocks.fetch({
+				success: function(blocks) {
+					callback(blocks);
+				}
+			});
 	}
 
 	App.start();

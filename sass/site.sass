@@ -3,8 +3,8 @@
 
 $padding-x: 15px
 $padding-y: $leading
-$sideW: 200px
-$side2W: $sideW * 1.5
+$sideW: 300px
+$side2W: $sideW
 $border: 1px #eee solid
 
 ul
@@ -25,26 +25,27 @@ ul
 		z-index: 2
 		width: $sideW
 		padding: $padding-y/2 0
-	.logo,
-	.types
-		padding: 0 $padding-x
 	.logo
-		padding-bottom: $padding-y
-	.type
-		line-height: 2rem
-		&:hover .type-label
-			opacity: .5
-			cursor: pointer
+		padding: 0 $padding-x $padding-y/2
+	.types,
+	.theme-curr
+		padding: $padding-y/2 $padding-x
+	.logo,
+	.theme-curr
+		border-bottom: $border
 	.side-2
 		z-index: 1
 		left: $sideW
 		width: $side2W
-		padding: 0 $padding-x
 		+translateX(-100%)
 		+single-transition(transform, .35s)
 		&.show
 			+translateX(0)
-	.blocks
+	.theme
+		padding: $padding-y/2 $padding-x
+	.theme-img
+		width: 100%
+	.blocks-temp
 		display: none
 	.block
 		margin: $padding-y/2 0
