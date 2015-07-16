@@ -54,6 +54,14 @@ $(function() {
 		model: App.Models.Block
 	});
 
+	App.Models.Page = Parse.Object.extend('Page', {
+		update: function(options) {
+			this.set(options.data).save().then(function(page){
+				options.callback(page);
+			});
+		}
+	});
+
 	App.Models.Type = Parse.Object.extend('Type');
 
 	App.Collections.Types = Parse.Collection.extend({
@@ -120,7 +128,8 @@ $(function() {
 			'mouseleave .theme-curr': 'hideSide2',
 			'mouseenter .side-2': 'showSide2',
 			'mouseleave .side-2': 'hideSide2',
-			'click .theme': 'changeTheme'
+			'click .theme': 'changeTheme',
+			'click .get-html': 'generatePage'
 		},
 
 		render: function(){
@@ -160,13 +169,14 @@ $(function() {
 					tagName: 'ul',
 				}),
 				callback: function(blocks) {
-					self.loadTypes(blocks);
+					self.blocks = blocks;
+					self.loadTypes();
 					self.enableDrag();
 				}
 			});
 		},
 
-		loadTypes: function(blocks) {
+		loadTypes: function() {
 			var self = this;
 			App.fn.loadComponent({
 				collection: App.types,
@@ -177,8 +187,8 @@ $(function() {
 					tagName: 'ul'
 				}),
 				callback: function(types) {
-					_.each(blocks, function(b, i) {
-						var block = blocks.at(i);
+					_.each(self.blocks, function(b, i) {
+						var block = self.blocks.at(i);
 						$('#' + block.id).appendTo($('#' + block.get('type').id));
 					});
 					_.each(self.$el.find('.blocks'), function(block, i) {
@@ -206,7 +216,33 @@ $(function() {
 					App.fn.findThemeBlocks(theme, function(blocks){
 						self.loadBlocks(blocks);
 					});
+					self.$el.find('.theme-curr-name').html(theme.get('name'));
 				});
+		},
+
+		generatePage: function() {
+			var self = this,
+				$blocks = self.$el.find('.preview .block-img'),
+				json = {};
+
+			json.blocks = [];
+
+			_.each($blocks, function($b, i){
+				json.blocks[i] = {
+					objectId: $blocks.eq(i).data('id')
+				};
+			});
+
+			var page = new App.Models.Page();
+
+			page.update({
+				data: { json: json },
+				callback: function(page) {
+					self.$el.find('.preview').append('<iframe class="preview-iframe" src="#/page/' + page.id+ '" />');
+					self.$el.find('.preview-list').hide();
+				}
+			})
+
 		},
 
 		showSide2: function() {
@@ -217,28 +253,23 @@ $(function() {
 			this.$el.find('.side-2').removeClass('show');
 		},
 
-		showType: function(e) {
-			var id = $(e.target).closest('.type').data('id');
-			this.$el.find('.blocks').hide();
-			this.$el.find('#'+ id).show();
-		},
-
 		enableDrag: function(){
 
 			this.$el.find('.block-img').draggable({
-				appendTo: "body",
+				appendTo: ".preview-list",
 				helper: "clone"
 			});
 			
 			this.$el.find(".preview-list").droppable({
-				accept: ".block-img",
-				greedy: true,
+				accept: ".side .block-img",
+				greedy: false,
 				drop: function(event, ui) {
 					var block = ui.draggable.eq(0);
 					$(this).append(block.clone());
 				}
 			}).sortable({
-				appendTo: "body",
+				appendTo: ".preview-list",
+				axis: "y",
 				start: function(event, ui) {
 					// $del.show();
 				},
@@ -248,6 +279,36 @@ $(function() {
 			});
 		}
 
+	});
+
+	App.Views.Page = Parse.View.extend({
+
+		render: function() {
+
+			var self = this,
+				page = self.model,
+				json = page.get('json');
+				blocks = json.blocks,
+				blockQuery = new Parse.Query(App.Models.Block);
+			
+			_.each(blocks, function(b) {
+				blockId = b.objectId;
+
+				var $container = $('<section>').addClass(blockId).appendTo(self.$el);
+
+				blockQuery.get(blockId).then(function(block) {
+
+					var template = Handlebars.compile(block.get('html')),
+						content = b.content || block.get('content');
+					
+					$container.html(template(content));
+
+					App.$pageStyles.append(block.get('css'));
+				});
+			})
+
+			// this.$el;
+		}
 	});
 
 	App.Views.Login = Parse.View.extend({
@@ -362,6 +423,9 @@ $(function() {
 	App.Router = Parse.Router.extend({
 
 		initialize: function(options){
+
+			App.$pageStyles = $('#page-styles');
+
 			App.blocks = new App.Collections.Blocks();
 			App.types = new App.Collections.Types();
 			App.themes = new App.Collections.Themes();
@@ -384,7 +448,8 @@ $(function() {
 			'new': 'new',
 			'login': 'login',
 			'dev': 'dev',
-			'add-block': 'addBlock'
+			'add-block': 'addBlock',
+			'page/:id': 'page'
 		},
 
 		landing: function() {
@@ -433,6 +498,17 @@ $(function() {
 			App.fn.renderView({
 				View: App.Views.UpdateBlock,
 			});
+		},
+
+		page: function(id) {
+			var query = new Parse.Query(App.Models.Page);
+			query.get(id).then(function(page){
+				App.fn.renderView({
+					View: App.Views.Page,
+					data: { model: page },
+					$container: $('body')
+				});
+			})
 		}
 
 	});

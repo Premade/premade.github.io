@@ -4,11 +4,12 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Basic Template</title>
+	<title>Premade</title>
 	<!-- Stylesheet -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="stylesheets/site.css">
+	<style id="page-styles"></style>
 </head>
 <body>
 
@@ -24,7 +25,7 @@
 			<div class="side">
 				<h1 class="logo">Premade</h1>
 				<div class="theme-curr">
-					Theme: <span class="theme-name">{{name}}</span>
+					Theme: <span class="theme-curr-name">{{name}}</span>
 				</div>
 				<div class="types"></div>
 				<div class="blocks-temp"></div>
@@ -33,9 +34,14 @@
 			<div class="main">
 				<div class="title">
 					<h2>Project Name</h2>
+					<button class="get-html btn btn-action btn-sm">Generate Page</button>
 				</div>
 				<div class="preview">
-					<ul class="preview-list"></ul>
+					<ul class="preview-list">
+						<li class="preview-empty">
+							<h3>Drag Blocks Here</h3>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
