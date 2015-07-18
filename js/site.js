@@ -117,7 +117,7 @@ $(function() {
 
 	});
 
-	App.Views.EditPage = Parse.View.extend({
+	App.Views.EditPageBlocks = Parse.View.extend({
 
 		template: Handlebars.compile($('#page-edit-tpl').html()),
 
@@ -233,44 +233,10 @@ $(function() {
 				};
 			});
 
-			self.loadChangeContentPanel(json);
-
 			App.fn.renderView({
-				View: App.Views.Page,
-				data: { json: json },
-				$container: self.$el.find('.preview-html')
+				View: App.Views.EditPageContent,
+				data: { json: json }
 			});
-
-			self.$el.find('.preview-html').show();
-			self.$el.find('.preview-list').hide();
-			self.$el.find('.edit-blocks').hide();
-			self.$el.find('.side-2').hide();
-		},
-
-		loadChangeContentPanel: function(json) {
-
-			var self = this,
-				blocks = json.blocks,
-				blockQuery = new Parse.Query(App.Models.Block);
-			
-			_.each(blocks, function(b) {
-				blockId = b.objectId;
-
-				blockQuery.get(blockId).then(function(block) {	
-
-					fields = block.get('fields');
-
-					_.each(fields, function(field) {
-
-						var template = Handlebars.compile($('#page-edit-content-' + field.type).html())
-
-						self.$el.find('.edit-content').append(template(field));
-					
-					});
-
-				});
-			});
-
 		},
 
 		showSide2: function() {
@@ -309,6 +275,57 @@ $(function() {
 
 	});
 
+	App.Views.EditPageContent = Parse.View.extend({
+
+		template: Handlebars.compile($('#content-edit-tpl').html()),
+
+		render: function() {
+			var self = this,
+				json;
+
+			if (self.model) {
+				json = self.model.get('json');
+			} else {
+				json = self.options.json;
+			}
+
+			var blocksIds = json.blocks,
+				blocks = [];
+
+			App.fn.fetchBlocks(function(){
+				_.each(blocksIds, function(b, i){
+					App.fn.findBlock(blocksIds[i].objectId, function(block){
+						blocks.push(block.toJSON());
+					});
+				});
+				_.each(blocks, function(block){
+					_.each(block.fields, function(field){
+						field.isTxt = false;
+						field.isImg = false;
+						switch (field.type) {
+							case "img":
+								field.isImg = true;
+								break;
+							case "txt":
+								field.isTxt = true;
+								break;
+						}
+					});
+				});
+				self.$el.html(self.template({
+					blocks: blocks
+				}));
+
+				App.fn.renderBlocks({
+					blocks: blocks,
+					$container: self.$el.find('.preview-html')
+				});
+
+			});
+		}
+
+	});
+
 	App.Views.Page = Parse.View.extend({
 
 		render: function() {
@@ -320,26 +337,23 @@ $(function() {
 				var page = self.model;
 				json = page.get('json');
 			} else {
-				json = self.options.json
+				json = self.options.json;
 			}
+
+			var blocksIds = json.blocks,
+				blocks = [];
 			
-			var blocks = json.blocks,
-				blockQuery = new Parse.Query(App.Models.Block);
-			
-			_.each(blocks, function(b) {
-				blockId = b.objectId;
-
-				var $container = $('<section>').addClass(blockId).appendTo(self.$el);
-
-				blockQuery.get(blockId).then(function(block) {
-
-					var template = Handlebars.compile(block.get('html')),
-						content = b.content || block.get('content');
-					
-					$container.html(template(content));
-
-					App.$pageStyles.append(block.get('css'));
+			App.fn.fetchBlocks(function(){
+				_.each(blocksIds, function(b, i){
+					App.fn.findBlock(blocksIds[i].objectId, function(block){
+						blocks.push(block.toJSON());
+					});
 				});
+
+				App.fn.renderBlocks({
+					blocks: blocks
+				});
+
 			});
 
 		}
@@ -460,8 +474,8 @@ $(function() {
 
 			App.$pageStyles = $('#page-styles');
 
-			App.blocks = [];
-			// App.blocks = new App.Collections.Blocks();
+			// App.blocks = [];
+			App.blocks = new App.Collections.Blocks();
 			App.types = new App.Collections.Types();
 			App.themes = new App.Collections.Themes();
 			App.userThemes = new App.Collections.UserThemes();
@@ -503,7 +517,7 @@ $(function() {
 				.then(function(theme) {
 					App.fn.findThemeBlocks(theme, function(blocks){
 						App.fn.renderView({
-							View: App.Views.EditPage,
+							View: App.Views.EditPageBlocks,
 							data: { 
 								collection: blocks,
 								theme: theme
@@ -540,8 +554,7 @@ $(function() {
 			query.get(id).then(function(page){
 				App.fn.renderView({
 					View: App.Views.Page,
-					data: { model: page },
-					$container: $('body')
+					data: { model: page }
 				});
 			})
 		}
@@ -626,6 +639,45 @@ $(function() {
 					callback(blocks);
 				}
 			});
+	}
+
+	App.fn.fetchBlocks = function(callback) {
+		if (App.blocks.length === 0) {
+			App.blocks.fetch().then(function(blocks) {
+				App.blocks = blocks;
+				callback();
+			});
+		} else {
+			callback();
+		}
+	}
+
+	App.fn.findBlock = function(id, callback) {
+		_.each(App.blocks.models, function(block){
+			if (id === block.id) {
+				callback(block);
+			}
+		})
+	}
+
+	App.fn.renderBlocks = function(options) {
+
+		var $container = options.$container || App.$app;
+
+		App.$pageStyles.empty();
+
+		_.each(options.blocks, function(block, i) {
+			var $block = $('<section>')
+							.addClass(block.objectId)
+							.appendTo($container),
+				template = Handlebars.compile(block.html),
+				content = options.content ? options.content[i] : block.content;
+
+			$block.html(template(content));
+
+			App.$pageStyles.append(block.css);
+		});
+
 	}
 
 	App.start();
