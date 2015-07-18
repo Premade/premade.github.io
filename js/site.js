@@ -233,15 +233,43 @@ $(function() {
 				};
 			});
 
-			var page = new App.Models.Page();
+			self.loadChangeContentPanel(json);
 
-			page.update({
+			App.fn.renderView({
+				View: App.Views.Page,
 				data: { json: json },
-				callback: function(page) {
-					self.$el.find('.preview').append('<iframe class="preview-iframe" src="#/page/' + page.id+ '" />');
-					self.$el.find('.preview-list').hide();
-				}
-			})
+				$container: self.$el.find('.preview-html')
+			});
+
+			self.$el.find('.preview-html').show();
+			self.$el.find('.preview-list').hide();
+			self.$el.find('.edit-blocks').hide();
+			self.$el.find('.side-2').hide();
+		},
+
+		loadChangeContentPanel: function(json) {
+
+			var self = this,
+				blocks = json.blocks,
+				blockQuery = new Parse.Query(App.Models.Block);
+			
+			_.each(blocks, function(b) {
+				blockId = b.objectId;
+
+				blockQuery.get(blockId).then(function(block) {	
+
+					fields = block.get('fields');
+
+					_.each(fields, function(field) {
+
+						var template = Handlebars.compile($('#page-edit-content-' + field.type).html())
+
+						self.$el.find('.edit-content').append(template(field));
+					
+					});
+
+				});
+			});
 
 		},
 
@@ -286,9 +314,16 @@ $(function() {
 		render: function() {
 
 			var self = this,
-				page = self.model,
+				json;
+
+			if (self.model) {
+				var page = self.model;
 				json = page.get('json');
-				blocks = json.blocks,
+			} else {
+				json = self.options.json
+			}
+			
+			var blocks = json.blocks,
 				blockQuery = new Parse.Query(App.Models.Block);
 			
 			_.each(blocks, function(b) {
@@ -305,9 +340,8 @@ $(function() {
 
 					App.$pageStyles.append(block.get('css'));
 				});
-			})
+			});
 
-			// this.$el;
 		}
 	});
 
@@ -426,7 +460,8 @@ $(function() {
 
 			App.$pageStyles = $('#page-styles');
 
-			App.blocks = new App.Collections.Blocks();
+			App.blocks = [];
+			// App.blocks = new App.Collections.Blocks();
 			App.types = new App.Collections.Types();
 			App.themes = new App.Collections.Themes();
 			App.userThemes = new App.Collections.UserThemes();

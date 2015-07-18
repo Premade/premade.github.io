@@ -22,26 +22,30 @@
 	<script id="page-edit-tpl" type="text/x-handlebars-template">
 
 		<div class="container-fluid page-edit">
-			<div class="side">
+			<div class="side app-ui">
 				<h1 class="logo">Premade</h1>
-				<div class="theme-curr">
-					Theme: <span class="theme-curr-name">{{name}}</span>
+				<div class="edit-blocks">
+					<div class="theme-curr">
+						Theme: <span class="theme-curr-name">{{name}}</span>
+					</div>
+					<div class="types"></div>
+					<div class="blocks-temp"></div>
 				</div>
-				<div class="types"></div>
-				<div class="blocks-temp"></div>
+				<div class="edit-content"></div>
 			</div>
-			<div class="side-2"></div>
+			<div class="side-2 app-ui"></div>
 			<div class="main">
-				<div class="title">
+				<div class="title app-ui">
 					<h2>Project Name</h2>
 					<button class="get-html btn btn-action btn-sm">Generate Page</button>
 				</div>
 				<div class="preview">
-					<ul class="preview-list">
+					<ul class="preview-list app-ui">
 						<li class="preview-empty">
 							<h3>Drag Blocks Here</h3>
 						</li>
 					</ul>
+					<div class="preview-html"></div>
 				</div>
 			</div>
 		</div>
@@ -75,6 +79,20 @@
 				</div>
 			</li>
 		{{/each}}
+	</script>
+
+	<script id="page-edit-content-txt" type="text/x-handlebars-template">
+		<div>
+			<label>{{name}}</label>
+			<input />
+		</div>
+	</script>
+
+	<script id="page-edit-content-img" type="text/x-handlebars-template">
+		<div>
+			<label>{{name}}</label>
+			<input />
+		</div>
 	</script>
 
 	<script id="login-tpl" type="text/x-handlebars-template">
