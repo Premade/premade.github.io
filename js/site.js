@@ -707,9 +707,10 @@ $(function() {
 
 	App.fn.renderBlocks = function(options) {
 
-		var $container = options.$container || App.$app;
-
 		App.$pageStyles.empty();
+
+		var $container = options.$container || App.$app,
+			styles = [];
 
 		_.each(options.blocks, function(block, i) {
 			var $block = $('<section>')
@@ -721,8 +722,11 @@ $(function() {
 
 			$block.html(template(content));
 
-			// TODO - Take out duplicates
-			App.$pageStyles.append(block.css);
+			if (styles.indexOf(block.objectId) === -1) {
+				styles.push(block.objectId);
+				App.$pageStyles.append(block.css);
+			}
+			
 		});
 
 	}
