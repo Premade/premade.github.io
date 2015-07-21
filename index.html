@@ -56,11 +56,11 @@
 				<h1 class="logo">Premade</h1>
 				<div class="edit">
 					{{#each blocks}}
-						<div data-id="{{objectId}}">
+						<div class="edit-block" data-id="{{objectId}}">
 							{{#each fields}}
 								<div>{{name}}</div>
 								{{#if isTxt}}
-									<input>
+									<input value="{{content}}" class="field" data-key="{{key}}">
 								{{/if}}
 								<div>{{helper}}</div>
 							{{/each}}

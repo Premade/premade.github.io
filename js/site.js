@@ -223,19 +223,19 @@ $(function() {
 		generatePage: function() {
 			var self = this,
 				$blocks = self.$el.find('.preview .block-img'),
-				json = {};
+				page = {};
 
-			json.blocks = [];
+			page.blocks = [];
 
 			_.each($blocks, function($b, i){
-				json.blocks[i] = {
+				page.blocks[i] = {
 					objectId: $blocks.eq(i).data('id')
 				};
 			});
 
 			App.fn.renderView({
 				View: App.Views.EditPageContent,
-				data: { json: json }
+				data: { page: page }
 			});
 		},
 
@@ -279,39 +279,30 @@ $(function() {
 
 		template: Handlebars.compile($('#content-edit-tpl').html()),
 
+		events: {
+			'change .field': 'updatePreview',
+		},
+
+		updatePreview: function(e) {
+			var $e = $(e.target),
+				block = $e.closest('.edit-block').data('id'),
+				field = $e.data('key'),
+				val = $e.val();
+			this.$el.find('.preview-html .' + block + ' .' + field).html(val);
+		},
+
 		render: function() {
 			var self = this,
-				json;
+				page;
 
 			if (self.model) {
-				json = self.model.get('json');
+				page = self.model.get('json');
 			} else {
-				json = self.options.json;
+				page = self.options.page;
 			}
 
-			var blocksIds = json.blocks,
-				blocks = [];
+			App.fn.getBlocks(page, function(blocks){
 
-			App.fn.fetchBlocks(function(){
-				_.each(blocksIds, function(b, i){
-					App.fn.findBlock(blocksIds[i].objectId, function(block){
-						blocks.push(block.toJSON());
-					});
-				});
-				_.each(blocks, function(block){
-					_.each(block.fields, function(field){
-						field.isTxt = false;
-						field.isImg = false;
-						switch (field.type) {
-							case "img":
-								field.isImg = true;
-								break;
-							case "txt":
-								field.isTxt = true;
-								break;
-						}
-					});
-				});
 				self.$el.html(self.template({
 					blocks: blocks
 				}));
@@ -321,7 +312,9 @@ $(function() {
 					$container: self.$el.find('.preview-html')
 				});
 
+				self.blocks = blocks;
 			});
+
 		}
 
 	});
@@ -331,29 +324,18 @@ $(function() {
 		render: function() {
 
 			var self = this,
-				json;
+				page;
 
 			if (self.model) {
-				var page = self.model;
-				json = page.get('json');
+				var page = self.model.get('json');
 			} else {
-				json = self.options.json;
+				page = self.options.page;
 			}
-
-			var blocksIds = json.blocks,
-				blocks = [];
-			
-			App.fn.fetchBlocks(function(){
-				_.each(blocksIds, function(b, i){
-					App.fn.findBlock(blocksIds[i].objectId, function(block){
-						blocks.push(block.toJSON());
-					});
-				});
-
+		
+			App.fn.getBlocks(page, function(blocks){
 				App.fn.renderBlocks({
 					blocks: blocks
 				});
-
 			});
 
 		}
@@ -495,10 +477,11 @@ $(function() {
 		routes: {
 			'': 'landing',
 			'new': 'new',
+			'page/:id': 'page',
+			'edit/:id': 'edit',
 			'login': 'login',
 			'dev': 'dev',
 			'add-block': 'addBlock',
-			'page/:id': 'page'
 		},
 
 		landing: function() {
@@ -549,6 +532,16 @@ $(function() {
 			});
 		},
 
+		edit: function(id) {
+			var query = new Parse.Query(App.Models.Page);
+			query.get(id).then(function(page){
+				App.fn.renderView({
+					View: App.Views.EditPageContent,
+					data: { model: page }
+				});
+			});
+		},
+
 		page: function(id) {
 			var query = new Parse.Query(App.Models.Page);
 			query.get(id).then(function(page){
@@ -556,7 +549,7 @@ $(function() {
 					View: App.Views.Page,
 					data: { model: page }
 				});
-			})
+			});
 		}
 
 	});
@@ -652,12 +645,59 @@ $(function() {
 		}
 	}
 
-	App.fn.findBlock = function(id, callback) {
+	App.fn.findaBlock = function(id, callback) {
 		_.each(App.blocks.models, function(block){
 			if (id === block.id) {
 				callback(block);
 			}
 		})
+	}
+
+	App.fn.getBlocks = function(page, callback) {
+
+		var blocks = [];
+
+		App.fn.fetchBlocks(function(){
+
+			_.each(page.blocks, function(b, i){
+
+				App.fn.findaBlock(page.blocks[i].objectId, function(block){
+
+					var jsonBlock = block.toJSON();
+
+					// Update block content with page content
+					if (page.blocks[i].fields) jsonBlock.content = page.blocks[i].fields;
+					
+					
+					_.each(jsonBlock.fields, function(field, key) {
+
+						// Copy content into fields
+						field.content = jsonBlock.content[key];
+
+						// Add key
+						field.key = key;
+
+						// Make field types into binaries
+						field.isTxt = false;
+						field.isImg = false;
+						switch (field.type) {
+							case "img":
+								field.isImg = true;
+								break;
+							case "txt":
+								field.isTxt = true;
+								break;
+						}
+					});
+
+					blocks.push(jsonBlock);
+
+				});
+			});
+
+			callback(blocks);
+
+		});
 	}
 
 	App.fn.renderBlocks = function(options) {
