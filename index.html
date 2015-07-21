@@ -21,29 +21,27 @@
 
 	<script id="page-edit-tpl" type="text/x-handlebars-template">
 
-		<div class="container-fluid page-edit">
-			<div class="side app-ui">
-				<h1 class="logo">Premade</h1>
-				<div class="theme-curr">
-					Theme: <span class="theme-curr-name">{{name}}</span>
-				</div>
-				<div class="types"></div>
-				<div class="blocks-temp"></div>
+		<div class="side app-ui">
+			<h1 class="logo">Premade</h1>
+			<div class="theme-curr">
+				Theme: <span class="theme-curr-name">{{name}}</span>
 			</div>
-			<div class="side-2 app-ui"></div>
-			<div class="main">
-				<div class="title app-ui">
-					<h2>Project Name</h2>
-					<button class="get-html btn btn-action btn-sm">Generate Page</button>
-				</div>
-				<div class="preview">
-					<ul class="preview-list app-ui">
-						<li class="preview-empty">
-							<h3>Drag Blocks Here</h3>
-						</li>
-					</ul>
-					<div class="preview-html"></div>
-				</div>
+			<div class="types"></div>
+			<div class="blocks-temp"></div>
+		</div>
+		<div class="side-2 app-ui"></div>
+		<div class="main">
+			<div class="title app-ui">
+				<h2>Project Name</h2>
+				<button class="get-html btn btn-action btn-sm">Generate Page</button>
+			</div>
+			<div class="preview">
+				<ul class="preview-list app-ui">
+					<li class="preview-empty">
+						<h3>Drag Blocks Here</h3>
+					</li>
+				</ul>
+				<div class="preview-html"></div>
 			</div>
 		</div>
 
@@ -51,31 +49,34 @@
 
 	<script id="content-edit-tpl" type="text/x-handlebars-template">
 
-		<div class="container-fluid page-edit">
-			<div class="side app-ui">
-				<h1 class="logo">Premade</h1>
-				<div class="edit">
-					{{#each blocks}}
-						<div class="edit-block" data-id="{{objectId}}">
-							{{#each fields}}
-								<div>{{name}}</div>
-								{{#if isTxt}}
-									<input value="{{content}}" class="field" data-key="{{key}}">
-								{{/if}}
-								<div>{{helper}}</div>
-							{{/each}}
-						</div>
-					{{/each}}
-				</div>
+		<div class="side app-ui">
+			<h1 class="logo">Premade</h1>
+			<div class="edit">
+				{{#each blocks}}
+					<div class="edit-block" data-id="{{objectId}}">
+						{{#each fields.fields}}
+							<div class="field-title">{{name}}</div>
+							{{#if isTxt}}
+								<input value="{{content}}" class="field field-input form-control" data-key="{{key}}">
+							{{/if}}
+							{{#if isLongTxt}}
+								<textarea class="field form-control" data-key="{{key}}" rows="3">{{content}}</textarea>
+							{{/if}}
+							{{#if helper}}
+							<div class="field-helper">{{helper}}</div>
+							{{/if}}
+						{{/each}}
+					</div>
+				{{/each}}
 			</div>
-			<div class="main">
-				<div class="title app-ui">
-					<h2>Project Name</h2>
-					<button class="get-html btn btn-action btn-sm">Generate Page</button>
-				</div>
-				<div class="preview">
-					<div class="preview-html"></div>
-				</div>
+		</div>
+		<div class="main">
+			<div class="title app-ui">
+				<h2>Project Name</h2>
+				<button class="get-html btn btn-action btn-sm">Generate Page</button>
+			</div>
+			<div class="preview">
+				<div class="preview-html"></div>
 			</div>
 		</div>
 

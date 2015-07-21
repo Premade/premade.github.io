@@ -121,7 +121,7 @@ $(function() {
 
 		template: Handlebars.compile($('#page-edit-tpl').html()),
 
-		className: 'page-edit-tpl',
+		className: 'container-fluid page-edit',
 
 		events: {
 			'mouseenter .theme-curr': 'showSide2',
@@ -279,6 +279,8 @@ $(function() {
 
 		template: Handlebars.compile($('#content-edit-tpl').html()),
 
+		className: 'container-fluid page-edit',
+
 		events: {
 			'change .field': 'updatePreview',
 		},
@@ -301,7 +303,9 @@ $(function() {
 				page = self.options.page;
 			}
 
-			App.fn.getBlocks(page, function(blocks){
+			App.fn.getBlocks(page, function(blocks) {
+
+				console.log(blocks);
 
 				self.$el.html(self.template({
 					blocks: blocks
@@ -669,23 +673,24 @@ $(function() {
 					if (page.blocks[i].fields) jsonBlock.content = page.blocks[i].fields;
 					
 					
-					_.each(jsonBlock.fields, function(field, key) {
+					_.each(jsonBlock.fields.fields, function(field) {
 
 						// Copy content into fields
-						field.content = jsonBlock.content[key];
-
-						// Add key
-						field.key = key;
+						field.content = jsonBlock.content[field.key];
 
 						// Make field types into binaries
 						field.isTxt = false;
+						field.isLongTxt = false;
 						field.isImg = false;
 						switch (field.type) {
-							case "img":
-								field.isImg = true;
-								break;
 							case "txt":
 								field.isTxt = true;
+								break;
+							case "longtxt":
+								field.isLongTxt = true;
+								break;
+							case "img":
+								field.isImg = true;
 								break;
 						}
 					});

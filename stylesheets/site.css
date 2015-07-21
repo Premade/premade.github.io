@@ -10,6 +10,8 @@ html {
 
 /* line 32, ../sass/_type.sass */
 .app-ui {
+  font-size: 100%;
+  line-height: 1.5rem;
   /* Copy & Lists */
   /* Headings */
   /* Tables */
@@ -17,41 +19,36 @@ html {
   /* Leading paragraph text */
   /* Hug a the block above you */
 }
-/* line 34, ../sass/_type.sass */
-.app-ui p, .app-ui ul {
-  font-size: 100%;
-}
 /* line 38, ../sass/_type.sass */
 .app-ui p {
-  line-height: 1.5rem;
   margin-top: 1.5rem;
   margin-bottom: 0;
 }
-/* line 42, ../sass/_type.sass */
+/* line 41, ../sass/_type.sass */
 .app-ui p:first-child {
   margin-top: 0;
 }
-/* line 45, ../sass/_type.sass */
+/* line 44, ../sass/_type.sass */
 .app-ui ul, .app-ui ol {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 48, ../sass/_type.sass */
+/* line 47, ../sass/_type.sass */
 .app-ui ul li, .app-ui ol li {
   line-height: 1.5rem;
 }
-/* line 50, ../sass/_type.sass */
+/* line 49, ../sass/_type.sass */
 .app-ui ul ul, .app-ui ul ol, .app-ui ol ul, .app-ui ol ol {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 54, ../sass/_type.sass */
+/* line 53, ../sass/_type.sass */
 .app-ui blockquote {
   line-height: 1.5rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
-/* line 60, ../sass/_type.sass */
+/* line 59, ../sass/_type.sass */
 .app-ui h1, .app-ui h2, .app-ui h3, .app-ui h4, .app-ui h5, .app-ui h6 {
   /* Change heading typefaces here */
   font-family: "Helvetica Neue";
@@ -59,51 +56,51 @@ html {
   margin-bottom: 0;
   line-height: 1.5rem;
 }
-/* line 67, ../sass/_type.sass */
+/* line 66, ../sass/_type.sass */
 .app-ui h1 {
   font-size: 1rem;
 }
-/* line 69, ../sass/_type.sass */
+/* line 68, ../sass/_type.sass */
 .app-ui h2 {
   font-size: 1rem;
   font-weight: normal;
 }
-/* line 72, ../sass/_type.sass */
+/* line 71, ../sass/_type.sass */
 .app-ui h3 {
   font-size: 1.414rem;
 }
-/* line 74, ../sass/_type.sass */
+/* line 73, ../sass/_type.sass */
 .app-ui h4 {
   font-size: 0.707rem;
 }
-/* line 76, ../sass/_type.sass */
+/* line 75, ../sass/_type.sass */
 .app-ui h5 {
   font-size: 0.47133rem;
 }
-/* line 78, ../sass/_type.sass */
+/* line 77, ../sass/_type.sass */
 .app-ui h6 {
   font-size: 0.3535rem;
 }
-/* line 82, ../sass/_type.sass */
+/* line 81, ../sass/_type.sass */
 .app-ui table {
   margin-top: 1.5rem;
   border-spacing: 0px;
   border-collapse: collapse;
 }
-/* line 87, ../sass/_type.sass */
+/* line 86, ../sass/_type.sass */
 .app-ui table td, .app-ui table th {
   padding: 0;
   line-height: 21px;
 }
-/* line 92, ../sass/_type.sass */
+/* line 91, ../sass/_type.sass */
 .app-ui code {
   vertical-align: bottom;
 }
-/* line 97, ../sass/_type.sass */
+/* line 96, ../sass/_type.sass */
 .app-ui .lead {
   font-size: 1.414rem;
 }
-/* line 101, ../sass/_type.sass */
+/* line 100, ../sass/_type.sass */
 .app-ui .hug {
   margin-top: 0;
 }
@@ -163,23 +160,24 @@ ul.app-ui,
 }
 /* line 39, ../sass/site.sass */
 .page-edit .logo {
+  color: #e74c3c;
   padding: 0 15px 0.75rem;
 }
-/* line 41, ../sass/site.sass */
+/* line 42, ../sass/site.sass */
 .page-edit .types,
 .page-edit .theme-curr {
   padding: 0.75rem 15px;
 }
-/* line 44, ../sass/site.sass */
+/* line 45, ../sass/site.sass */
 .page-edit .logo,
 .page-edit .theme-curr {
   border-bottom: 1px #eee solid;
 }
-/* line 47, ../sass/site.sass */
+/* line 48, ../sass/site.sass */
 .page-edit .theme-curr-name {
   color: #e74c3c;
 }
-/* line 49, ../sass/site.sass */
+/* line 50, ../sass/site.sass */
 .page-edit .side-2 {
   z-index: 1;
   left: 300px;
@@ -193,47 +191,47 @@ ul.app-ui,
   -webkit-transition: -webkit-transform 0.35s;
   transition: transform 0.35s;
 }
-/* line 55, ../sass/site.sass */
+/* line 56, ../sass/site.sass */
 .page-edit .side-2.show {
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
   transform: translateX(0);
 }
-/* line 57, ../sass/site.sass */
+/* line 58, ../sass/site.sass */
 .page-edit .theme {
   padding: 0.75rem 15px;
 }
-/* line 59, ../sass/site.sass */
+/* line 60, ../sass/site.sass */
 .page-edit .theme-img {
   width: 100%;
 }
-/* line 61, ../sass/site.sass */
+/* line 62, ../sass/site.sass */
 .page-edit .blocks-temp {
   display: none;
 }
-/* line 63, ../sass/site.sass */
+/* line 64, ../sass/site.sass */
 .page-edit .block {
   margin: 0.75rem 0;
 }
-/* line 65, ../sass/site.sass */
+/* line 66, ../sass/site.sass */
 .page-edit .block-img {
   position: relative;
   z-index: 2;
   width: 100%;
 }
-/* line 69, ../sass/site.sass */
+/* line 70, ../sass/site.sass */
 .page-edit .main {
   padding: 0.75rem 0 0 300px;
 }
-/* line 71, ../sass/site.sass */
+/* line 72, ../sass/site.sass */
 .page-edit .title {
   margin-left: -15px;
   margin-right: -15px;
   padding: 0 15px 0.75rem;
   border-bottom: 1px #eee solid;
 }
-/* line 76, ../sass/site.sass */
+/* line 77, ../sass/site.sass */
 .page-edit .get-html {
   position: absolute;
   right: 15px;
@@ -241,32 +239,32 @@ ul.app-ui,
   margin-top: -3px;
   margin-right: -9px;
 }
-/* line 82, ../sass/site.sass */
+/* line 83, ../sass/site.sass */
 .page-edit .preview {
   margin-left: -15px;
   margin-right: -15px;
 }
-/* line 85, ../sass/site.sass */
+/* line 86, ../sass/site.sass */
 .page-edit .preview .block-img {
   z-index: 0;
 }
-/* line 87, ../sass/site.sass */
+/* line 88, ../sass/site.sass */
 .page-edit .preview-html,
 .page-edit .preview-list {
   min-height: calc(100vh - 49px);
   position: relative;
 }
-/* line 91, ../sass/site.sass */
+/* line 92, ../sass/site.sass */
 .page-edit .preview-list {
   margin-bottom: 0;
 }
-/* line 93, ../sass/site.sass */
+/* line 94, ../sass/site.sass */
 .page-edit .preview-html {
   border: 0;
   width: 100%;
   overflow-x: hidden;
 }
-/* line 97, ../sass/site.sass */
+/* line 98, ../sass/site.sass */
 .page-edit .preview-empty {
   position: absolute;
   top: 50%;
@@ -276,4 +274,35 @@ ul.app-ui,
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-transform: uppercase;
+}
+/* line 104, ../sass/site.sass */
+.page-edit .edit-block {
+  padding: 0.75rem 15px;
+  border-bottom: 1px #eee solid;
+}
+/* line 107, ../sass/site.sass */
+.page-edit .edit-block:last-child {
+  border-bottom: 0;
+}
+/* line 109, ../sass/site.sass */
+.page-edit .field-title {
+  margin-top: 0.75rem;
+  font-weight: 500;
+}
+/* line 112, ../sass/site.sass */
+.page-edit .field-title:first-child {
+  margin-top: 0;
+}
+/* line 114, ../sass/site.sass */
+.page-edit .field-helper {
+  color: #999;
+}
+/* line 116, ../sass/site.sass */
+.page-edit input.field {
+  width: 100%;
+  margin: 3px 0;
+}
+/* line 119, ../sass/site.sass */
+.page-edit input.textarea {
+  height: 4.5rem;
 }

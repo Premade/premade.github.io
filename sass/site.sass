@@ -2,7 +2,7 @@
 @import "type"
 
 $padding-x: 15px
-$padding-y: $leading
+$padding-y: $leading/2
 $sideW: 300px
 $side2W: $sideW
 $border: 1px #eee solid
@@ -35,12 +35,13 @@ ul.app-ui,
 	.side
 		z-index: 2
 		width: $sideW
-		padding: $padding-y/2 0
+		padding: $padding-y 0
 	.logo
-		padding: 0 $padding-x $padding-y/2
+		color: $highlight
+		padding: 0 $padding-x $padding-y
 	.types,
 	.theme-curr
-		padding: $padding-y/2 $padding-x
+		padding: $padding-y $padding-x
 	.logo,
 	.theme-curr
 		border-bottom: $border
@@ -55,28 +56,28 @@ ul.app-ui,
 		&.show
 			+translateX(0)
 	.theme
-		padding: $padding-y/2 $padding-x
+		padding: $padding-y $padding-x
 	.theme-img
 		width: 100%
 	.blocks-temp
 		display: none
 	.block
-		margin: $padding-y/2 0
+		margin: $padding-y 0
 	.block-img
 		position: relative
 		z-index: 2
 		width: 100%
 	.main
-		padding: $padding-y/2 0 0 $sideW
+		padding: $padding-y 0 0 $sideW
 	.title
 		margin-left: -$padding-x
 		margin-right: -$padding-x
-		padding: 0 $padding-x $padding-y/2
+		padding: 0 $padding-x $padding-y
 		border-bottom: $border
 	.get-html
 		position: absolute
 		right: $padding-x
-		top: $padding-y/2
+		top: $padding-y
 		margin-top: -3px
 		margin-right: -9px
 	.preview
@@ -100,3 +101,20 @@ ul.app-ui,
 		left: 50%
 		+translate(-50%, -50%)
 		text-transform: uppercase
+	.edit-block
+		padding: $padding-y $padding-x
+		border-bottom: $border
+		&:last-child
+			border-bottom: 0
+	.field-title
+		margin-top: $padding-y
+		font-weight: 500
+		&:first-child
+			margin-top: 0
+	.field-helper
+		color: #999
+	input.field
+		width: 100%
+		margin: 3px 0
+	input.textarea
+		height: $leading * 3
