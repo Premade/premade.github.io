@@ -53,7 +53,7 @@
 			<h1 class="logo">Premade</h1>
 			<div class="edit">
 				{{#each blocks}}
-					<div class="edit-block" data-id="{{objectId}}">
+					<div class="edit-block" data-id="{{objectId}}-{{@index}}">
 						{{#each fields.fields}}
 							<div class="field-title">{{name}}</div>
 							{{#if isTxt}}

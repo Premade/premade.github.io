@@ -714,12 +714,14 @@ $(function() {
 		_.each(options.blocks, function(block, i) {
 			var $block = $('<section>')
 							.addClass(block.objectId)
+							.addClass(block.objectId + '-' + i)
 							.appendTo($container),
 				template = Handlebars.compile(block.html),
 				content = options.content ? options.content[i] : block.content;
 
 			$block.html(template(content));
 
+			// TODO - Take out duplicates
 			App.$pageStyles.append(block.css);
 		});
 
