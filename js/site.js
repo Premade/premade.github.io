@@ -15,8 +15,8 @@ $(function() {
 
 		start: function() {
 			this.$app = this.$el.find('#app');
-			var router = new this.Router;
-			router.start();
+			this.router = new this.Router;
+			this.router.start();
 		}
 
 	}))({el: document.body});
@@ -129,7 +129,7 @@ $(function() {
 			'mouseenter .side-2': 'showSide2',
 			'mouseleave .side-2': 'hideSide2',
 			'click .theme': 'changeTheme',
-			'click .get-html': 'generatePage'
+			'click .generate': 'generatePage'
 		},
 
 		render: function(){
@@ -282,15 +282,51 @@ $(function() {
 		className: 'container-fluid page-edit',
 
 		events: {
-			'change .field': 'updatePreview',
+			'change .field': 'changeField',
+			'click .publish': 'publishPage'
 		},
 
-		updatePreview: function(e) {
+		changeField: function(e) {
 			var $e = $(e.target),
+				index = $e.closest('.edit-block').data('index'),
 				block = $e.closest('.edit-block').data('id'),
 				field = $e.data('key'),
 				val = $e.val();
+			
 			this.$el.find('.preview-html .' + block + ' .' + field).html(val);
+
+			this.blocks[index].content[field] = val;
+		},
+
+		publishPage: function() {
+			var self = this,
+				json = {};
+
+			if (!self.model) self.model = new App.Models.Page();
+			
+			json.blocks = [];
+
+			_.each(this.blocks, function(block){
+
+				var newBlock = {};
+
+				newBlock.objectId = block.objectId;
+				newBlock.fields = block.content;
+
+				json.blocks.push(newBlock);
+
+			});
+
+			self.model.update({
+				data: {
+					json: json
+				},
+				callback: function (page) {
+					App.router.navigate("/#/page/" + page.id, {trigger: true});
+				}
+
+			});
+
 		},
 
 		render: function() {
@@ -304,8 +340,6 @@ $(function() {
 			}
 
 			App.fn.getBlocks(page, function(blocks) {
-
-				console.log(blocks);
 
 				self.$el.html(self.template({
 					blocks: blocks
@@ -338,7 +372,8 @@ $(function() {
 		
 			App.fn.getBlocks(page, function(blocks){
 				App.fn.renderBlocks({
-					blocks: blocks
+					blocks: blocks,
+					$container: self.$el
 				});
 			});
 

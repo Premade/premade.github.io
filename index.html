@@ -33,7 +33,7 @@
 		<div class="main">
 			<div class="title app-ui">
 				<h2>Project Name</h2>
-				<button class="get-html btn btn-action btn-sm">Generate Page</button>
+				<button class="generate btn btn-action btn-sm">Generate Page</button>
 			</div>
 			<div class="preview">
 				<ul class="preview-list app-ui">
@@ -53,7 +53,7 @@
 			<h1 class="logo">Premade</h1>
 			<div class="edit">
 				{{#each blocks}}
-					<div class="edit-block" data-id="{{objectId}}-{{@index}}">
+					<div class="edit-block" data-id="{{objectId}}-{{@index}}" data-index="{{@index}}">
 						{{#each fields.fields}}
 							<div class="field-title">{{name}}</div>
 							{{#if isTxt}}
@@ -61,6 +61,9 @@
 							{{/if}}
 							{{#if isLongTxt}}
 								<textarea class="field form-control" data-key="{{key}}" rows="3">{{content}}</textarea>
+							{{/if}}
+							{{#if isImg}}
+								<input type="file" class="field field-img" data-key="{{key}}" data-url="{{content}}">
 							{{/if}}
 							{{#if helper}}
 							<div class="field-helper">{{helper}}</div>
@@ -73,7 +76,7 @@
 		<div class="main">
 			<div class="title app-ui">
 				<h2>Project Name</h2>
-				<button class="get-html btn btn-action btn-sm">Generate Page</button>
+				<button class="publish btn btn-action btn-sm">Publish Page</button>
 			</div>
 			<div class="preview">
 				<div class="preview-html"></div>
