@@ -237,6 +237,7 @@ $(function() {
 				View: App.Views.EditPageContent,
 				data: { page: page }
 			});
+
 		},
 
 		showSide2: function() {
@@ -322,6 +323,7 @@ $(function() {
 					json: json
 				},
 				callback: function (page) {
+					App.router.navigate("/#/edit/" + page.id);
 					App.router.navigate("/#/page/" + page.id, {trigger: true});
 				}
 
