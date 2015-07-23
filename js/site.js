@@ -81,28 +81,31 @@ $(function() {
 	});
 
 	App.Models.Image = Parse.Object.extend('Image', {
-		uploadAsBlockPreview: function(data, block) {
 
+		upload: function(file, callback) {
 			var self = this,
-				file = data.file,
 				parseFile = new Parse.File(file.name, file);
 
 			parseFile.save().then(function() {
-
 				self.set({
 					url: parseFile,
 					uploader: Parse.User.current()
 				}).save(null, {
 					success: function(img) {
-						data.img = img;
-						data.imgUrl = data.img.get('url').url();
-						data.file = null;
-						block.update(data);
+						callback(img);
 					}, error: function(img, error) {
 						console.log(error);
 					}
-				});
+				})
+			});
+		},
 
+		uploadAsBlockPreview: function(data, block) {
+			this.upload(data.file, function(img) {
+				data.img = img;
+				data.imgUrl = data.img.get('url').url();
+				data.file = null;
+				block.update(data);
 			});
 		}
 	});
@@ -288,15 +291,43 @@ $(function() {
 		},
 
 		changeField: function(e) {
-			var $e = $(e.target),
+
+			var self = this,
+				$e = $(e.target),
 				index = $e.closest('.edit-block').data('index'),
 				block = $e.closest('.edit-block').data('id'),
 				field = $e.data('key'),
-				val = $e.val();
-			
-			this.$el.find('.preview-html .' + block + ' .' + field).html(val);
+				type = $e.data('type'),
+				val = $e.val(),
+				$field = this.$el.find('.preview-html .' + block + ' .' + field);
 
-			this.blocks[index].content[field] = val;
+			switch (type) {
+				case 'txt':
+					$field.html(val);
+					self.blocks[index].content[field] = val;
+					break;
+				case 'longtxt':
+					$field.html(val);
+					self.blocks[index].content[field] = val;
+					break;
+				case 'img':
+					var img = new App.Models.Image();
+					img.upload($e[0].files[0], function(img){
+						val = img.get('url').url();
+						$field.attr('src', val);
+						self.blocks[index].content[field] = val;
+					});
+					break;
+				case 'bgimg':
+					var img = new App.Models.Image();
+					img.upload($e[0].files[0], function(img){
+						val = img.get('url').url();
+						$field.css('background-image', 'url(' + val + ')');
+						self.blocks[index].content[field] = val;
+					});
+					break;
+			}
+
 		},
 
 		publishPage: function() {
@@ -465,7 +496,7 @@ $(function() {
 
 			// Load User Series
 			App.fn.loadComponent({
-				collection: App.userSeries,
+				collection: App.userThemes,
 				View: App.Views.Select,
 				$container: self.$el.find('.update-block-theme'),
 				data: {
@@ -727,6 +758,9 @@ $(function() {
 								field.isLongTxt = true;
 								break;
 							case "img":
+								field.isImg = true;
+								break;
+							case "bgimg":
 								field.isImg = true;
 								break;
 						}

@@ -56,17 +56,28 @@
 					<div class="edit-block" data-id="{{objectId}}-{{@index}}" data-index="{{@index}}">
 						{{#each fields.fields}}
 							<div class="field-title">{{name}}</div>
+							
 							{{#if isTxt}}
-								<input value="{{content}}" class="field field-input form-control" data-key="{{key}}">
+								<input value="{{content}}" 
+									   class="field field-input form-control" 
+									   data-type="{{type}}" 
+									   data-key="{{key}}">
 							{{/if}}
 							{{#if isLongTxt}}
-								<textarea class="field form-control" data-key="{{key}}" rows="3">{{content}}</textarea>
+								<textarea class="field form-control" 
+										  data-key="{{key}}" 
+										  data-type="{{type}}" 
+										  rows="3">{{content}}</textarea>
 							{{/if}}
 							{{#if isImg}}
-								<input type="file" class="field field-img" data-key="{{key}}" data-url="{{content}}">
+								<input type="file" 
+									   class="field field-img" 
+									   data-key="{{key}}" 
+									   data-type="{{type}}" 
+									   data-url="{{content}}">
 							{{/if}}
 							{{#if helper}}
-							<div class="field-helper">{{helper}}</div>
+								<div class="field-helper">{{helper}}</div>
 							{{/if}}
 						{{/each}}
 					</div>
