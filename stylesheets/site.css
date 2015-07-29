@@ -114,26 +114,26 @@ ul.app-ui,
 
 /* line 16, ../sass/site.sass */
 .app-ui .btn-action {
-  color: #fff;
+  color: white;
   background-color: #e74c3c;
   border-color: #e74c3c;
   font-weight: bold;
 }
-/* line 18, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 18, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.0.alpha.19/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:visited {
-  color: #fff;
+  color: white;
 }
-/* line 21, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 21, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.0.alpha.19/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:focus {
-  color: #fff;
+  color: white;
 }
-/* line 24, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 24, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.0.alpha.19/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:hover {
-  color: #fff;
+  color: white;
 }
-/* line 27, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 27, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.0.alpha.19/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:active {
-  color: #fff;
+  color: white;
 }
 /* line 21, ../sass/site.sass */
 .app-ui .btn-action:hover {
@@ -144,13 +144,13 @@ ul.app-ui,
 /* line 26, ../sass/site.sass */
 .page-edit .side,
 .page-edit .side-2 {
-  background: #fff;
+  background: white;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   box-sizing: border-box;
-  border-right: 1px #eee solid;
+  border-right: 1px #eeeeee solid;
 }
 /* line 35, ../sass/site.sass */
 .page-edit .side {
@@ -171,7 +171,7 @@ ul.app-ui,
 /* line 45, ../sass/site.sass */
 .page-edit .logo,
 .page-edit .theme-curr {
-  border-bottom: 1px #eee solid;
+  border-bottom: 1px #eeeeee solid;
 }
 /* line 48, ../sass/site.sass */
 .page-edit .theme-curr-name {
@@ -229,10 +229,10 @@ ul.app-ui,
   margin-left: -15px;
   margin-right: -15px;
   padding: 0 15px 0.75rem;
-  border-bottom: 1px #eee solid;
+  border-bottom: 1px #eeeeee solid;
 }
 /* line 77, ../sass/site.sass */
-.page-edit .title .btn-action {
+.page-edit .title .btn-actions {
   position: absolute;
   right: 15px;
   top: 0.75rem;
@@ -278,7 +278,7 @@ ul.app-ui,
 /* line 104, ../sass/site.sass */
 .page-edit .edit-block {
   padding: 0.75rem 15px;
-  border-bottom: 1px #eee solid;
+  border-bottom: 1px #eeeeee solid;
 }
 /* line 107, ../sass/site.sass */
 .page-edit .edit-block:last-child {
@@ -295,7 +295,7 @@ ul.app-ui,
 }
 /* line 114, ../sass/site.sass */
 .page-edit .field-helper {
-  color: #999;
+  color: #999999;
 }
 /* line 116, ../sass/site.sass */
 .page-edit .field-input {
