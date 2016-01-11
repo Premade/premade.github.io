@@ -136,17 +136,51 @@ $(function() {
 			'click .generate': 'generatePage'
 		},
 
+		
+
 		render: function(){
 
 			var self = this;
 
-			self.currTheme = self.options.theme;
+			if (self.options.blocks) {
+				App.fn.findaBlock(self.options.blocks[0].objectId, function(block) {
+					self.loadPage(block.get("theme"));
+				});
+			} else {
+				self.getDefaultTheme();
+			}
+			
+		},
 
-			self.$el.html(self.template(self.currTheme.attributes));
+		getDefaultTheme: function() {
+			var self = this,
+				themeQuery = new Parse.Query(App.Models.Theme);			
+			themeQuery
+				.equalTo("isDefault", true)
+				.first()
+				.then(function(theme) {
+					self.loadPage(theme);
+				});
+		},
 
-			// Load Theme
-			self.loadThemes();
-			self.loadBlocks(self.collection);
+		loadPage: function(theme) {
+			var self = this;
+				
+			self.currTheme = theme;
+
+			App.fn.findThemeBlocks(self.currTheme, function(blocks) {
+				self.collection = blocks;
+				self.$el.html(self.template(self.currTheme.attributes));
+
+				// Load Theme
+				self.loadThemes();
+				self.loadBlocks(self.collection);
+
+				// Load existing blocks if any
+				if (self.options.blocks) {
+					self.loadBlocksInUse(self.options.blocks);
+				}
+			});
 		},
 
 		loadThemes: function() {
@@ -163,6 +197,7 @@ $(function() {
 		},
 
 		loadBlocks: function(blocks) {
+			console.log(blocks);
 			var self = this;
 			App.fn.loadComponent({
 				collection: blocks,
@@ -202,6 +237,24 @@ $(function() {
 					});
 				}
 			});
+		},
+
+		loadBlocksInUse: function(blocks) {
+			var self = this;
+			// App.fn.loadComponent({
+			// 	collection: blocks,
+			// 	$container: self.$el.find('.preview-list'),
+			// 	View: App.fn.generateView({
+			// 		templateId: '#page-edit-blocks',
+			// 		type: 'collection',
+			// 		tagName: 'ul',
+			// 	}),
+			// 	callback: function(blocks) {
+			// 		self.blocks = blocks;
+			// 		self.loadTypes();
+			// 		self.enableDrag();
+			// 	}
+			// });
 		},
 
 		changeTheme: function (e) {
@@ -288,7 +341,8 @@ $(function() {
 
 		events: {
 			'change .field': 'changeField',
-			'click .publish': 'publishPage'
+			'click .publish': 'publishPage',
+			'click .back': 'backToBlocks'
 		},
 
 		changeField: function(e) {
@@ -361,6 +415,36 @@ $(function() {
 
 			});
 
+		},
+
+		backToBlocks: function() {
+			var self = this,
+				page;
+
+			if (self.model) {
+				page = self.model.get('json');
+			} else {
+				page = self.options.page;
+			}
+
+			App.fn.renderView({
+				View: App.Views.EditPageBlocks,
+				data: page
+			});
+
+			App.fn.renderView = function(options) {
+				var View = options.View, // type of View
+					data = options.data || null, // data obj to render in the view
+					$container = options.$container || App.$app, // container to put the view
+					notInsert = options.notInsert, // put the el in the container or return el as HTML
+					view = new View(data);
+				view.render();
+				if (notInsert) {
+					return view.el.outerHTML;
+				} else {
+					$container.html(view.el);
+				}
+			};
 		},
 
 		render: function() {
@@ -564,23 +648,11 @@ $(function() {
 		},
 
 		new: function() {
-			// Get Default Theme
-			var themeQuery = new Parse.Query(App.Models.Theme);
-
-			themeQuery
-				.equalTo("isDefault", true)
-				.first()
-				.then(function(theme) {
-					App.fn.findThemeBlocks(theme, function(blocks){
-						App.fn.renderView({
-							View: App.Views.EditPageBlocks,
-							data: { 
-								collection: blocks,
-								theme: theme
-							}
-						});
-					});
-				});
+	
+			App.fn.renderView({
+				View: App.Views.EditPageBlocks
+			});
+			
 		},
 
 		login: function() {
@@ -652,7 +724,7 @@ $(function() {
 						break;
 				}
 				data = _.extend({}, options.data, data);
-				console.log(data);
+				// console.log(data);
 				this.$el.html(this.template(data));
 			}
 		});
