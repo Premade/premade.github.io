@@ -72,7 +72,8 @@ $(function() {
 	App.Models.Theme = Parse.Object.extend('Theme');
 
 	App.Collections.Themes =  Parse.Collection.extend({
-		model: App.Models.Theme
+		model: App.Models.Theme,
+		query: (new Parse.Query(App.Models.Theme)).equalTo('isLive', true)
 	});
 
 	App.Collections.UserThemes =  Parse.Collection.extend({
@@ -695,7 +696,7 @@ $(function() {
 	App.fn.findThemeBlocks = function(theme, callback) {
 		var Blocks = Parse.Collection.extend({
 				model: App.Models.Block,
-				query: (new Parse.Query(App.Models.Block)).equalTo('theme', theme)
+				query: (new Parse.Query(App.Models.Block)).equalTo('theme', theme).equalTo('isLive', true)
 			}),
 			blocks = new Blocks();
 
