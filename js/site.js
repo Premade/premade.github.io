@@ -28,7 +28,7 @@ $(function() {
 			data.type = new App.Models.Type().set('objectId', data.type);
 			data.theme = new App.Models.Theme().set('objectId', data.theme);
 			data.content = jQuery.parseJSON(data.content);
-			data.help = jQuery.parseJSON(data.help);
+			data.fields = jQuery.parseJSON(data.fields);
 			data.user = this.get('user') || Parse.User.current();
 
 			if (data.file) {
@@ -558,7 +558,7 @@ $(function() {
 				html:		this.$el.find('#update-block-html').val(),
 				css:		this.$el.find('#update-block-css').val(),
 				content:	this.$el.find('#update-block-content').val(),
-				help:		this.$el.find('#update-block-help').val()
+				fields:		this.$el.find('#update-block-fields').val()
 			});
 		},
 
@@ -857,7 +857,10 @@ $(function() {
 			styles = [];
 
 		_.each(options.blocks, function(block, i) {
-			var $block = $('<section>')
+
+			var themeId = block.theme.objectId
+				$block = $('<section>')
+							.addClass('theme-' + themeId)
 							.addClass(block.objectId)
 							.addClass(block.objectId + '-' + i)
 							.appendTo($container),
@@ -865,6 +868,22 @@ $(function() {
 				content = options.content ? options.content[i] : block.content;
 
 			$block.html(template(content));
+
+			if ($('.theme-' + themeId).length === 1) {
+				
+				var currTheme = App.themes.get(themeId);
+
+				if (currTheme) {
+					App.$pageStyles.append(currTheme.get('css'));
+				} else {
+					currTheme = new App.Models.Theme();
+					currTheme.set("objectId", themeId);
+					currTheme.fetch(function(theme) {
+						App.$pageStyles.append(theme.get('css'));
+					})
+				}
+				
+			}
 
 			if (styles.indexOf(block.objectId) === -1) {
 				styles.push(block.objectId);
