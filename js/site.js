@@ -861,8 +861,8 @@ $(function() {
 			var themeId = block.theme.objectId
 				$block = $('<section>')
 							.addClass('theme-' + themeId)
-							.addClass(block.objectId)
-							.addClass(block.objectId + '-' + i)
+							.addClass('block-' + block.objectId)
+							.addClass('block-' + block.objectId + '-' + i)
 							.appendTo($container),
 				template = Handlebars.compile(block.html),
 				content = options.content ? options.content[i] : block.content;
