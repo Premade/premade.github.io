@@ -1,5 +1,6 @@
 @import "compass"
 @import "type"
+@import "land"
 
 $padding-x: 15px
 $padding-y: $leading/2
@@ -56,6 +57,8 @@ ul.app-ui,
 		&.show
 			+translateX(0)
 	.theme
+		&:hover
+			cursor: pointer
 		padding: $padding-y $padding-x
 	.theme-img
 		width: 100%
