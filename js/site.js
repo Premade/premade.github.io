@@ -3,8 +3,8 @@ $(function() {
 	Parse.$ = jQuery;
 
 	Parse.initialize(
-		"jeMtQiq57iqWpCV9XPUek13bNodxuPMcaUR2MgRz", 
-		"5BYJySV53Ga3DxcG8Aa6k9NMidQqY1dml3B7iKqF");
+		'jeMtQiq57iqWpCV9XPUek13bNodxuPMcaUR2MgRz', 
+		'5BYJySV53Ga3DxcG8Aa6k9NMidQqY1dml3B7iKqF');
 
 	var App = new (Parse.View.extend({
 
@@ -144,7 +144,7 @@ $(function() {
 
 			if (self.options.blocks) {
 				App.fn.findaBlock(self.options.blocks[0].objectId, function(block) {
-					self.loadPage(block.get("theme"));
+					self.loadPage(block.get('theme'));
 				});
 			} else {
 				self.getDefaultTheme();
@@ -156,7 +156,7 @@ $(function() {
 			var self = this,
 				themeQuery = new Parse.Query(App.Models.Theme);			
 			themeQuery
-				.equalTo("isDefault", true)
+				.equalTo('isDefault', true)
 				.first()
 				.then(function(theme) {
 					self.loadPage(theme);
@@ -266,7 +266,7 @@ $(function() {
 			var themeQuery = new Parse.Query(App.Models.Theme);
 
 			themeQuery
-				.equalTo("objectId", id)
+				.equalTo('objectId', id)
 				.first()
 				.then(function(theme) {
 					self.currTheme = theme;
@@ -307,26 +307,52 @@ $(function() {
 
 		enableDrag: function(){
 
+			var $del = this.$el.find('.delete');
+
 			this.$el.find('.block-img').draggable({
-				appendTo: ".preview-list",
-				helper: "clone"
+				appendTo: '.preview-list',
+				helper: 'clone'
 			});
 			
-			this.$el.find(".preview-list").droppable({
-				accept: ".side .block-img",
+			this.$el.find('.preview-list').droppable({
+				accept: '.side .block-img',
 				greedy: false,
 				drop: function(event, ui) {
-					var block = ui.draggable.eq(0);
-					$(this).append(block.clone());
+					var $block = ui.draggable.eq(0),
+						$clone = $block.clone();
+					$(this).append($clone);
+					$clone.draggable({
+						connectToSortable: ".preview-list",
+						appendTo: '.delete',
+						revert: "invalid",
+						drag: function(event, ui) {
+							$(this).css('z-index', 10000);
+						}
+					});
+					$(this).find('.preview-empty').toggle($(this).children().length < 3); // no idea why it's 3
 				}
 			}).sortable({
-				appendTo: ".preview-list",
-				axis: "y",
+				appendTo: '.preview-list',
+				axis: 'y',
 				start: function(event, ui) {
-					// $del.show();
+					$del.show();
 				},
 				stop: function(event, ui) {
-					// $del.hide();
+					$del.hide();
+				}
+			});
+
+			this.$el.find('.delete').droppable({
+				accept: '.preview-list .block-img',
+				over: function(event, ui) {
+					$(this).addClass('active');
+				},
+				out: function(event, ui) {
+					$(this).removeClass('active');
+				},
+				drop: function(event, ui) {
+					ui.draggable.eq(0).remove();
+					$(this).removeClass('active').hide();
 				}
 			});
 		}
@@ -337,7 +363,7 @@ $(function() {
 
 		template: Handlebars.compile($('#content-edit-tpl').html()),
 
-		className: 'container-fluid page-edit',
+		className: 'container-fluid page-edit page-edit-content',
 
 		events: {
 			'change .field': 'changeField',
@@ -409,8 +435,8 @@ $(function() {
 					json: json
 				},
 				callback: function (page) {
-					App.router.navigate("/#/edit/" + page.id);
-					App.router.navigate("/#/page/" + page.id, {trigger: true});
+					App.router.navigate('/#/edit/' + page.id);
+					App.router.navigate('/#/page/' + page.id, {trigger: true});
 				}
 
 			});
@@ -824,16 +850,16 @@ $(function() {
 						field.isLongTxt = false;
 						field.isImg = false;
 						switch (field.type) {
-							case "txt":
+							case 'txt':
 								field.isTxt = true;
 								break;
-							case "longtxt":
+							case 'longtxt':
 								field.isLongTxt = true;
 								break;
-							case "img":
+							case 'img':
 								field.isImg = true;
 								break;
-							case "bgimg":
+							case 'bgimg':
 								field.isImg = true;
 								break;
 						}
@@ -877,7 +903,7 @@ $(function() {
 					App.$pageStyles.append(currTheme.get('css'));
 				} else {
 					currTheme = new App.Models.Theme();
-					currTheme.set("objectId", themeId);
+					currTheme.set('objectId', themeId);
 					currTheme.fetch(function(theme) {
 						App.$pageStyles.append(theme.get('css'));
 					})

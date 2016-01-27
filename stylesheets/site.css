@@ -328,14 +328,14 @@ html {
   opacity: 1;
 }
 
-/* line 12, ../sass/site.sass */
+/* line 13, ../sass/site.sass */
 ul.app-ui,
 .app-ui ul {
   padding: 0;
   list-style: none;
 }
 
-/* line 17, ../sass/site.sass */
+/* line 18, ../sass/site.sass */
 .app-ui .btn-action {
   color: #fff;
   background-color: #e74c3c;
@@ -358,50 +358,90 @@ ul.app-ui,
 .app-ui .btn-action:active {
   color: #fff;
 }
-/* line 22, ../sass/site.sass */
+/* line 23, ../sass/site.sass */
 .app-ui .btn-action:hover {
   background-color: #ea6153;
   border-color: #ea6153;
 }
 
 /* line 27, ../sass/site.sass */
+.page-edit {
+  min-height: 100vh;
+  background-color: #fff;
+}
+/* line 30, ../sass/site.sass */
 .page-edit .side,
 .page-edit .side-2 {
   background: #fff;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   box-sizing: border-box;
   border-right: 1px #eee solid;
 }
-/* line 36, ../sass/site.sass */
+/* line 39, ../sass/site.sass */
 .page-edit .side {
   z-index: 2;
   width: 300px;
-  padding: 0.75rem 0;
 }
-/* line 40, ../sass/site.sass */
+/* line 42, ../sass/site.sass */
 .page-edit .logo {
   color: #e74c3c;
-  padding: 0 15px 0.75rem;
-}
-/* line 43, ../sass/site.sass */
-.page-edit .types,
-.page-edit .theme-curr {
   padding: 0.75rem 15px;
 }
-/* line 46, ../sass/site.sass */
+/* line 45, ../sass/site.sass */
+.page-edit .types {
+  height: calc(100vh - 98px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0.75rem 15px 0;
+}
+/* line 50, ../sass/site.sass */
+.page-edit .delete {
+  position: absolute;
+  height: calc(100vh - 98px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  background-color: #4d4d4d;
+  display: none;
+}
+/* line 59, ../sass/site.sass */
+.page-edit .delete.active {
+  background-color: #e74c3c;
+}
+/* line 61, ../sass/site.sass */
+.page-edit .delete .material-icons {
+  font-size: 48px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 68, ../sass/site.sass */
 .page-edit .logo,
 .page-edit .theme-curr {
   border-bottom: 1px #eee solid;
 }
-/* line 49, ../sass/site.sass */
+/* line 71, ../sass/site.sass */
+.page-edit .theme-curr {
+  padding: 0.75rem 15px;
+}
+/* line 73, ../sass/site.sass */
 .page-edit .theme-curr-name {
   color: #e74c3c;
 }
-/* line 51, ../sass/site.sass */
+/* line 75, ../sass/site.sass */
 .page-edit .side-2 {
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
   z-index: 1;
   left: 300px;
   width: 300px;
@@ -414,51 +454,52 @@ ul.app-ui,
   -webkit-transition: -webkit-transform 0.35s;
   transition: transform 0.35s;
 }
-/* line 57, ../sass/site.sass */
+/* line 84, ../sass/site.sass */
 .page-edit .side-2.show {
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
   transform: translateX(0);
 }
-/* line 59, ../sass/site.sass */
+/* line 86, ../sass/site.sass */
 .page-edit .theme {
   padding: 0.75rem 15px;
 }
-/* line 60, ../sass/site.sass */
+/* line 87, ../sass/site.sass */
 .page-edit .theme:hover {
   cursor: pointer;
 }
-/* line 63, ../sass/site.sass */
+/* line 90, ../sass/site.sass */
 .page-edit .theme-img {
   width: 100%;
 }
-/* line 65, ../sass/site.sass */
+/* line 92, ../sass/site.sass */
 .page-edit .blocks-temp {
   display: none;
 }
-/* line 67, ../sass/site.sass */
+/* line 94, ../sass/site.sass */
 .page-edit .block {
   margin: 0.75rem 0;
 }
-/* line 69, ../sass/site.sass */
+/* line 96, ../sass/site.sass */
 .page-edit .block-img {
   position: relative;
   z-index: 2;
   width: 100%;
 }
-/* line 73, ../sass/site.sass */
+/* line 100, ../sass/site.sass */
 .page-edit .main {
-  padding: 0.75rem 0 0 300px;
+  padding: 0 0 0 300px;
 }
-/* line 75, ../sass/site.sass */
+/* line 102, ../sass/site.sass */
 .page-edit .title {
+  background: #fff;
   margin-left: -15px;
   margin-right: -15px;
-  padding: 0 15px 0.75rem;
+  padding: 0.75rem 15px;
   border-bottom: 1px #eee solid;
 }
-/* line 80, ../sass/site.sass */
+/* line 108, ../sass/site.sass */
 .page-edit .title .btn-actions {
   position: absolute;
   right: 15px;
@@ -466,32 +507,47 @@ ul.app-ui,
   margin-top: -3px;
   margin-right: -9px;
 }
-/* line 86, ../sass/site.sass */
+/* line 114, ../sass/site.sass */
 .page-edit .preview {
+  padding: 80px 0;
   margin-left: -15px;
   margin-right: -15px;
 }
-/* line 89, ../sass/site.sass */
+/* line 118, ../sass/site.sass */
 .page-edit .preview .block-img {
   z-index: 0;
 }
-/* line 91, ../sass/site.sass */
+/* line 120, ../sass/site.sass */
+.page-edit.page-edit-content .preview {
+  padding: 0;
+}
+/* line 122, ../sass/site.sass */
 .page-edit .preview-html,
 .page-edit .preview-list {
-  min-height: calc(100vh - 49px);
+  margin: 0 auto;
   position: relative;
 }
-/* line 95, ../sass/site.sass */
+/* line 126, ../sass/site.sass */
 .page-edit .preview-list {
+  background: #fff;
+  max-width: 600px;
+  min-height: 400px;
   margin-bottom: 0;
+  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
+  border: 1px #eee solid;
 }
-/* line 97, ../sass/site.sass */
+/* line 133, ../sass/site.sass */
 .page-edit .preview-html {
+  display: none;
   border: 0;
   width: 100%;
   overflow-x: hidden;
 }
-/* line 101, ../sass/site.sass */
+/* line 138, ../sass/site.sass */
+.page-edit.page-edit-content .preview-html {
+  display: block;
+}
+/* line 140, ../sass/site.sass */
 .page-edit .preview-empty {
   position: absolute;
   top: 50%;
@@ -502,34 +558,39 @@ ul.app-ui,
   transform: translate(-50%, -50%);
   text-transform: uppercase;
 }
-/* line 107, ../sass/site.sass */
+/* line 146, ../sass/site.sass */
+.page-edit .edit {
+  height: calc(100vh - 49px);
+  overflow-y: scroll;
+}
+/* line 149, ../sass/site.sass */
 .page-edit .edit-block {
   padding: 0.75rem 15px;
   border-bottom: 1px #eee solid;
 }
-/* line 110, ../sass/site.sass */
+/* line 152, ../sass/site.sass */
 .page-edit .edit-block:last-child {
   border-bottom: 0;
 }
-/* line 112, ../sass/site.sass */
+/* line 154, ../sass/site.sass */
 .page-edit .field-title {
   margin-top: 0.75rem;
   font-weight: 500;
 }
-/* line 115, ../sass/site.sass */
+/* line 157, ../sass/site.sass */
 .page-edit .field-title:first-child {
   margin-top: 0;
 }
-/* line 117, ../sass/site.sass */
+/* line 159, ../sass/site.sass */
 .page-edit .field-helper {
   color: #999;
 }
-/* line 119, ../sass/site.sass */
+/* line 161, ../sass/site.sass */
 .page-edit .field-input {
   width: 100%;
   margin: 3px 0;
 }
-/* line 122, ../sass/site.sass */
+/* line 164, ../sass/site.sass */
 .page-edit input.textarea {
   height: 4.5rem;
 }

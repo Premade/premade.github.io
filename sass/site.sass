@@ -8,6 +8,7 @@ $sideW: 300px
 $side2W: $sideW
 $border: 1px #eee solid
 $highlight: #e74c3c
+$bgColor: #fff
 
 ul.app-ui,
 .app-ui ul 
@@ -24,10 +25,12 @@ ul.app-ui,
 		border-color: adjust-lightness($highlight, 5)
 
 .page-edit
+	min-height: 100vh
+	background-color: $bgColor
 	.side,
 	.side-2
 		background: #fff
-		position: absolute
+		position: fixed
 		top: 0
 		left: 0
 		bottom: 0
@@ -36,19 +39,43 @@ ul.app-ui,
 	.side
 		z-index: 2
 		width: $sideW
-		padding: $padding-y 0
 	.logo
 		color: $highlight
-		padding: 0 $padding-x $padding-y
-	.types,
-	.theme-curr
 		padding: $padding-y $padding-x
+	.types
+		height: calc(100vh - 98px)
+		overflow-x: hidden
+		overflow-y: scroll
+		padding: $padding-y $padding-x 0
+	.delete
+		position: absolute
+		height: calc(100vh - 98px)
+		bottom: 0
+		left: 0
+		right: 0
+		z-index: 3
+		background-color: #4d4d4d
+		display: none
+		&.active
+			background-color: $highlight
+		.material-icons
+			font-size: 48px
+			color: #fff
+			position: absolute
+			top: 50%
+			left: 50%
+			+translate(-50%, -50%)
 	.logo,
 	.theme-curr
 		border-bottom: $border
+	.theme-curr
+		padding: $padding-y $padding-x
 	.theme-curr-name
 		color: $highlight
 	.side-2
+		height: 100vh
+		overflow-x: hidden
+		overflow-y: scroll
 		z-index: 1
 		left: $sideW
 		width: $side2W
@@ -71,11 +98,12 @@ ul.app-ui,
 		z-index: 2
 		width: 100%
 	.main
-		padding: $padding-y 0 0 $sideW
+		padding: 0 0 0 $sideW
 	.title
+		background: #fff
 		margin-left: -$padding-x
 		margin-right: -$padding-x
-		padding: 0 $padding-x $padding-y
+		padding: $padding-y $padding-x
 		border-bottom: $border
 	.title .btn-actions
 		position: absolute
@@ -84,26 +112,40 @@ ul.app-ui,
 		margin-top: -3px
 		margin-right: -9px
 	.preview
+		padding: 80px 0
 		margin-left: -$padding-x
 		margin-right: -$padding-x
 		.block-img
 			z-index: 0
+	&.page-edit-content .preview
+		padding: 0
 	.preview-html,
 	.preview-list
-		min-height: calc(100vh - 49px)
+		margin: 0 auto
 		position: relative
 	.preview-list
+		background: #fff
+		max-width: 600px
+		min-height: 400px
 		margin-bottom: 0
+		box-shadow: 0 3px 5px 0 rgba(0,0,0,0.2)
+		border: $border
 	.preview-html
+		display: none
 		border: 0
 		width: 100%
 		overflow-x: hidden
+	&.page-edit-content .preview-html
+		display: block
 	.preview-empty
 		position: absolute
 		top: 50%
 		left: 50%
 		+translate(-50%, -50%)
 		text-transform: uppercase
+	.edit
+		height: calc(100vh - 49px)
+		overflow-y: scroll
 	.edit-block
 		padding: $padding-y $padding-x
 		border-bottom: $border
