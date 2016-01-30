@@ -46,7 +46,7 @@ ul.app-ui,
 	.types
 		height: calc(100vh - 98px)
 		overflow-x: hidden
-		overflow-y: scroll
+		overflow-y: auto
 		padding: $padding-y $padding-x 0
 	.delete
 		position: absolute
@@ -76,7 +76,7 @@ ul.app-ui,
 	.side-2
 		height: 100vh
 		overflow-x: hidden
-		overflow-y: scroll
+		overflow-y: auto
 		z-index: 1
 		left: $sideW
 		width: $side2W
@@ -86,9 +86,14 @@ ul.app-ui,
 			+translateX(0)
 	.theme
 		&:hover
+			opacity: 0.8
 			cursor: pointer
-		padding: $padding-y $padding-x
+		padding: 0 $padding-x
+		margin: $padding-y 0
+	.theme-name
+		font-weight: bold
 	.theme-img
+		margin-top: $padding-y
 		width: 100%
 	.blocks-temp
 		display: none
@@ -171,7 +176,7 @@ ul.app-ui,
 		display: block
 	.edit
 		height: calc(100vh - 49px)
-		overflow-y: scroll
+		overflow-y: auto
 	.edit-block
 		padding: $padding-y $padding-x
 		border-bottom: $border
