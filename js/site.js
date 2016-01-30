@@ -143,7 +143,7 @@ $(function() {
 			var self = this;
 
 			if (self.options.blocks) {
-				App.fn.findaBlock(self.options.blocks[0].objectId, function(block) {
+				App.fn.findBlock(self.options.blocks[0].objectId, function(block) {
 					self.loadPage(block.get('theme'));
 				});
 			} else {
@@ -798,6 +798,17 @@ $(function() {
 			});
 	}
 
+	App.fn.fetchThemes = function(callback) {
+		if (App.themes.length === 0) {
+			App.themes.fetch().then(function(themes) {
+				App.themes = themes;
+				callback();
+			});
+		} else {
+			callback();
+		}
+	}
+
 	App.fn.fetchBlocks = function(callback) {
 		if (App.blocks.length === 0) {
 			App.blocks.fetch().then(function(blocks) {
@@ -809,7 +820,7 @@ $(function() {
 		}
 	}
 
-	App.fn.findaBlock = function(id, callback) {
+	App.fn.findBlock = function(id, callback) {
 		_.each(App.blocks.models, function(block){
 			if (id === block.id) {
 				callback(block);
@@ -825,7 +836,7 @@ $(function() {
 
 			_.each(page.blocks, function(b, i){
 
-				App.fn.findaBlock(page.blocks[i].objectId, function(block){
+				App.fn.findBlock(page.blocks[i].objectId, function(block) {
 
 					var jsonBlock = block.toJSON();
 
@@ -870,45 +881,66 @@ $(function() {
 
 	App.fn.renderBlocks = function(options) {
 
-		App.$pageStyles.empty();
-
 		var $container = options.$container || App.$app,
-			styles = [];
+			html = '',
+			style = {
+				themes: [],
+				blocks: []
+			};
 
 		_.each(options.blocks, function(block, i) {
 
-			var themeId = block.theme.objectId
+			var themeId = block.theme.objectId,
+				blockId = block.objectId,
 				$block = $('<section>')
 							.addClass('theme-' + themeId)
-							.addClass('block-' + block.objectId)
-							.addClass('block-' + block.objectId + '-' + i)
-							.appendTo($container),
+							.addClass('block-' + blockId)
+							.addClass('block-' + blockId + '-' + i),
 				template = Handlebars.compile(block.html),
 				content = options.content ? options.content[i] : block.content;
 
+			console.log(block.theme);
+
 			$block.html(template(content));
+			html += $block[0].outerHTML;
 
-			if ($('.theme-' + themeId).length === 1) {
 				
-				var currTheme = App.themes.get(themeId);
-
-				if (currTheme) {
-					App.$pageStyles.append(currTheme.get('css'));
-				} else {
-					currTheme = new App.Models.Theme();
-					currTheme.set('objectId', themeId);
-					currTheme.fetch(function(theme) {
-						App.$pageStyles.append(theme.get('css'));
-					})
-				}
-				
-			}
-
-			if (styles.indexOf(block.objectId) === -1) {
-				styles.push(block.objectId);
-				App.$pageStyles.append(block.css);
+			if (style.blocks.indexOf(blockId) === -1) {
+				// Only push the # of blocks with in options.blocks
+				style.blocks.push(i);
 			}
 			
+			if (style.themes.indexOf(themeId) === -1) {
+				style.themes.push(themeId);
+			}
+			
+		});
+
+		// Load HTMl
+		$container.append(html);
+
+		// Load CSS
+		App.fn.getCSS(options.blocks, style);
+
+	}
+
+	App.fn.getCSS = function(blocks, style) {
+
+		// debugger;
+		var css = '';
+
+		App.fn.fetchThemes(function(){
+			// Themes
+			_.each(style.themes, function(theme, i) {
+				css += App.themes.get(theme).get('css');
+			});
+			
+			// Blocks
+			_.each(style.blocks, function(num, i) {
+				css += blocks[num].css;
+			});
+
+			App.$pageStyles.html(css);
 		});
 
 	}
