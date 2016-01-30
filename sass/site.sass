@@ -9,6 +9,7 @@ $side2W: $sideW
 $border: 1px #eee solid
 $highlight: #e74c3c
 $bgColor: #fff
+$placeHolderHeight: 120px
 
 ul.app-ui,
 .app-ui ul 
@@ -93,6 +94,7 @@ ul.app-ui,
 		display: none
 	.block
 		margin: $padding-y 0
+		width: 100%
 	.block-img
 		position: relative
 		z-index: 2
@@ -126,10 +128,40 @@ ul.app-ui,
 	.preview-list
 		background: #fff
 		max-width: 600px
-		min-height: 400px
+		min-height: $placeHolderHeight
 		margin-bottom: 0
 		box-shadow: 0 3px 5px 0 rgba(0,0,0,0.2)
 		border: $border
+		.block
+			margin: 0
+			width: 100% !important
+			height: auto !important
+			&.ui-draggable-dragging,
+			&.ui-sortable-helper
+				box-shadow: 0 20px 50px 0 rgba(0,0,0,0.5)
+			&.ui-draggable-dragging,
+				width: 260px !important
+	.preview-empty
+		display: none
+		height: 400px
+		text-align: center
+		text-transform: uppercase
+		h3 
+			line-height: 400px
+		&:last-child
+			display: block
+	.preview-placeholder
+		height: $placeHolderHeight
+		width: 100%
+		position: relative
+		&:before
+			content: ''
+			background: #f5f5f5
+			position: absolute
+			top: 10px
+			right: 10px
+			bottom: 10px
+			left: 10px
 	.preview-html
 		display: none
 		border: 0
@@ -137,12 +169,6 @@ ul.app-ui,
 		overflow-x: hidden
 	&.page-edit-content .preview-html
 		display: block
-	.preview-empty
-		position: absolute
-		top: 50%
-		left: 50%
-		+translate(-50%, -50%)
-		text-transform: uppercase
 	.edit
 		height: calc(100vh - 49px)
 		overflow-y: scroll

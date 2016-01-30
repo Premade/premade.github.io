@@ -279,7 +279,7 @@ $(function() {
 
 		generatePage: function() {
 			var self = this,
-				$blocks = self.$el.find('.preview .block-img'),
+				$blocks = self.$el.find('.preview-list .block'),
 				page = {};
 
 			page.blocks = [];
@@ -309,31 +309,24 @@ $(function() {
 
 			var $del = this.$el.find('.delete');
 
-			this.$el.find('.block-img').draggable({
+			this.$el.find('.block').draggable({
 				appendTo: '.preview-list',
-				helper: 'clone'
+				helper: 'clone',
+				connectToSortable: '.preview-list',
+				start: function(event, ui) {
+					$(this).css('z-index', 10000);
+				},
+				stop: function(event, ui) {
+					$(this).css('z-index', 0);
+				}
 			});
 			
 			this.$el.find('.preview-list').droppable({
-				accept: '.side .block-img',
-				greedy: false,
-				drop: function(event, ui) {
-					var $block = ui.draggable.eq(0),
-						$clone = $block.clone();
-					$(this).append($clone);
-					$clone.draggable({
-						connectToSortable: ".preview-list",
-						appendTo: '.delete',
-						revert: "invalid",
-						drag: function(event, ui) {
-							$(this).css('z-index', 10000);
-						}
-					});
-					$(this).find('.preview-empty').toggle($(this).children().length < 3); // no idea why it's 3
-				}
+				accept: '.side .block',
+				greedy: false
 			}).sortable({
 				appendTo: '.preview-list',
-				axis: 'y',
+				placeholder: "preview-placeholder",
 				start: function(event, ui) {
 					$del.show();
 				},
@@ -343,7 +336,7 @@ $(function() {
 			});
 
 			this.$el.find('.delete').droppable({
-				accept: '.preview-list .block-img',
+				accept: '.preview-list .block',
 				over: function(event, ui) {
 					$(this).addClass('active');
 				},

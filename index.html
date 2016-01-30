@@ -142,8 +142,8 @@
 	
 	<script id="page-edit-blocks" type="text/x-handlebars-template">
 		{{#each items}}
-			<li class="block" id={{objectId}}>
-				<img class="block-img" src="{{imgUrl}}" alt="{{name}}" data-id="{{objectId}}"/>
+			<li class="block" id="{{objectId}}" data-id="{{objectId}}">
+				<img class="block-img" src="{{imgUrl}}" alt="{{name}}"/>
 			</li>
 		{{/each}}
 	</script>
