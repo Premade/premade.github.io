@@ -136,25 +136,29 @@ $(function() {
 			'click .generate': 'generatePage'
 		},
 
-		
-
 		render: function(){
 
 			var self = this;
 
-			if (self.options.blocks) {
-				App.fn.findBlock(self.options.blocks[0].objectId, function(block) {
-					self.loadPage(block.get('theme'));
-				});
-			} else {
+			// If it's a new page
+			if (!self.model) {
 				self.getDefaultTheme();
+				return;
 			}
+
+			self.page = self.model.get('json');
+
+			App.fn.findBlock(self.page.blocks[0].objectId, function(block) {
+				block.get('theme').fetch().then(function(theme){
+					self.loadPage(theme, self.page);	
+				})
+			});
 			
 		},
 
 		getDefaultTheme: function() {
 			var self = this,
-				themeQuery = new Parse.Query(App.Models.Theme);			
+				themeQuery = new Parse.Query(App.Models.Theme);
 			themeQuery
 				.equalTo('isDefault', true)
 				.first()
@@ -164,6 +168,7 @@ $(function() {
 		},
 
 		loadPage: function(theme) {
+
 			var self = this;
 				
 			self.currTheme = theme;
@@ -177,10 +182,10 @@ $(function() {
 				self.loadBlocks(self.collection);
 
 				// Load existing blocks if any
-				if (self.options.blocks) {
-					self.loadBlocksInUse(self.options.blocks);
+				if (self.page) {
+					self.loadExistingBlocks(self.page);
 				}
-			});
+			});	
 		},
 
 		loadThemes: function() {
@@ -197,7 +202,6 @@ $(function() {
 		},
 
 		loadBlocks: function(blocks) {
-			console.log(blocks);
 			var self = this;
 			App.fn.loadComponent({
 				collection: blocks,
@@ -238,25 +242,7 @@ $(function() {
 				}
 			});
 		},
-
-		loadBlocksInUse: function(blocks) {
-			var self = this;
-			// App.fn.loadComponent({
-			// 	collection: blocks,
-			// 	$container: self.$el.find('.preview-list'),
-			// 	View: App.fn.generateView({
-			// 		templateId: '#page-edit-blocks',
-			// 		type: 'collection',
-			// 		tagName: 'ul',
-			// 	}),
-			// 	callback: function(blocks) {
-			// 		self.blocks = blocks;
-			// 		self.loadTypes();
-			// 		self.enableDrag();
-			// 	}
-			// });
-		},
-
+		
 		changeTheme: function (e) {
 			var self = this,
 				id = $(e.target).closest('.theme').data('id');
@@ -277,24 +263,56 @@ $(function() {
 				});
 		},
 
+		loadExistingBlocks: function(page) {
+
+			var self = this;
+				template = Handlebars.compile($('#page-edit-blocks-with-content').html());
+
+			App.fn.getBlocks(page, function(blocks) {
+
+				// Get content on to it.
+				_.each(blocks, function(block, i){
+					block.content = JSON.stringify(page.blocks[i].content);
+				});
+
+				self.$el.find('.preview-list').append(template({
+					items: blocks
+				}));
+
+			});
+		},
+
 		generatePage: function() {
 			var self = this,
 				$blocks = self.$el.find('.preview-list .block'),
 				page = {};
 
-			page.blocks = [];
+				page.blocks = [];
 
-			_.each($blocks, function($b, i){
-				page.blocks[i] = {
-					objectId: $blocks.eq(i).data('id')
-				};
-			});
+				_.each($blocks, function($b, i){
+					page.blocks[i] = {
+						objectId: $blocks.eq(i).data('id'),
+						content: $blocks.eq(i).data('content')
+					};
+				});
 
-			App.fn.renderView({
-				View: App.Views.EditPageContent,
-				data: { page: page }
-			});
+			if (self.page) {
 
+				self.model.update({
+					data: {
+						json: page
+					},
+					callback: function (page) {
+						App.router.navigate('/#/edit/' + page.id, {trigger: true});
+					}
+
+				});
+			} else {
+				App.fn.renderView({
+					View: App.Views.EditPageContent,
+					data: { page: page }
+				});
+			}
 		},
 
 		showSide2: function() {
@@ -309,9 +327,9 @@ $(function() {
 
 			var $del = this.$el.find('.delete');
 
-			this.$el.find('.block').draggable({
-				appendTo: '.preview-list',
+			this.$el.find('.side .block').draggable({
 				helper: 'clone',
+				appendTo: '.preview-list',
 				connectToSortable: '.preview-list',
 				start: function(event, ui) {
 					$(this).css('z-index', 10000);
@@ -373,7 +391,9 @@ $(function() {
 				field = $e.data('key'),
 				type = $e.data('type'),
 				val = $e.val(),
-				$field = this.$el.find('.preview-html .' + block + ' .' + field);
+				$field = this.$el.find('.preview-html .block-' + block + ' .' + field);
+
+			console.log(self.blocks);
 
 			switch (type) {
 				case 'txt':
@@ -401,10 +421,9 @@ $(function() {
 					});
 					break;
 			}
-
 		},
 
-		publishPage: function() {
+		savePage: function(url) {
 			var self = this,
 				json = {};
 
@@ -412,12 +431,12 @@ $(function() {
 			
 			json.blocks = [];
 
-			_.each(this.blocks, function(block){
+			_.each(self.blocks, function(block){
 
 				var newBlock = {};
 
 				newBlock.objectId = block.objectId;
-				newBlock.fields = block.content;
+				newBlock.content = block.content;
 
 				json.blocks.push(newBlock);
 
@@ -428,42 +447,17 @@ $(function() {
 					json: json
 				},
 				callback: function (page) {
-					App.router.navigate('/#/edit/' + page.id);
-					App.router.navigate('/#/page/' + page.id, {trigger: true});
+					App.router.navigate('/#/' + url + '/' + page.id, {trigger: true});
 				}
-
 			});
+		},
 
+		publishPage: function() {
+			this.savePage('page');
 		},
 
 		backToBlocks: function() {
-			var self = this,
-				page;
-
-			if (self.model) {
-				page = self.model.get('json');
-			} else {
-				page = self.options.page;
-			}
-
-			App.fn.renderView({
-				View: App.Views.EditPageBlocks,
-				data: page
-			});
-
-			App.fn.renderView = function(options) {
-				var View = options.View, // type of View
-					data = options.data || null, // data obj to render in the view
-					$container = options.$container || App.$app, // container to put the view
-					notInsert = options.notInsert, // put the el in the container or return el as HTML
-					view = new View(data);
-				view.render();
-				if (notInsert) {
-					return view.el.outerHTML;
-				} else {
-					$container.html(view.el);
-				}
-			};
+			this.savePage('build');
 		},
 
 		render: function() {
@@ -488,6 +482,11 @@ $(function() {
 				});
 
 				self.blocks = blocks;
+
+				// Temp - hide back when the page has not been published before
+				if (!self.model) {
+					self.$el.find('.back').hide();
+				}
 			});
 
 		}
@@ -508,6 +507,7 @@ $(function() {
 			}
 		
 			App.fn.getBlocks(page, function(blocks){
+				console.log(blocks);
 				App.fn.renderBlocks({
 					blocks: blocks,
 					$container: self.$el
@@ -653,8 +653,9 @@ $(function() {
 		routes: {
 			'': 'landing',
 			'new': 'new',
-			'page/:id': 'page',
+			'build/:id': 'build',
 			'edit/:id': 'edit',
+			'page/:id': 'page',
 			'login': 'login',
 			'dev': 'dev',
 			'add-block': 'addBlock',
@@ -667,11 +668,39 @@ $(function() {
 		},
 
 		new: function() {
-	
 			App.fn.renderView({
 				View: App.Views.EditPageBlocks
 			});
-			
+		},
+
+		build: function(id) {
+			var query = new Parse.Query(App.Models.Page);
+			query.get(id).then(function(page){
+				App.fn.renderView({
+					View: App.Views.EditPageBlocks,
+					data: { model: page }
+				});
+			});
+		},
+
+		edit: function(id) {
+			var query = new Parse.Query(App.Models.Page);
+			query.get(id).then(function(page){
+				App.fn.renderView({
+					View: App.Views.EditPageContent,
+					data: { model: page }
+				});
+			});
+		},
+
+		page: function(id) {
+			var query = new Parse.Query(App.Models.Page);
+			query.get(id).then(function(page){
+				App.fn.renderView({
+					View: App.Views.Page,
+					data: { model: page }
+				});
+			});
 		},
 
 		login: function() {
@@ -695,26 +724,6 @@ $(function() {
 				View: App.Views.UpdateBlock,
 			});
 		},
-
-		edit: function(id) {
-			var query = new Parse.Query(App.Models.Page);
-			query.get(id).then(function(page){
-				App.fn.renderView({
-					View: App.Views.EditPageContent,
-					data: { model: page }
-				});
-			});
-		},
-
-		page: function(id) {
-			var query = new Parse.Query(App.Models.Page);
-			query.get(id).then(function(page){
-				App.fn.renderView({
-					View: App.Views.Page,
-					data: { model: page }
-				});
-			});
-		}
 
 	});
 
@@ -821,11 +830,13 @@ $(function() {
 	}
 
 	App.fn.findBlock = function(id, callback) {
-		_.each(App.blocks.models, function(block){
-			if (id === block.id) {
-				callback(block);
-			}
-		})
+		App.fn.fetchBlocks(function(){
+			_.each(App.blocks.models, function(block){
+				if (id === block.id) {
+					callback(block);
+				}
+			})
+		});
 	}
 
 	App.fn.getBlocks = function(page, callback) {
@@ -841,7 +852,7 @@ $(function() {
 					var jsonBlock = block.toJSON();
 
 					// Update block content with page content
-					if (page.blocks[i].fields) jsonBlock.content = page.blocks[i].fields;
+					if (page.blocks[i].content) jsonBlock.content = page.blocks[i].content;
 					
 					
 					_.each(jsonBlock.fields.fields, function(field) {
@@ -898,8 +909,6 @@ $(function() {
 							.addClass('block-' + blockId + '-' + i),
 				template = Handlebars.compile(block.html),
 				content = options.content ? options.content[i] : block.content;
-
-			console.log(block.theme);
 
 			$block.html(template(content));
 			html += $block[0].outerHTML;
