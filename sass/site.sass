@@ -1,0 +1,198 @@
+@import "compass"
+@import "type"
+@import "land"
+
+$padding-x: 15px
+$padding-y: $leading/2
+$sideW: 300px
+$side2W: $sideW
+$border: 1px #eee solid
+$highlight: #e74c3c
+$bgColor: #fff
+$placeHolderHeight: 120px
+
+ul.app-ui,
+.app-ui ul 
+	padding: 0
+	list-style: none
+	
+.app-ui .btn-action
+	+link-colors(#fff, #fff, #fff, #fff, #fff)
+	background-color: $highlight
+	border-color: $highlight
+	font-weight: bold
+	&:hover
+		background-color: adjust-lightness($highlight, 5)
+		border-color: adjust-lightness($highlight, 5)
+
+.page-edit
+	min-height: 100vh
+	background-color: $bgColor
+	.side,
+	.side-2
+		background: #fff
+		position: fixed
+		top: 0
+		left: 0
+		bottom: 0
+		box-sizing: border-box
+		border-right: $border
+	.side
+		z-index: 2
+		width: $sideW
+	.logo
+		color: $highlight
+		padding: $padding-y $padding-x
+	.types
+		height: calc(100vh - 98px)
+		overflow-x: hidden
+		overflow-y: auto
+		padding: $padding-y $padding-x 0
+	.delete
+		position: absolute
+		height: calc(100vh - 98px)
+		bottom: 0
+		left: 0
+		right: 0
+		z-index: 3
+		background-color: #4d4d4d
+		display: none
+		&.active
+			background-color: $highlight
+		.material-icons
+			font-size: 48px
+			color: #fff
+			position: absolute
+			top: 50%
+			left: 50%
+			+translate(-50%, -50%)
+	.logo,
+	.theme-curr
+		border-bottom: $border
+	.theme-curr
+		padding: $padding-y $padding-x
+		&:hover
+			cursor: pointer
+	.theme-curr-name
+		color: $highlight
+	.side-2
+		height: 100vh
+		overflow-x: hidden
+		overflow-y: auto
+		z-index: 1
+		left: $sideW
+		width: $side2W
+		+translateX(-100%)
+		+single-transition(transform, .35s)
+		&.show
+			+translateX(0)
+	.theme
+		&:hover
+			opacity: 0.8
+			cursor: pointer
+		padding: 0 $padding-x
+		margin: $padding-y 0
+	.theme-name
+		font-weight: bold
+	.theme-img
+		margin-top: $padding-y
+		width: 100%
+	.blocks-temp
+		display: none
+	.block
+		margin: $padding-y 0
+		width: 100%
+	.block-img
+		position: relative
+		z-index: 2
+		width: 100%
+	.main
+		padding: 0 0 0 $sideW
+	.title
+		background: #fff
+		margin-left: -$padding-x
+		margin-right: -$padding-x
+		padding: $padding-y $padding-x
+		border-bottom: $border
+	.title .btn-actions
+		position: absolute
+		right: $padding-x
+		top: $padding-y
+		margin-top: -3px
+		margin-right: -9px
+	.preview
+		padding: 80px 0
+		margin-left: -$padding-x
+		margin-right: -$padding-x
+		.block-img
+			z-index: 0
+	&.page-edit-content .preview
+		padding: 0
+	.preview-html,
+	.preview-list
+		margin: 0 auto
+		position: relative
+	.preview-list
+		background: #fff
+		max-width: 600px
+		min-height: $placeHolderHeight
+		margin-bottom: 0
+		box-shadow: 0 3px 5px 0 rgba(0,0,0,0.2)
+		border: $border
+		.block
+			margin: 0
+			width: 100% !important
+			height: auto !important
+			&.ui-draggable-dragging,
+			&.ui-sortable-helper
+				box-shadow: 0 20px 50px 0 rgba(0,0,0,0.5)
+			&.ui-draggable-dragging,
+				width: 260px !important
+	.preview-empty
+		display: none
+		height: 400px
+		text-align: center
+		text-transform: uppercase
+		h3 
+			line-height: 400px
+		&:last-child
+			display: block
+	.preview-placeholder
+		height: $placeHolderHeight
+		width: 100%
+		position: relative
+		&:before
+			content: ''
+			background: #f5f5f5
+			position: absolute
+			top: 10px
+			right: 10px
+			bottom: 10px
+			left: 10px
+	.preview-html
+		display: none
+		border: 0
+		width: 100%
+		overflow-x: hidden
+	&.page-edit-content .preview-html
+		display: block
+	.edit
+		height: calc(100vh - 49px)
+		overflow-y: auto
+	.edit-block
+		padding: $padding-y $padding-x
+		border-bottom: $border
+		&:last-child
+			border-bottom: 0
+	.field-title
+		margin-top: $padding-y
+		font-weight: 500
+		&:first-child
+			margin-top: 0
+	.field-helper
+		color: #999
+	.field-input
+		width: 100%
+		margin: 3px 0
+	input.textarea
+		height: $leading * 3

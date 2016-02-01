@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Premade</title>
+	<!-- Stylesheet -->
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="stylesheets/site.css">
+	<style id="page-styles"></style>
+</head>
+<body>
+
+	<div id="app"></div>
+
+	<script id="landing-tpl" type="text/x-handlebars-template">
+		<div class="land-container">
+			<div class="land-top">
+				<h1 class="land-logo-h1">Premade.io</h1>
+			</div>
+			<div class="land-middle">
+				<div class="land-title">Coming Soon</div>
+				<div class="land-slogan">Drag & drop webpage builder with thousands of pre-made content&nbsp;blocks.</div>
+				<!-- Begin MailChimp Signup Form -->
+				<div id="mc_embed_signup">
+					<form action="//premade.us12.list-manage.com/subscribe/post?u=1078ebfbc262838892f0d6e13&amp;id=c81f66d706" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+						<div id="mc_embed_signup_scroll">
+							<div class="mc-field-group">
+								<label for="mce-EMAIL"></label>
+								<input type="email" value="" name="EMAIL" class="required email land-input" id="mce-EMAIL" placeholder="YOUR EMAIL ADDRESS">
+								<input type="submit" value="Get Notified" name="subscribe" id="mc-embedded-subscribe" class="button land-btn">
+							</div>
+							<div id="mce-responses" class="clear">
+							<div class="response" id="mce-error-response" style="display:none"></div>
+							<div class="response" id="mce-success-response" style="display:none"></div>
+							</div>   
+							<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+							<div style="position: absolute; left: -5000px;" aria-hidden="true">
+								<input type="text" name="b_1078ebfbc262838892f0d6e13_c81f66d706" tabindex="-1" value="">
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--End mc_embed_signup-->
+			</div>
+			<div class="land-bottom">
+				<a href="#" class="land-a" target="_blank" rel="nofollow">About</a> &nbsp;&bull;&nbsp; 
+				<a href="https://medium.com/premade-io" class="land-a" target="_blank" rel="nofollow">Medium</a> &nbsp;&bull;&nbsp; 
+				<a href="https://github.com/moyicat/premade.io" class="land-a" target="_blank" rel="nofollow">GitHub</a> &nbsp;&bull;&nbsp; 
+				<a href="https://twitter.com/HelloPremade" class="land-a" target="_blank" rel="nofollow">Twitter</a>
+			</div>
+		</div>
+	</script>
+
+	<script id="page-edit-tpl" type="text/x-handlebars-template">
+
+		<div class="side app-ui">
+			<h1 class="logo">Premade.io</h1>
+			<div class="theme-curr">
+				Theme: <span class="theme-curr-name">{{name}}</span>
+			</div>
+			<div class="types">
+			</div>
+			<div class="blocks-temp"></div>
+			<div class="delete">
+				<i class="material-icons">close</i>
+			</div>
+		</div>
+		<div class="side-2 app-ui"></div>
+		<div class="main">
+			<div class="title app-ui">
+				<h2>Project Name</h2>
+				<div class="btn-actions">
+					<button class="generate btn btn-action btn-sm">Generate Page</button>
+				</div>
+			</div>
+			<div class="preview">
+				<ul class="preview-list app-ui">
+					<li class="preview-empty">
+						<h3>Drag Blocks Here</h3>
+					</li>
+				</ul>
+				<div class="preview-html"></div>
+			</div>
+		</div>
+
+	</script>
+
+	<script id="content-edit-tpl" type="text/x-handlebars-template">
+
+		<div class="side app-ui">
+			<h1 class="logo">Premade.io</h1>
+			<div class="edit">
+				{{#each blocks}}
+					<div class="edit-block" data-id="{{objectId}}-{{@index}}" data-index="{{@index}}">
+						{{#each fields.fields}}
+							<div class="field-title">{{name}}</div>
+							
+							{{#if isTxt}}
+								<input value="{{content}}" 
+									   class="field field-input form-control" 
+									   data-type="{{type}}" 
+									   data-key="{{key}}">
+							{{/if}}
+							{{#if isLongTxt}}
+								<textarea class="field form-control" 
+										  data-key="{{key}}" 
+										  data-type="{{type}}" 
+										  rows="3">{{content}}</textarea>
+							{{/if}}
+							{{#if isImg}}
+								<input type="file" 
+									   class="field field-img" 
+									   data-key="{{key}}" 
+									   data-type="{{type}}" 
+									   data-url="{{content}}">
+							{{/if}}
+							{{#if helper}}
+								<div class="field-helper">{{helper}}</div>
+							{{/if}}
+						{{/each}}
+					</div>
+				{{/each}}
+			</div>
+		</div>
+		<div class="main">
+			<div class="title app-ui">
+				<h2>Project Name</h2>
+				<div class="btn-actions">
+					<button class="back btn btn-sm btn-link">Back</button>
+					<button class="publish btn btn-sm btn-action">Publish Page</button>
+				</div>
+			</div>
+			<div class="preview">
+				<div class="preview-html"></div>
+			</div>
+		</div>
+
+	</script>
+	
+	<script id="page-edit-blocks-with-content" type="text/x-handlebars-template">
+		{{#each items}}
+			<li class="block" id="{{objectId}}" data-id="{{objectId}}" data-content="{{content}}">
+				<img class="block-img" src="{{imgUrl}}" alt="{{name}}"/>
+			</li>
+		{{/each}}
+	</script>
+
+	<script id="page-edit-blocks" type="text/x-handlebars-template">
+		{{#each items}}
+			<li class="block" id="{{objectId}}" data-id="{{objectId}}">
+				<img class="block-img" src="{{imgUrl}}" alt="{{name}}"/>
+			</li>
+		{{/each}}
+	</script>
+	
+	<script id="page-edit-types" type="text/x-handlebars-template">
+		{{#each items}}
+			<li class="type" data-id="{{objectId}}">
+				<div class="type-label">{{name}}</div>
+				<ul class="blocks"id="{{objectId}}"></ul>
+			</li>
+		{{/each}}
+	</script>
+
+	<script id="page-edit-themes" type="text/x-handlebars-template">
+		{{#each items}}
+			<li class="theme" data-id="{{objectId}}">
+				<div class="theme-title">
+					<span class="theme-name">{{name}}</span>
+					by
+					<a href="{{authorUrl}}" target="_blank">{{author}}</a>
+				</div>
+				<img class="theme-img" src="{{imgUrl}}" alt="{{name}}"/>
+			</li>
+		{{/each}}
+	</script>
+
+	<script id="page-edit-content-txt" type="text/x-handlebars-template">
+		<div>
+			<label>{{name}}</label>
+			<input />
+		</div>
+	</script>
+
+	<script id="page-edit-content-img" type="text/x-handlebars-template">
+		<div>
+			<label>{{name}}</label>
+			<input />
+		</div>
+	</script>
+
+	<script id="login-tpl" type="text/x-handlebars-template">
+		<form class="login-form">
+			<input type="text" name="username" placeholder="Username" required="required" autofocus="">
+			<input type="password" name="password" placeholder="Password" required="required">
+			<button type="submit">Sign in</button>
+		</form>
+	</script>
+
+	<script id="dev-tpl" type="text/x-handlebars-template">
+		<a href="#/add">Add Block</a>
+	</script>
+
+	<script id="update-block-tpl" type="text/x-handlebars-template">
+		<form class="update-block-form">
+			<div class="form-group update-block-type"></div>
+			<div class="form-group update-block-theme"></div>
+			<div class="form-group">
+				<label for="update-block-name">Block Name</label>
+				<input class="form-control" id="update-block-name" placeholder="" name="name">
+			</div>
+			<div class="form-group">
+				<label for="update-block-file">Preview Image</label>
+				<input type="file" id="update-block-file" name="img">
+				<p class="help-block">600px wide, smaller than 2MB</p>
+			</div>
+			<div class="form-group">
+				<label for="update-block-html">HTML</label>
+				<textarea class="form-control" id="update-block-html" name="html" rows="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="update-block-css">CSS</label>
+				<textarea class="form-control" id="update-block-css" name="css" rows="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="update-block-content">Default Content</label>
+				<textarea class="form-control" id="update-block-content" name="content" rows="3"></textarea>
+				<p class="help-block">in JSON</p>
+			</div>
+			</div>
+			<div class="form-group">
+				<label for="update-block-fields">Define Fields</label>
+				<textarea class="form-control" id="update-block-help" name="help" rows="3"></textarea>
+				<p class="help-block">in JSON</p>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-default">Add</button>
+			</div>
+		</form>
+	</script>
+
+	<script id="select-tpl" type="text/x-handlebars-template">
+		<label for="update-block-{{field}}">{{label}}</label>
+		<select class="form-control" id="update-block-{{field}}" name="{{field}}">
+			{{#each items}}
+				<option value="{{objectId}}">{{name}}</option>
+			{{/each}}
+		</select>
+	</script>
+
+	<!-- Javascript -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+	<script src="//www.parsecdn.com/js/parse-1.4.2.min.js"></script>
+	<script src="//cdn.jsdelivr.net/handlebarsjs/3.0.3/handlebars.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="js/site.js"></script>
+</body>
+</html>
