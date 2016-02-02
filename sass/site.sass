@@ -11,6 +11,9 @@ $highlight: #e74c3c
 $bgColor: #fff
 $placeHolderHeight: 120px
 
+.special-highlight
+	border: 1px dashed $highlight !important
+
 ul.app-ui,
 .app-ui ul 
 	padding: 0
@@ -102,6 +105,8 @@ ul.app-ui,
 	.block
 		margin: $padding-y 0
 		width: 100%
+		&.ui-draggable-dragging
+			z-index: 1000
 	.block-img
 		position: relative
 		z-index: 2
@@ -146,7 +151,7 @@ ul.app-ui,
 			&.ui-draggable-dragging,
 			&.ui-sortable-helper
 				box-shadow: 0 20px 50px 0 rgba(0,0,0,0.5)
-			&.ui-draggable-dragging,
+			&.ui-draggable-dragging
 				width: 260px !important
 	.preview-empty
 		display: none

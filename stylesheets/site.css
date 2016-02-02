@@ -219,13 +219,14 @@ html {
   right: 0;
   bottom: 0;
   left: 0;
+  background-color: #000;
   background-image: url("../img/land-bg.png");
   background-size: cover;
   background-position: center center;
   text-align: left;
   color: #fff;
 }
-/* line 19, ../sass/_land.sass */
+/* line 20, ../sass/_land.sass */
 .land-container:before {
   content: "";
   position: absolute;
@@ -237,7 +238,7 @@ html {
   background-color: #16171c;
 }
 
-/* line 29, ../sass/_land.sass */
+/* line 30, ../sass/_land.sass */
 .land-top,
 .land-middle,
 .land-bottom {
@@ -246,12 +247,12 @@ html {
   right: 15vw;
 }
 
-/* line 36, ../sass/_land.sass */
+/* line 37, ../sass/_land.sass */
 .land-top {
   top: 40px;
 }
 
-/* line 39, ../sass/_land.sass */
+/* line 40, ../sass/_land.sass */
 .land-middle {
   top: 50%;
   -moz-transform: translateY(-50%);
@@ -260,12 +261,12 @@ html {
   transform: translateY(-50%);
 }
 
-/* line 43, ../sass/_land.sass */
+/* line 44, ../sass/_land.sass */
 .land-bottom {
   bottom: 60px;
 }
 
-/* line 46, ../sass/_land.sass */
+/* line 47, ../sass/_land.sass */
 .land-logo-h1 {
   margin: 0;
   text-transform: uppercase;
@@ -275,7 +276,7 @@ html {
   font-weight: bold;
 }
 
-/* line 54, ../sass/_land.sass */
+/* line 55, ../sass/_land.sass */
 .land-title {
   font-family: "Montserrat", "Helvetica Neue";
   font-size: 64px;
@@ -284,7 +285,7 @@ html {
   margin-bottom: 20px;
 }
 
-/* line 61, ../sass/_land.sass */
+/* line 62, ../sass/_land.sass */
 .land-slogan {
   font-size: 22px;
   line-height: 1.4em;
@@ -293,7 +294,7 @@ html {
   margin-bottom: 40px;
 }
 
-/* line 68, ../sass/_land.sass */
+/* line 69, ../sass/_land.sass */
 .land-input,
 .land-btn {
   font-family: "Montserrat", "Helvetica Neue";
@@ -304,38 +305,43 @@ html {
   outline: none;
 }
 
-/* line 77, ../sass/_land.sass */
+/* line 78, ../sass/_land.sass */
 .land-input {
   width: 25em;
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* line 81, ../sass/_land.sass */
+/* line 82, ../sass/_land.sass */
 .land-btn {
   background: #fff;
   color: #222;
   text-transform: uppercase;
 }
 
-/* line 86, ../sass/_land.sass */
+/* line 87, ../sass/_land.sass */
 .land-a {
   color: #fff;
   opacity: 0.7;
 }
-/* line 89, ../sass/_land.sass */
+/* line 90, ../sass/_land.sass */
 .land-a:hover {
   color: #fff;
   opacity: 1;
 }
 
 /* line 14, ../sass/site.sass */
+.special-highlight {
+  border: 1px dashed #e74c3c !important;
+}
+
+/* line 17, ../sass/site.sass */
 ul.app-ui,
 .app-ui ul {
   padding: 0;
   list-style: none;
 }
 
-/* line 19, ../sass/site.sass */
+/* line 22, ../sass/site.sass */
 .app-ui .btn-action {
   color: #fff;
   background-color: #e74c3c;
@@ -358,18 +364,18 @@ ul.app-ui,
 .app-ui .btn-action:active {
   color: #fff;
 }
-/* line 24, ../sass/site.sass */
+/* line 27, ../sass/site.sass */
 .app-ui .btn-action:hover {
   background-color: #ea6153;
   border-color: #ea6153;
 }
 
-/* line 28, ../sass/site.sass */
+/* line 31, ../sass/site.sass */
 .page-edit {
   min-height: 100vh;
   background-color: #fff;
 }
-/* line 31, ../sass/site.sass */
+/* line 34, ../sass/site.sass */
 .page-edit .side,
 .page-edit .side-2 {
   background: #fff;
@@ -380,24 +386,24 @@ ul.app-ui,
   box-sizing: border-box;
   border-right: 1px #eee solid;
 }
-/* line 40, ../sass/site.sass */
+/* line 43, ../sass/site.sass */
 .page-edit .side {
   z-index: 2;
   width: 300px;
 }
-/* line 43, ../sass/site.sass */
+/* line 46, ../sass/site.sass */
 .page-edit .logo {
   color: #e74c3c;
   padding: 0.75rem 15px;
 }
-/* line 46, ../sass/site.sass */
+/* line 49, ../sass/site.sass */
 .page-edit .types {
   height: calc(100vh - 98px);
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0.75rem 15px 0;
 }
-/* line 51, ../sass/site.sass */
+/* line 54, ../sass/site.sass */
 .page-edit .delete {
   position: absolute;
   height: calc(100vh - 98px);
@@ -408,11 +414,11 @@ ul.app-ui,
   background-color: #4d4d4d;
   display: none;
 }
-/* line 60, ../sass/site.sass */
+/* line 63, ../sass/site.sass */
 .page-edit .delete.active {
   background-color: #e74c3c;
 }
-/* line 62, ../sass/site.sass */
+/* line 65, ../sass/site.sass */
 .page-edit .delete .material-icons {
   font-size: 48px;
   color: #fff;
@@ -424,24 +430,24 @@ ul.app-ui,
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 69, ../sass/site.sass */
+/* line 72, ../sass/site.sass */
 .page-edit .logo,
 .page-edit .theme-curr {
   border-bottom: 1px #eee solid;
 }
-/* line 72, ../sass/site.sass */
+/* line 75, ../sass/site.sass */
 .page-edit .theme-curr {
   padding: 0.75rem 15px;
 }
-/* line 74, ../sass/site.sass */
+/* line 77, ../sass/site.sass */
 .page-edit .theme-curr:hover {
   cursor: pointer;
 }
-/* line 76, ../sass/site.sass */
+/* line 79, ../sass/site.sass */
 .page-edit .theme-curr-name {
   color: #e74c3c;
 }
-/* line 78, ../sass/site.sass */
+/* line 81, ../sass/site.sass */
 .page-edit .side-2 {
   height: 100vh;
   overflow-x: hidden;
@@ -458,52 +464,56 @@ ul.app-ui,
   -webkit-transition: -webkit-transform 0.35s;
   transition: transform 0.35s;
 }
-/* line 87, ../sass/site.sass */
+/* line 90, ../sass/site.sass */
 .page-edit .side-2.show {
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
   transform: translateX(0);
 }
-/* line 89, ../sass/site.sass */
+/* line 92, ../sass/site.sass */
 .page-edit .theme {
   padding: 0 15px;
   margin: 0.75rem 0;
 }
-/* line 90, ../sass/site.sass */
+/* line 93, ../sass/site.sass */
 .page-edit .theme:hover {
   opacity: 0.8;
   cursor: pointer;
 }
-/* line 95, ../sass/site.sass */
+/* line 98, ../sass/site.sass */
 .page-edit .theme-name {
   font-weight: bold;
 }
-/* line 97, ../sass/site.sass */
+/* line 100, ../sass/site.sass */
 .page-edit .theme-img {
   margin-top: 0.75rem;
   width: 100%;
 }
-/* line 100, ../sass/site.sass */
+/* line 103, ../sass/site.sass */
 .page-edit .blocks-temp {
   display: none;
 }
-/* line 102, ../sass/site.sass */
+/* line 105, ../sass/site.sass */
 .page-edit .block {
   margin: 0.75rem 0;
   width: 100%;
 }
-/* line 105, ../sass/site.sass */
+/* line 108, ../sass/site.sass */
+.page-edit .block.ui-draggable-dragging {
+  z-index: 1000;
+}
+/* line 110, ../sass/site.sass */
 .page-edit .block-img {
   position: relative;
   z-index: 2;
   width: 100%;
 }
-/* line 109, ../sass/site.sass */
+/* line 114, ../sass/site.sass */
 .page-edit .main {
   padding: 0 0 0 300px;
 }
-/* line 111, ../sass/site.sass */
+/* line 116, ../sass/site.sass */
 .page-edit .title {
   background: #fff;
   margin-left: -15px;
@@ -511,7 +521,7 @@ ul.app-ui,
   padding: 0.75rem 15px;
   border-bottom: 1px #eee solid;
 }
-/* line 117, ../sass/site.sass */
+/* line 122, ../sass/site.sass */
 .page-edit .title .btn-actions {
   position: absolute;
   right: 15px;
@@ -519,27 +529,27 @@ ul.app-ui,
   margin-top: -3px;
   margin-right: -9px;
 }
-/* line 123, ../sass/site.sass */
+/* line 128, ../sass/site.sass */
 .page-edit .preview {
   padding: 80px 0;
   margin-left: -15px;
   margin-right: -15px;
 }
-/* line 127, ../sass/site.sass */
+/* line 132, ../sass/site.sass */
 .page-edit .preview .block-img {
   z-index: 0;
 }
-/* line 129, ../sass/site.sass */
+/* line 134, ../sass/site.sass */
 .page-edit.page-edit-content .preview {
   padding: 0;
 }
-/* line 131, ../sass/site.sass */
+/* line 136, ../sass/site.sass */
 .page-edit .preview-html,
 .page-edit .preview-list {
   margin: 0 auto;
   position: relative;
 }
-/* line 135, ../sass/site.sass */
+/* line 140, ../sass/site.sass */
 .page-edit .preview-list {
   background: #fff;
   max-width: 600px;
@@ -548,42 +558,42 @@ ul.app-ui,
   box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
   border: 1px #eee solid;
 }
-/* line 142, ../sass/site.sass */
+/* line 147, ../sass/site.sass */
 .page-edit .preview-list .block {
   margin: 0;
   width: 100% !important;
   height: auto !important;
 }
-/* line 146, ../sass/site.sass */
+/* line 151, ../sass/site.sass */
 .page-edit .preview-list .block.ui-draggable-dragging, .page-edit .preview-list .block.ui-sortable-helper {
   box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.5);
 }
-/* line 149, ../sass/site.sass */
+/* line 154, ../sass/site.sass */
 .page-edit .preview-list .block.ui-draggable-dragging {
   width: 260px !important;
 }
-/* line 151, ../sass/site.sass */
+/* line 156, ../sass/site.sass */
 .page-edit .preview-empty {
   display: none;
   height: 400px;
   text-align: center;
   text-transform: uppercase;
 }
-/* line 156, ../sass/site.sass */
+/* line 161, ../sass/site.sass */
 .page-edit .preview-empty h3 {
   line-height: 400px;
 }
-/* line 158, ../sass/site.sass */
+/* line 163, ../sass/site.sass */
 .page-edit .preview-empty:last-child {
   display: block;
 }
-/* line 160, ../sass/site.sass */
+/* line 165, ../sass/site.sass */
 .page-edit .preview-placeholder {
   height: 120px;
   width: 100%;
   position: relative;
 }
-/* line 164, ../sass/site.sass */
+/* line 169, ../sass/site.sass */
 .page-edit .preview-placeholder:before {
   content: "";
   background: #f5f5f5;
@@ -593,50 +603,50 @@ ul.app-ui,
   bottom: 10px;
   left: 10px;
 }
-/* line 172, ../sass/site.sass */
+/* line 177, ../sass/site.sass */
 .page-edit .preview-html {
   display: none;
   border: 0;
   width: 100%;
   overflow-x: hidden;
 }
-/* line 177, ../sass/site.sass */
+/* line 182, ../sass/site.sass */
 .page-edit.page-edit-content .preview-html {
   display: block;
 }
-/* line 179, ../sass/site.sass */
+/* line 184, ../sass/site.sass */
 .page-edit .edit {
   height: calc(100vh - 49px);
   overflow-y: auto;
 }
-/* line 182, ../sass/site.sass */
+/* line 187, ../sass/site.sass */
 .page-edit .edit-block {
   padding: 0.75rem 15px;
   border-bottom: 1px #eee solid;
 }
-/* line 185, ../sass/site.sass */
+/* line 190, ../sass/site.sass */
 .page-edit .edit-block:last-child {
   border-bottom: 0;
 }
-/* line 187, ../sass/site.sass */
+/* line 192, ../sass/site.sass */
 .page-edit .field-title {
   margin-top: 0.75rem;
   font-weight: 500;
 }
-/* line 190, ../sass/site.sass */
+/* line 195, ../sass/site.sass */
 .page-edit .field-title:first-child {
   margin-top: 0;
 }
-/* line 192, ../sass/site.sass */
+/* line 197, ../sass/site.sass */
 .page-edit .field-helper {
   color: #999;
 }
-/* line 194, ../sass/site.sass */
+/* line 199, ../sass/site.sass */
 .page-edit .field-input {
   width: 100%;
   margin: 3px 0;
 }
-/* line 197, ../sass/site.sass */
+/* line 202, ../sass/site.sass */
 .page-edit input.textarea {
   height: 4.5rem;
 }

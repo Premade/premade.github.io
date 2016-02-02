@@ -330,13 +330,7 @@ $(function() {
 			this.$el.find('.side .block').draggable({
 				helper: 'clone',
 				appendTo: '.preview-list',
-				connectToSortable: '.preview-list',
-				start: function(event, ui) {
-					$(this).css('z-index', 10000);
-				},
-				stop: function(event, ui) {
-					$(this).css('z-index', 0);
-				}
+				connectToSortable: '.preview-list'
 			});
 			
 			this.$el.find('.preview-list').droppable({
@@ -377,9 +371,34 @@ $(function() {
 		className: 'container-fluid page-edit page-edit-content',
 
 		events: {
+			'focus .field': 'focusField',
+			'blur .field': 'blurField',
 			'change .field': 'changeField',
 			'click .publish': 'publishPage',
 			'click .back': 'backToBlocks'
+		},
+
+		focusField: function(e) {
+
+			var self = this,
+				$e = $(e.target),
+				block = $e.closest('.edit-block').data('id'),
+				field = $e.data('key'),
+				$field = this.$el.find('.preview-html .block-' + block + ' .' + field);
+
+			$field.addClass('special-highlight');
+		},
+
+		blurField: function(e) {
+
+			var self = this,
+				$e = $(e.target),
+				block = $e.closest('.edit-block').data('id'),
+				field = $e.data('key'),
+				$field = this.$el.find('.preview-html .block-' + block + ' .' + field);
+
+			$field.removeClass('special-highlight');
+
 		},
 
 		changeField: function(e) {
@@ -423,7 +442,7 @@ $(function() {
 			}
 		},
 
-		savePage: function(url) {
+		savePage: function(navs) {
 			var self = this,
 				json = {};
 
@@ -447,17 +466,35 @@ $(function() {
 					json: json
 				},
 				callback: function (page) {
-					App.router.navigate('/#/' + url + '/' + page.id, {trigger: true});
+					_.each(navs, function(nav, i){
+						App.router.navigate('/#/' + nav.url + '/' + page.id, {trigger: nav.trigger});
+					});
 				}
 			});
 		},
 
 		publishPage: function() {
-			this.savePage('page');
+			this.savePage([
+				{
+					'url': 'build',
+					'trigger': false
+				}, {
+					'url': 'edit',
+					'trigger': false
+				}, {
+					'url': 'page',
+					'trigger': true
+				}
+			]);
 		},
 
 		backToBlocks: function() {
-			this.savePage('build');
+			this.savePage([
+				{
+					'url': 'build',
+					'trigger': true
+				}
+			]);
 		},
 
 		render: function() {
