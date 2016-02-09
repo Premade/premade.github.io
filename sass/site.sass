@@ -44,8 +44,15 @@ ul.app-ui,
 		z-index: 2
 		width: $sideW
 	.logo
-		color: $highlight
+		position: relative
 		padding: $padding-y $padding-x
+		.logo-a
+			color: $highlight
+			&:hover
+				text-decoration: none
+				opacity: 0.8
+		.btn
+			font-family: $bodyFont
 	.types
 		height: calc(100vh - 98px)
 		overflow-x: hidden
@@ -119,7 +126,9 @@ ul.app-ui,
 		margin-right: -$padding-x
 		padding: $padding-y $padding-x
 		border-bottom: $border
-	.title .btn-actions
+	.title-info
+		color: #999
+	.btn-actions
 		position: absolute
 		right: $padding-x
 		top: $padding-y

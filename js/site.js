@@ -283,6 +283,7 @@ $(function() {
 		},
 
 		generatePage: function() {
+
 			var self = this,
 				$blocks = self.$el.find('.preview-list .block'),
 				page = {};
@@ -295,6 +296,11 @@ $(function() {
 						content: $blocks.eq(i).data('content')
 					};
 				});
+
+			if (page.blocks.length === 0) {
+				alert('You need a least one block to generate a page!');
+				return;
+			}
 
 			if (self.page) {
 
@@ -339,11 +345,12 @@ $(function() {
 			}).sortable({
 				appendTo: '.preview-list',
 				placeholder: "preview-placeholder",
-				start: function(event, ui) {
+				activate: function(event, ui) {
 					$del.show();
 				},
-				stop: function(event, ui) {
+				deactivate: function(event, ui) {
 					$del.hide();
+					ui.item.css('z-index', 0);
 				}
 			});
 

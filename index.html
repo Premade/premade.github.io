@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Premade</title>
+	<title>Premade.io - Drag & drop webpage builder with thousands of pre-made content blocks</title>
 	<!-- Stylesheet -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -47,10 +47,11 @@
 			</div>
 			<div class="land-bottom">
 				<!-- <a href="#" class="land-a" target="_blank" rel="nofollow">About</a> &nbsp;&bull;&nbsp; -->
-				<a href="https://medium.com/premade-io" class="land-a" target="_blank" rel="nofollow">Medium</a> &nbsp;&bull;&nbsp; 
+				<a href="https://medium.com/tag/premade" class="land-a" target="_blank" rel="nofollow">The Story</a> &nbsp;&bull;&nbsp; 
 				<a href="https://github.com/Premade/premade.github.io" class="land-a" target="_blank" rel="nofollow">GitHub</a> &nbsp;&bull;&nbsp; 
 				<a href="https://twitter.com/HelloPremade" class="land-a" target="_blank" rel="nofollow">Twitter</a> &nbsp;&bull;&nbsp; 
-				<a href="http://premade-io-queue.herokuapp.com/" class="land-a" target="_blank" rel="nofollow">Project Roadmap</a>
+				<a href="http://premade-io-queue.herokuapp.com/" class="land-a" target="_blank" rel="nofollow">Feature Request</a> &nbsp;&bull;&nbsp; 
+				<a href="https://arainazhang.typeform.com/to/TPPjv3" class="land-a" target="_blank" rel="nofollow">Submit Your Design</a>
 			</div>
 		</div>
 	</script>
@@ -58,7 +59,12 @@
 	<script id="page-edit-tpl" type="text/x-handlebars-template">
 
 		<div class="side app-ui">
-			<h1 class="logo">Premade.io</h1>
+			<h1 class="logo">
+				<a href="/" class="logo-a">Premade.io</a>
+				<div class="btn-actions">
+					<a href="https://arainazhang.typeform.com/to/Khc2Zs" target="_blank" class="btn btn-sm btn-default">Leave Feedback</a>
+				</div>
+			</h1>
 			<div class="theme-curr">
 				Theme: <span class="theme-curr-name">{{name}}</span>
 			</div>
@@ -72,7 +78,7 @@
 		<div class="side-2 app-ui"></div>
 		<div class="main">
 			<div class="title app-ui">
-				<h2>Project Name</h2>
+				<h2>Beta Test <span class="title-info">- Your pages could be deleted anytime.</span></h2>
 				<div class="btn-actions">
 					<button class="generate btn btn-action btn-sm">Generate Page</button>
 				</div>
@@ -92,7 +98,12 @@
 	<script id="content-edit-tpl" type="text/x-handlebars-template">
 
 		<div class="side app-ui">
-			<h1 class="logo">Premade.io</h1>
+			<h1 class="logo">
+				<a href="/" class="logo-a">Premade.io</a>
+				<div class="btn-actions">
+					<a href="https://arainazhang.typeform.com/to/Khc2Zs" target="_blank" class="btn btn-sm btn-default">Leave Feedback</a>
+				</div>
+			</h1>
 			<div class="edit">
 				{{#each blocks}}
 					<div class="edit-block" data-id="{{objectId}}-{{@index}}" data-index="{{@index}}">
@@ -128,7 +139,7 @@
 		</div>
 		<div class="main">
 			<div class="title app-ui">
-				<h2>Project Name</h2>
+				<h2>Beta Test <span class="title-info">- Your pages could be deleted anytime.</span></h2>
 				<div class="btn-actions">
 					<button class="back btn btn-sm btn-link">Back</button>
 					<button class="publish btn btn-sm btn-action">Publish Page</button>

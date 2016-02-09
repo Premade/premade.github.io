@@ -318,13 +318,13 @@ html {
   text-transform: uppercase;
 }
 
-/* line 87, ../sass/_land.sass */
-.land-a {
+/* line 88, ../sass/_land.sass */
+.land-a, .land-a:visited {
   color: #fff;
   opacity: 0.7;
 }
-/* line 90, ../sass/_land.sass */
-.land-a:hover {
+/* line 92, ../sass/_land.sass */
+.land-a:hover, .land-a:active {
   color: #fff;
   opacity: 1;
 }
@@ -348,19 +348,19 @@ ul.app-ui,
   border-color: #e74c3c;
   font-weight: bold;
 }
-/* line 18, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 18, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:visited {
   color: #fff;
 }
-/* line 21, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 21, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:focus {
   color: #fff;
 }
-/* line 24, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 24, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:hover {
   color: #fff;
 }
-/* line 27, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 27, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 .app-ui .btn-action:active {
   color: #fff;
 }
@@ -393,17 +393,30 @@ ul.app-ui,
 }
 /* line 46, ../sass/site.sass */
 .page-edit .logo {
-  color: #e74c3c;
+  position: relative;
   padding: 0.75rem 15px;
 }
 /* line 49, ../sass/site.sass */
+.page-edit .logo .logo-a {
+  color: #e74c3c;
+}
+/* line 51, ../sass/site.sass */
+.page-edit .logo .logo-a:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
+/* line 54, ../sass/site.sass */
+.page-edit .logo .btn {
+  font-family: "Helvetica Neue";
+}
+/* line 56, ../sass/site.sass */
 .page-edit .types {
   height: calc(100vh - 98px);
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0.75rem 15px 0;
 }
-/* line 54, ../sass/site.sass */
+/* line 61, ../sass/site.sass */
 .page-edit .delete {
   position: absolute;
   height: calc(100vh - 98px);
@@ -414,11 +427,11 @@ ul.app-ui,
   background-color: #4d4d4d;
   display: none;
 }
-/* line 63, ../sass/site.sass */
+/* line 70, ../sass/site.sass */
 .page-edit .delete.active {
   background-color: #e74c3c;
 }
-/* line 65, ../sass/site.sass */
+/* line 72, ../sass/site.sass */
 .page-edit .delete .material-icons {
   font-size: 48px;
   color: #fff;
@@ -430,24 +443,24 @@ ul.app-ui,
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 72, ../sass/site.sass */
+/* line 79, ../sass/site.sass */
 .page-edit .logo,
 .page-edit .theme-curr {
   border-bottom: 1px #eee solid;
 }
-/* line 75, ../sass/site.sass */
+/* line 82, ../sass/site.sass */
 .page-edit .theme-curr {
   padding: 0.75rem 15px;
 }
-/* line 77, ../sass/site.sass */
+/* line 84, ../sass/site.sass */
 .page-edit .theme-curr:hover {
   cursor: pointer;
 }
-/* line 79, ../sass/site.sass */
+/* line 86, ../sass/site.sass */
 .page-edit .theme-curr-name {
   color: #e74c3c;
 }
-/* line 81, ../sass/site.sass */
+/* line 88, ../sass/site.sass */
 .page-edit .side-2 {
   height: 100vh;
   overflow-x: hidden;
@@ -464,56 +477,56 @@ ul.app-ui,
   -webkit-transition: -webkit-transform 0.35s;
   transition: transform 0.35s;
 }
-/* line 90, ../sass/site.sass */
+/* line 97, ../sass/site.sass */
 .page-edit .side-2.show {
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
   transform: translateX(0);
 }
-/* line 92, ../sass/site.sass */
+/* line 99, ../sass/site.sass */
 .page-edit .theme {
   padding: 0 15px;
   margin: 0.75rem 0;
 }
-/* line 93, ../sass/site.sass */
+/* line 100, ../sass/site.sass */
 .page-edit .theme:hover {
   opacity: 0.8;
   cursor: pointer;
 }
-/* line 98, ../sass/site.sass */
+/* line 105, ../sass/site.sass */
 .page-edit .theme-name {
   font-weight: bold;
 }
-/* line 100, ../sass/site.sass */
+/* line 107, ../sass/site.sass */
 .page-edit .theme-img {
   margin-top: 0.75rem;
   width: 100%;
 }
-/* line 103, ../sass/site.sass */
+/* line 110, ../sass/site.sass */
 .page-edit .blocks-temp {
   display: none;
 }
-/* line 105, ../sass/site.sass */
+/* line 112, ../sass/site.sass */
 .page-edit .block {
   margin: 0.75rem 0;
   width: 100%;
 }
-/* line 108, ../sass/site.sass */
+/* line 115, ../sass/site.sass */
 .page-edit .block.ui-draggable-dragging {
   z-index: 1000;
 }
-/* line 110, ../sass/site.sass */
+/* line 117, ../sass/site.sass */
 .page-edit .block-img {
   position: relative;
   z-index: 2;
   width: 100%;
 }
-/* line 114, ../sass/site.sass */
+/* line 121, ../sass/site.sass */
 .page-edit .main {
   padding: 0 0 0 300px;
 }
-/* line 116, ../sass/site.sass */
+/* line 123, ../sass/site.sass */
 .page-edit .title {
   background: #fff;
   margin-left: -15px;
@@ -521,35 +534,39 @@ ul.app-ui,
   padding: 0.75rem 15px;
   border-bottom: 1px #eee solid;
 }
-/* line 122, ../sass/site.sass */
-.page-edit .title .btn-actions {
+/* line 129, ../sass/site.sass */
+.page-edit .title-info {
+  color: #999;
+}
+/* line 131, ../sass/site.sass */
+.page-edit .btn-actions {
   position: absolute;
   right: 15px;
   top: 0.75rem;
   margin-top: -3px;
   margin-right: -9px;
 }
-/* line 128, ../sass/site.sass */
+/* line 137, ../sass/site.sass */
 .page-edit .preview {
   padding: 80px 0;
   margin-left: -15px;
   margin-right: -15px;
 }
-/* line 132, ../sass/site.sass */
+/* line 141, ../sass/site.sass */
 .page-edit .preview .block-img {
   z-index: 0;
 }
-/* line 134, ../sass/site.sass */
+/* line 143, ../sass/site.sass */
 .page-edit.page-edit-content .preview {
   padding: 0;
 }
-/* line 136, ../sass/site.sass */
+/* line 145, ../sass/site.sass */
 .page-edit .preview-html,
 .page-edit .preview-list {
   margin: 0 auto;
   position: relative;
 }
-/* line 140, ../sass/site.sass */
+/* line 149, ../sass/site.sass */
 .page-edit .preview-list {
   background: #fff;
   max-width: 600px;
@@ -558,42 +575,42 @@ ul.app-ui,
   box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
   border: 1px #eee solid;
 }
-/* line 147, ../sass/site.sass */
+/* line 156, ../sass/site.sass */
 .page-edit .preview-list .block {
   margin: 0;
   width: 100% !important;
   height: auto !important;
 }
-/* line 151, ../sass/site.sass */
+/* line 160, ../sass/site.sass */
 .page-edit .preview-list .block.ui-draggable-dragging, .page-edit .preview-list .block.ui-sortable-helper {
   box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.5);
 }
-/* line 154, ../sass/site.sass */
+/* line 163, ../sass/site.sass */
 .page-edit .preview-list .block.ui-draggable-dragging {
   width: 260px !important;
 }
-/* line 156, ../sass/site.sass */
+/* line 165, ../sass/site.sass */
 .page-edit .preview-empty {
   display: none;
   height: 400px;
   text-align: center;
   text-transform: uppercase;
 }
-/* line 161, ../sass/site.sass */
+/* line 170, ../sass/site.sass */
 .page-edit .preview-empty h3 {
   line-height: 400px;
 }
-/* line 163, ../sass/site.sass */
+/* line 172, ../sass/site.sass */
 .page-edit .preview-empty:last-child {
   display: block;
 }
-/* line 165, ../sass/site.sass */
+/* line 174, ../sass/site.sass */
 .page-edit .preview-placeholder {
   height: 120px;
   width: 100%;
   position: relative;
 }
-/* line 169, ../sass/site.sass */
+/* line 178, ../sass/site.sass */
 .page-edit .preview-placeholder:before {
   content: "";
   background: #f5f5f5;
@@ -603,50 +620,50 @@ ul.app-ui,
   bottom: 10px;
   left: 10px;
 }
-/* line 177, ../sass/site.sass */
+/* line 186, ../sass/site.sass */
 .page-edit .preview-html {
   display: none;
   border: 0;
   width: 100%;
   overflow-x: hidden;
 }
-/* line 182, ../sass/site.sass */
+/* line 191, ../sass/site.sass */
 .page-edit.page-edit-content .preview-html {
   display: block;
 }
-/* line 184, ../sass/site.sass */
+/* line 193, ../sass/site.sass */
 .page-edit .edit {
   height: calc(100vh - 49px);
   overflow-y: auto;
 }
-/* line 187, ../sass/site.sass */
+/* line 196, ../sass/site.sass */
 .page-edit .edit-block {
   padding: 0.75rem 15px;
   border-bottom: 1px #eee solid;
 }
-/* line 190, ../sass/site.sass */
+/* line 199, ../sass/site.sass */
 .page-edit .edit-block:last-child {
   border-bottom: 0;
 }
-/* line 192, ../sass/site.sass */
+/* line 201, ../sass/site.sass */
 .page-edit .field-title {
   margin-top: 0.75rem;
   font-weight: 500;
 }
-/* line 195, ../sass/site.sass */
+/* line 204, ../sass/site.sass */
 .page-edit .field-title:first-child {
   margin-top: 0;
 }
-/* line 197, ../sass/site.sass */
+/* line 206, ../sass/site.sass */
 .page-edit .field-helper {
   color: #999;
 }
-/* line 199, ../sass/site.sass */
+/* line 208, ../sass/site.sass */
 .page-edit .field-input {
   width: 100%;
   margin: 3px 0;
 }
-/* line 202, ../sass/site.sass */
+/* line 211, ../sass/site.sass */
 .page-edit input.textarea {
   height: 4.5rem;
 }
