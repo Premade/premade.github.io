@@ -2,15 +2,14 @@ $(function() {
 	// Enable jQuery for Parse
 	Parse.$ = jQuery;
 
-	Parse.initialize(
-		'jeMtQiq57iqWpCV9XPUek13bNodxuPMcaUR2MgRz', 
-		'5BYJySV53Ga3DxcG8Aa6k9NMidQqY1dml3B7iKqF');
+	Parse.initialize("premade-parse");
+	Parse.serverURL = 'https://premade-parse.herokuapp.com/parse';
 
-	var App = new (Parse.View.extend({
+	var App = new (Backbone.View.extend({
 
 		Models: {},
-		Collections: {},
 		Views: {},
+		query: {},
 		fn: {},
 
 		start: function() {
@@ -50,10 +49,6 @@ $(function() {
 		}
 	});
 
-	App.Collections.Blocks = Parse.Collection.extend({
-		model: App.Models.Block
-	});
-
 	App.Models.Page = Parse.Object.extend('Page', {
 		update: function(options) {
 			this.set(options.data).save().then(function(page){
@@ -64,22 +59,7 @@ $(function() {
 
 	App.Models.Type = Parse.Object.extend('Type');
 
-	App.Collections.Types = Parse.Collection.extend({
-		model: App.Models.Type,
-		query: (new Parse.Query(App.Models.Type)).ascending('order')
-	});
-
 	App.Models.Theme = Parse.Object.extend('Theme');
-
-	App.Collections.Themes =  Parse.Collection.extend({
-		model: App.Models.Theme,
-		query: (new Parse.Query(App.Models.Theme)).equalTo('isLive', true)
-	});
-
-	App.Collections.UserThemes =  Parse.Collection.extend({
-		model: App.Models.Theme,
-		query: (new Parse.Query(App.Models.Theme)).equalTo('user', Parse.User.current())
-	});
 
 	App.Models.Image = Parse.Object.extend('Image', {
 
@@ -111,7 +91,7 @@ $(function() {
 		}
 	});
 
-	App.Views.Landing = Parse.View.extend({
+	App.Views.Landing = Backbone.View.extend({
 
 		template: Handlebars.compile($('#landing-tpl').html()),
 
@@ -121,7 +101,7 @@ $(function() {
 
 	});
 
-	App.Views.EditPageBlocks = Parse.View.extend({
+	App.Views.EditPageBlocks = Backbone.View.extend({
 
 		template: Handlebars.compile($('#page-edit-tpl').html()),
 
@@ -136,7 +116,7 @@ $(function() {
 			'click .generate': 'generatePage'
 		},
 
-		render: function(){
+		render: function() {
 
 			var self = this;
 
@@ -146,11 +126,12 @@ $(function() {
 				return;
 			}
 
-			self.page = self.model.get('json');
+			self.page = self.model.attributes.json;
 
 			App.fn.findBlock(self.page.blocks[0].objectId, function(block) {
+
 				block.get('theme').fetch().then(function(theme){
-					self.loadPage(theme, self.page);	
+					self.loadPage(theme);	
 				})
 			});
 			
@@ -174,6 +155,7 @@ $(function() {
 			self.currTheme = theme;
 
 			App.fn.findThemeBlocks(self.currTheme, function(blocks) {
+
 				self.collection = blocks;
 				self.$el.html(self.template(self.currTheme.attributes));
 
@@ -191,7 +173,7 @@ $(function() {
 		loadThemes: function() {
 			var self = this;
 			App.fn.loadComponent({
-				collection: App.themes,
+				collection: App.query.themes,
 				$container: self.$el.find('.side-2'),
 				View: App.fn.generateView({
 					templateId: '#page-edit-themes',
@@ -222,7 +204,7 @@ $(function() {
 		loadTypes: function() {
 			var self = this;
 			App.fn.loadComponent({
-				collection: App.types,
+				collection: App.query.types,
 				$container: self.$el.find('.types'),
 				View: App.fn.generateView({
 					templateId: '#page-edit-types',
@@ -230,9 +212,8 @@ $(function() {
 					tagName: 'ul'
 				}),
 				callback: function(types) {
-					_.each(self.blocks, function(b, i) {
-						var block = self.blocks.at(i);
-						$('#' + block.id).appendTo($('#' + block.get('type').id));
+					_.each(self.blocks, function(block, i) {
+						$('#' + block.id).appendTo($('#' + block.attributes.type.id));
 					});
 					_.each(self.$el.find('.blocks'), function(block, i) {
 						if ($(block).find('.block').length === 0) {
@@ -309,14 +290,14 @@ $(function() {
 						json: page
 					},
 					callback: function (page) {
-						App.router.navigate('/#/edit/' + page.id, {trigger: true});
+						App.router.navigate('#/edit/' + page.id, {trigger: true});
 					}
 
 				});
 			} else {
 				App.fn.renderView({
 					View: App.Views.EditPageContent,
-					data: { page: page }
+					data: { model: page }
 				});
 			}
 		},
@@ -371,7 +352,7 @@ $(function() {
 
 	});
 
-	App.Views.EditPageContent = Parse.View.extend({
+	App.Views.EditPageContent = Backbone.View.extend({
 
 		template: Handlebars.compile($('#content-edit-tpl').html()),
 
@@ -419,8 +400,6 @@ $(function() {
 				val = $e.val(),
 				$field = this.$el.find('.preview-html .block-' + block + ' .' + field);
 
-			console.log(self.blocks);
-
 			switch (type) {
 				case 'txt':
 					$field.html(val);
@@ -453,7 +432,7 @@ $(function() {
 			var self = this,
 				json = {};
 
-			if (!self.model) self.model = new App.Models.Page();
+			if (!self.model.attributes) self.model = new App.Models.Page();
 			
 			json.blocks = [];
 
@@ -461,7 +440,7 @@ $(function() {
 
 				var newBlock = {};
 
-				newBlock.objectId = block.objectId;
+				newBlock.objectId = block.id;
 				newBlock.content = block.content;
 
 				json.blocks.push(newBlock);
@@ -474,7 +453,7 @@ $(function() {
 				},
 				callback: function (page) {
 					_.each(navs, function(nav, i){
-						App.router.navigate('/#/' + nav.url + '/' + page.id, {trigger: nav.trigger});
+						App.router.navigate('#/' + nav.url + '/' + page.id, {trigger: nav.trigger});
 					});
 				}
 			});
@@ -508,10 +487,10 @@ $(function() {
 			var self = this,
 				page;
 
-			if (self.model) {
-				page = self.model.get('json');
+			if (self.model.attributes) {
+				page = self.model.attributes.json;
 			} else {
-				page = self.options.page;
+				page = self.model;
 			}
 
 			App.fn.getBlocks(page, function(blocks) {
@@ -528,7 +507,7 @@ $(function() {
 				self.blocks = blocks;
 
 				// Temp - hide back when the page has not been published before
-				if (!self.model) {
+				if (!self.model.attributes) {
 					self.$el.find('.back').hide();
 				}
 			});
@@ -537,7 +516,7 @@ $(function() {
 
 	});
 
-	App.Views.Page = Parse.View.extend({
+	App.Views.Page = Backbone.View.extend({
 
 		render: function() {
 
@@ -545,13 +524,12 @@ $(function() {
 				page;
 
 			if (self.model) {
-				var page = self.model.get('json');
+				var page = self.model.attributes.json;
 			} else {
 				page = self.options.page;
 			}
-		
+
 			App.fn.getBlocks(page, function(blocks){
-				console.log(blocks);
 				App.fn.renderBlocks({
 					blocks: blocks,
 					$container: self.$el
@@ -561,7 +539,7 @@ $(function() {
 		}
 	});
 
-	App.Views.Login = Parse.View.extend({
+	App.Views.Login = Backbone.View.extend({
 
 		template: Handlebars.compile($('#login-tpl').html()),
 
@@ -578,7 +556,7 @@ $(function() {
 
 			Parse.User.logIn(username, password, {
 				success: function(user) {
-					Parse.history.navigate('#/dev', { trigger: true });
+					Backbone.history.navigate('#/dev', { trigger: true });
 				},
 				error: function(user, error) {
 					alert(error.message);
@@ -592,7 +570,7 @@ $(function() {
 		}
 	});
 
-	App.Views.Dev = Parse.View.extend({
+	App.Views.Dev = Backbone.View.extend({
 
 		template: Handlebars.compile($('#dev-tpl').html()),
 
@@ -602,7 +580,7 @@ $(function() {
 
 	});
 
-	App.Views.UpdateBlock = Parse.View.extend({
+	App.Views.UpdateBlock = Backbone.View.extend({
 
 		template: Handlebars.compile($('#update-block-tpl').html()),
 
@@ -633,7 +611,7 @@ $(function() {
 
 			// Load Types
 			App.fn.loadComponent({
-				collection: App.types,
+				collection: App.query.types,
 				View: App.Views.Select,
 				$container: self.$el.find('.update-block-type'),
 				data: {
@@ -644,7 +622,7 @@ $(function() {
 
 			// Load User Series
 			App.fn.loadComponent({
-				collection: App.userThemes,
+				collection: App.query.userThemes,
 				View: App.Views.Select,
 				$container: self.$el.find('.update-block-theme'),
 				data: {
@@ -656,13 +634,13 @@ $(function() {
 
 	});
 
-	App.Views.Select = Parse.View.extend({
+	App.Views.Select = Backbone.View.extend({
 
 		template: Handlebars.compile($('#select-tpl').html()),
 
 		render: function(){
 			var data = { 
-				items: this.collection.toJSON(),
+				items: this.collection,
 				label: this.options.label,
 				field: this.options.field
 			};
@@ -670,17 +648,17 @@ $(function() {
 		}
 	});
 
-	App.Router = Parse.Router.extend({
+	App.Router = Backbone.Router.extend({
 
 		initialize: function(options){
 
 			App.$pageStyles = $('#page-styles');
 
 			// App.blocks = [];
-			App.blocks = new App.Collections.Blocks();
-			App.types = new App.Collections.Types();
-			App.themes = new App.Collections.Themes();
-			App.userThemes = new App.Collections.UserThemes();
+			App.query.blocks = new Parse.Query(App.Models.Block);
+			App.query.types = new Parse.Query(App.Models.Type).ascending('order');
+			App.query.themes = new Parse.Query(App.Models.Theme).equalTo('isLive', true);
+			App.query.userThemes = new Parse.Query(App.Models.Theme).equalTo('user', Parse.User.current());
 
 			// BlogApp.blog = new BlogApp.Models.Blog();
 			// BlogApp.category = new BlogApp.Models.Category();
@@ -691,7 +669,8 @@ $(function() {
 		},
 		
 		start: function(){
-			Parse.history.start({root: '/blocks/'});
+			Backbone.history.start({root: '/'});
+			// Backbone.history.start({root: '/blocks/'});
 		},
 
 		routes: {
@@ -774,14 +753,14 @@ $(function() {
 	App.fn.checkLogin = function() {
 		var currentUser = Parse.User.current();
 		if (!currentUser) {
-			Parse.history.navigate('#/login', { trigger: true });
+			Backbone.history.navigate('#/login', { trigger: true });
 		} else {
 			return;
 		}
 	};
 
 	App.fn.generateView = function(options) {
-		return Parse.View.extend({
+		return Backbone.View.extend({
 			template: Handlebars.compile($(options.templateId).html()),
 			tagName: options.tagName || 'div',
 			className: options.className || null,
@@ -789,10 +768,10 @@ $(function() {
 				var data;
 				switch(options.type) {
 					case 'model':
-						data = this.model.toJSON();
+						data = this.model;
 						break;
 					case 'collection':
-						data = { items: this.collection.toJSON() };
+						data = { items: this.collection };
 						break;
 				}
 				data = _.extend({}, options.data, data);
@@ -822,7 +801,7 @@ $(function() {
 		// TODO - Check don't fetch if fetched
 		// console.log(options.collection);
 
-		options.collection.fetch().then(function(collection){
+		options.collection.find().then(function(collection){
 
 			var data = {collection: collection};
 			data = _.extend({}, options.data, data);
@@ -835,25 +814,19 @@ $(function() {
 
 			if (options.callback) options.callback(collection);
 		});
+	
 	}
 
 	App.fn.findThemeBlocks = function(theme, callback) {
-		var Blocks = Parse.Collection.extend({
-				model: App.Models.Block,
-				query: (new Parse.Query(App.Models.Block)).equalTo('theme', theme).equalTo('isLive', true)
-			}),
-			blocks = new Blocks();
 
-			blocks.fetch({
-				success: function(blocks) {
-					callback(blocks);
-				}
-			});
+		var query = new Parse.Query(App.Models.Block).equalTo('theme', theme).equalTo('isLive', true);
+		
+		callback(query);
 	}
 
 	App.fn.fetchThemes = function(callback) {
-		if (App.themes.length === 0) {
-			App.themes.fetch().then(function(themes) {
+		if (!App.themes) {
+			App.query.themes.find().then(function(themes) {
 				App.themes = themes;
 				callback();
 			});
@@ -863,8 +836,8 @@ $(function() {
 	}
 
 	App.fn.fetchBlocks = function(callback) {
-		if (App.blocks.length === 0) {
-			App.blocks.fetch().then(function(blocks) {
+		if (!App.blocks) {
+			App.query.blocks.find().then(function(blocks) {
 				App.blocks = blocks;
 				callback();
 			});
@@ -875,7 +848,7 @@ $(function() {
 
 	App.fn.findBlock = function(id, callback) {
 		App.fn.fetchBlocks(function(){
-			_.each(App.blocks.models, function(block){
+			_.each(App.blocks, function(block){
 				if (id === block.id) {
 					callback(block);
 				}
@@ -889,15 +862,22 @@ $(function() {
 
 		App.fn.fetchBlocks(function(){
 
-			_.each(page.blocks, function(b, i){
+			_.each(page.blocks, function(b) {
 
-				App.fn.findBlock(page.blocks[i].objectId, function(block) {
+				App.fn.findBlock(b.objectId, function(block) {
 
-					var jsonBlock = block.toJSON();
+					var jsonBlock = {
+						id: block.id,
+						content: block.attributes.content,
+						html: block.attributes.html,
+						css: block.attributes.css,
+						fields: block.attributes.fields,
+						theme: block.attributes.theme,
+						imgUrl: block.attributes.imgUrl,
+					};
 
 					// Update block content with page content
-					if (page.blocks[i].content) jsonBlock.content = page.blocks[i].content;
-					
+					if (b.content) jsonBlock.content = b.content;
 					
 					_.each(jsonBlock.fields.fields, function(field) {
 
@@ -945,8 +925,8 @@ $(function() {
 
 		_.each(options.blocks, function(block, i) {
 
-			var themeId = block.theme.objectId,
-				blockId = block.objectId,
+			var themeId = block.theme.id,
+				blockId = block.id,
 				$block = $('<section>')
 							.addClass('theme-' + themeId)
 							.addClass('block-' + blockId)
@@ -957,7 +937,6 @@ $(function() {
 			$block.html(template(content));
 			html += $block[0].outerHTML;
 
-				
 			if (style.blocks.indexOf(blockId) === -1) {
 				// Only push the # of blocks with in options.blocks
 				style.blocks.push(i);
@@ -979,13 +958,18 @@ $(function() {
 
 	App.fn.getCSS = function(blocks, style) {
 
-		// debugger;
 		var css = '';
 
-		App.fn.fetchThemes(function(){
+		App.fn.fetchThemes(function() {
+
 			// Themes
-			_.each(style.themes, function(theme, i) {
-				css += App.themes.get(theme).get('css');
+			_.each(style.themes, function(themeId, i) {
+
+				theme = App.themes.filter(function(t){
+					return t.id === themeId;
+				})[0];
+
+				css += theme.attributes.css;
 			});
 			
 			// Blocks
