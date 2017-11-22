@@ -2,8 +2,8 @@ $(function() {
 	// Enable jQuery for Parse
 	Parse.$ = jQuery;
 
-	Parse.initialize("premade-parse");
-	Parse.serverURL = 'https://premade-parse.herokuapp.com/parse';
+	Parse.initialize("f60f0c62-b1aa-45ec-9018-4f5280ca9f14");
+	Parse.serverURL = 'https://api.parse.buddy.com/parse/';
 
 	var App = new (Backbone.View.extend({
 
