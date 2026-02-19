@@ -1,5 +1,4 @@
-@import "compass"
-@import "type"
+@use "type" as *
 
 $land-padding: 15vw
 $land-padding-top: 40px
@@ -10,7 +9,7 @@ $land-padding-bottom: 60px
 	top: 0
 	right: 0
 	bottom: 0
-	left: 0	
+	left: 0
 	background-color: #000
 	background-image: url('../img/land-bg.png')
 	background-size: cover
@@ -39,7 +38,7 @@ $land-padding-bottom: 60px
 
 .land-middle
 	top: 50%
-	+translateY(-50%)
+	transform: translateY(-50%)
 
 .land-bottom
 	bottom: $land-padding-bottom

@@ -13,29 +13,23 @@ $bodyFont: 'Helvetica Neue'
 $scale: 1.414
 
 /* Setup */
-	
+
 html
 
 	/* Change default typefaces here */
 	font-family: $bodyFont
-	font-size: $baseFontSize / $currFontSize * 100%
+	font-size: calc($baseFontSize / $currFontSize * 100%)
 
 	// Make everything look a little nicer in webkit
 	-webkit-font-smoothing: antialiased
 
-	// -webkit-text-size-adjust: auto
-	// -moz-text-size-adjust: auto
-	// -ms-text-size-adjust: auto
-	// -o-text-size-adjust: auto
-	// text-size-adjust: auto
-
 .app-ui
 
-	font-size: $baseFontSize / $currFontSize * 100%
+	font-size: calc($baseFontSize / $currFontSize * 100%)
 	line-height: $leading
-	
+
 	/* Copy & Lists */
-	p	
+	p
 		margin-top: $leading
 		margin-bottom: 0
 		&:first-child
@@ -71,11 +65,11 @@ html
 	h3
 		font-size: 1 * $scale * 1rem
 	h4
-		font-size: $scale / 2 * 1rem
+		font-size: calc($scale / 2 * 1rem)
 	h5
-		font-size: $scale / 3 * 1rem
+		font-size: calc($scale / 3 * 1rem)
 	h6
-		font-size: $scale / 4 * 1rem
+		font-size: calc($scale / 4 * 1rem)
 
 	/* Tables */
 	table

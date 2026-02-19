@@ -1,9 +1,9 @@
 $(function() {
-	// Enable jQuery for Parse
-	Parse.$ = jQuery;
-
-	Parse.initialize("182e1bde-39b6-4993-8c0e-96bf33c18a04");
-	Parse.serverURL = 'https://api.parse.buddy.com/parse/';
+	// Initialize Supabase client
+	var supabase = window.supabase.createClient(
+		'https://cvdglclcryqdchgdqlmx.supabase.co',
+		'sb_publishable_shhKnTSQFE6-a2bXUGj6iw_clyHbXp7'
+	);
 
 	var App = new (Backbone.View.extend({
 
@@ -20,76 +20,149 @@ $(function() {
 
 	}))({el: document.body});
 
-	App.Models.Block = Parse.Object.extend('Block', {
+	// =========================================================
+	// Query builder — lightweight wrapper around supabase queries.
+	// Supports .eq(), .order(), .find(), .first(), .get(id)
+	// so that App.fn.loadComponent can call .find() on it.
+	// =========================================================
+	App.fn.query = function(table) {
+		var _table = table;
+		var _filters = [];
+		var _order = null;
 
-		preProcess: function(data) {
+		var q = {
+			eq: function(col, val) {
+				_filters.push({ col: col, val: val });
+				return q;
+			},
+			order: function(col, opts) {
+				_order = { col: col, opts: opts || {} };
+				return q;
+			},
+			find: function() {
+				var query = supabase.from(_table).select();
+				_.each(_filters, function(f) {
+					query = query.eq(f.col, f.val);
+				});
+				if (_order) {
+					query = query.order(_order.col, _order.opts);
+				}
+				return query.then(function(result) {
+					if (result.error) { console.log(result.error); return []; }
+					return result.data;
+				});
+			},
+			first: function() {
+				var query = supabase.from(_table).select();
+				_.each(_filters, function(f) {
+					query = query.eq(f.col, f.val);
+				});
+				if (_order) {
+					query = query.order(_order.col, _order.opts);
+				}
+				return query.limit(1).single().then(function(result) {
+					if (result.error) { console.log(result.error); return null; }
+					return result.data;
+				});
+			},
+			get: function(id) {
+				return supabase.from(_table).select().eq('id', id).single()
+					.then(function(result) {
+						if (result.error) { console.log(result.error); return null; }
+						return result.data;
+					});
+			}
+		};
+		return q;
+	};
 
-			data.type = new App.Models.Type().set('objectId', data.type);
-			data.theme = new App.Models.Theme().set('objectId', data.theme);
-			data.content = jQuery.parseJSON(data.content);
-			data.fields = jQuery.parseJSON(data.fields);
-			data.user = this.get('user') || Parse.User.current();
+	// =========================================================
+	// Data helper functions (replacing Parse model methods)
+	// =========================================================
+
+	App.fn.blockPreProcess = function(blockId, data) {
+		data.type_id = data.type;
+		data.theme_id = data.theme;
+		data.content = data.content ? JSON.parse(data.content) : {};
+		data.fields = data.fields ? JSON.parse(data.fields) : {};
+		delete data.type;
+		delete data.theme;
+
+		supabase.auth.getUser().then(function(resp) {
+			data.user_id = resp.data.user ? resp.data.user.id : null;
 
 			if (data.file) {
-				data.img = new App.Models.Image().uploadAsBlockPreview(data, this);
+				App.fn.uploadAsBlockPreview(data, blockId);
 			} else {
-				this.update(data);
+				delete data.file;
+				App.fn.blockSave(blockId, data);
 			}
+		});
+	};
 
-		},
-
-		update: function(data) {
-			this.set(data).save(null,{
-				success: function(block) {
-					console.log(block);
-				}, error: function(block, error) {
-					console.log(error);
-				}
-			});
+	App.fn.blockSave = function(blockId, data) {
+		var query;
+		if (blockId) {
+			query = supabase.from('blocks').update(data).eq('id', blockId).select();
+		} else {
+			query = supabase.from('blocks').insert(data).select();
 		}
-	});
+		query.then(function(result) {
+			if (result.error) { console.log(result.error); }
+			else { console.log(result.data[0]); }
+		});
+	};
 
-	App.Models.Page = Parse.Object.extend('Page', {
-		update: function(options) {
-			this.set(options.data).save().then(function(page){
-				options.callback(page);
-			});
+	App.fn.pageSave = function(pageId, data, callback) {
+		var query;
+		if (pageId) {
+			query = supabase.from('pages').update(data).eq('id', pageId).select();
+		} else {
+			query = supabase.from('pages').insert(data).select();
 		}
-	});
+		query.then(function(result) {
+			if (result.error) { console.log(result.error); }
+			else { callback(result.data[0]); }
+		});
+	};
 
-	App.Models.Type = Parse.Object.extend('Type');
+	App.fn.imageUpload = function(file, callback) {
+		var fileName = Date.now() + '_' + file.name;
+		var storagePath = 'images/' + fileName;
 
-	App.Models.Theme = Parse.Object.extend('Theme');
+		supabase.storage.from('uploads').upload(storagePath, file, {
+			contentType: file.type
+		}).then(function(uploadResult) {
+			if (uploadResult.error) { console.log(uploadResult.error); return; }
 
-	App.Models.Image = Parse.Object.extend('Image', {
+			var publicUrl = supabase.storage.from('uploads').getPublicUrl(storagePath).data.publicUrl;
 
-		upload: function(file, callback) {
-			var self = this,
-				parseFile = new Parse.File(file.name, file);
-
-			parseFile.save().then(function() {
-				self.set({
-					url: parseFile,
-					uploader: Parse.User.current()
-				}).save(null, {
-					success: function(img) {
-						callback(img);
-					}, error: function(img, error) {
-						console.log(error);
-					}
-				})
+			return supabase.auth.getUser().then(function(userResp) {
+				return supabase.from('images').insert({
+					url: publicUrl,
+					storage_path: storagePath,
+					uploader_id: userResp.data.user ? userResp.data.user.id : null
+				}).select();
 			});
-		},
+		}).then(function(result) {
+			if (result && result.data) {
+				callback(result.data[0]);
+			}
+		});
+	};
 
-		uploadAsBlockPreview: function(data, block) {
-			this.upload(data.file, function(img) {
-				data.img = img;
-				data.imgUrl = data.img.get('url').url();
-				data.file = null;
-				block.update(data);
-			});
-		}
-	});
+	App.fn.uploadAsBlockPreview = function(data, blockId) {
+		App.fn.imageUpload(data.file, function(img) {
+			data.img_id = img.id;
+			data.img_url = img.url;
+			delete data.file;
+			App.fn.blockSave(blockId, data);
+		});
+	};
+
+	// =========================================================
+	// Views
+	// =========================================================
 
 	App.Views.Landing = Backbone.View.extend({
 
@@ -126,38 +199,35 @@ $(function() {
 				return;
 			}
 
-			self.page = self.model.attributes.json;
+			self.page = self.model.json;
 
-			App.fn.findBlock(self.page.blocks[0].objectId, function(block) {
-
-				block.get('theme').fetch().then(function(theme){
-					self.loadPage(theme);	
-				})
+			App.fn.findBlock(self.page.blocks[0].blockId, function(block) {
+				supabase.from('themes').select().eq('id', block.theme_id).single()
+					.then(function(result) {
+						self.loadPage(result.data);
+					});
 			});
-			
+
 		},
 
 		getDefaultTheme: function() {
-			var self = this,
-				themeQuery = new Parse.Query(App.Models.Theme);
-			themeQuery
-				.equalTo('isDefault', true)
-				.first()
-				.then(function(theme) {
-					self.loadPage(theme);
+			var self = this;
+			supabase.from('themes').select().eq('is_default', true).limit(1).single()
+				.then(function(result) {
+					self.loadPage(result.data);
 				});
 		},
 
 		loadPage: function(theme) {
 
 			var self = this;
-				
+
 			self.currTheme = theme;
 
 			App.fn.findThemeBlocks(self.currTheme, function(blocks) {
 
 				self.collection = blocks;
-				self.$el.html(self.template(self.currTheme.attributes));
+				self.$el.html(self.template(self.currTheme));
 
 				// Load Theme
 				self.loadThemes();
@@ -167,7 +237,7 @@ $(function() {
 				if (self.page) {
 					self.loadExistingBlocks(self.page);
 				}
-			});	
+			});
 		},
 
 		loadThemes: function() {
@@ -213,7 +283,7 @@ $(function() {
 				}),
 				callback: function(types) {
 					_.each(self.blocks, function(block, i) {
-						$('#' + block.id).appendTo($('#' + block.attributes.type.id));
+						$('#' + block.id).appendTo($('#' + block.type_id));
 					});
 					_.each(self.$el.find('.blocks'), function(block, i) {
 						if ($(block).find('.block').length === 0) {
@@ -223,24 +293,21 @@ $(function() {
 				}
 			});
 		},
-		
+
 		changeTheme: function (e) {
 			var self = this,
 				id = $(e.target).closest('.theme').data('id');
 
 			if (id === self.currTheme.id) return;
 
-			var themeQuery = new Parse.Query(App.Models.Theme);
-
-			themeQuery
-				.equalTo('objectId', id)
-				.first()
-				.then(function(theme) {
+			supabase.from('themes').select().eq('id', id).single()
+				.then(function(result) {
+					var theme = result.data;
 					self.currTheme = theme;
 					App.fn.findThemeBlocks(theme, function(blocks){
 						self.loadBlocks(blocks);
 					});
-					self.$el.find('.theme-curr-name').html(theme.get('name'));
+					self.$el.find('.theme-curr-name').html(theme.name);
 				});
 		},
 
@@ -273,7 +340,7 @@ $(function() {
 
 				_.each($blocks, function($b, i){
 					page.blocks[i] = {
-						objectId: $blocks.eq(i).data('id'),
+						blockId: $blocks.eq(i).data('id'),
 						content: $blocks.eq(i).data('content')
 					};
 				});
@@ -284,15 +351,8 @@ $(function() {
 			}
 
 			if (self.page) {
-
-				self.model.update({
-					data: {
-						json: page
-					},
-					callback: function (page) {
-						App.router.navigate('#/edit/' + page.id, {trigger: true});
-					}
-
+				App.fn.pageSave(self.model.id, { json: page }, function(page) {
+					App.router.navigate('#/edit/' + page.id, {trigger: true});
 				});
 			} else {
 				App.fn.renderView({
@@ -319,7 +379,7 @@ $(function() {
 				appendTo: '.preview-list',
 				connectToSortable: '.preview-list'
 			});
-			
+
 			this.$el.find('.preview-list').droppable({
 				accept: '.side .block',
 				greedy: false
@@ -410,17 +470,15 @@ $(function() {
 					self.blocks[index].content[field] = val;
 					break;
 				case 'img':
-					var img = new App.Models.Image();
-					img.upload($e[0].files[0], function(img){
-						val = img.get('url').url();
+					App.fn.imageUpload($e[0].files[0], function(img){
+						val = img.url;
 						$field.attr('src', val);
 						self.blocks[index].content[field] = val;
 					});
 					break;
 				case 'bgimg':
-					var img = new App.Models.Image();
-					img.upload($e[0].files[0], function(img){
-						val = img.get('url').url();
+					App.fn.imageUpload($e[0].files[0], function(img){
+						val = img.url;
 						$field.css('background-image', 'url(' + val + ')');
 						self.blocks[index].content[field] = val;
 					});
@@ -432,30 +490,24 @@ $(function() {
 			var self = this,
 				json = {};
 
-			if (!self.model.attributes) self.model = new App.Models.Page();
-			
 			json.blocks = [];
 
 			_.each(self.blocks, function(block){
 
 				var newBlock = {};
 
-				newBlock.objectId = block.id;
+				newBlock.blockId = block.id;
 				newBlock.content = block.content;
 
 				json.blocks.push(newBlock);
 
 			});
 
-			self.model.update({
-				data: {
-					json: json
-				},
-				callback: function (page) {
-					_.each(navs, function(nav, i){
-						App.router.navigate('#/' + nav.url + '/' + page.id, {trigger: nav.trigger});
-					});
-				}
+			App.fn.pageSave(self.model.id || null, { json: json }, function(page) {
+				self.model = page;
+				_.each(navs, function(nav, i){
+					App.router.navigate('#/' + nav.url + '/' + page.id, {trigger: nav.trigger});
+				});
 			});
 		},
 
@@ -487,8 +539,8 @@ $(function() {
 			var self = this,
 				page;
 
-			if (self.model.attributes) {
-				page = self.model.attributes.json;
+			if (self.model.id && self.model.json) {
+				page = self.model.json;
 			} else {
 				page = self.model;
 			}
@@ -506,8 +558,8 @@ $(function() {
 
 				self.blocks = blocks;
 
-				// Temp - hide back when the page has not been published before
-				if (!self.model.attributes) {
+				// Hide back when the page has not been published before
+				if (!self.model.id) {
 					self.$el.find('.back').hide();
 				}
 			});
@@ -524,7 +576,7 @@ $(function() {
 				page;
 
 			if (self.model) {
-				var page = self.model.attributes.json;
+				page = self.model.json;
 			} else {
 				page = self.options.page;
 			}
@@ -551,15 +603,17 @@ $(function() {
 			e.preventDefault();
 
 			var data = $(e.target).serializeArray(),
-				username = data[0].value,
+				email = data[0].value,
 				password = data[1].value;
 
-			Parse.User.logIn(username, password, {
-				success: function(user) {
+			supabase.auth.signInWithPassword({
+				email: email,
+				password: password
+			}).then(function(result) {
+				if (result.error) {
+					alert(result.error.message);
+				} else {
 					Backbone.history.navigate('#/dev', { trigger: true });
-				},
-				error: function(user, error) {
-					alert(error.message);
 				}
 			});
 
@@ -590,10 +644,10 @@ $(function() {
 
 		submit: function(e){
 			e.preventDefault();
-			this.model = this.model || new App.Models.Block();
-			this.model.preProcess({
-				type:		this.$el.find('#update-block-type').val(),
-				theme:		this.$el.find('#update-block-theme').val(),
+			var blockId = this.model ? this.model.id : null;
+			App.fn.blockPreProcess(blockId, {
+				type:		this.$el.find('.update-block-type select').val(),
+				theme:		this.$el.find('.update-block-theme select').val(),
 				name:		this.$el.find('#update-block-name').val(),
 				file:		this.$el.find('#update-block-file')[0].files[0],
 				html:		this.$el.find('#update-block-html').val(),
@@ -604,7 +658,7 @@ $(function() {
 		},
 
 		render: function(){
-			
+
 			var self = this;
 
 			self.$el.html(self.template());
@@ -620,9 +674,9 @@ $(function() {
 				}
 			});
 
-			// Load User Series
+			// Load Themes
 			App.fn.loadComponent({
-				collection: App.query.userThemes,
+				collection: App.query.themes,
 				View: App.Views.Select,
 				$container: self.$el.find('.update-block-theme'),
 				data: {
@@ -639,7 +693,7 @@ $(function() {
 		template: Handlebars.compile($('#select-tpl').html()),
 
 		render: function(){
-			var data = { 
+			var data = {
 				items: this.collection,
 				label: this.options.label,
 				field: this.options.field
@@ -648,29 +702,23 @@ $(function() {
 		}
 	});
 
+	// =========================================================
+	// Router
+	// =========================================================
+
 	App.Router = Backbone.Router.extend({
 
 		initialize: function(options){
 
 			App.$pageStyles = $('#page-styles');
 
-			// App.blocks = [];
-			App.query.blocks = new Parse.Query(App.Models.Block);
-			App.query.types = new Parse.Query(App.Models.Type).ascending('order');
-			App.query.themes = new Parse.Query(App.Models.Theme).equalTo('isLive', true);
-			App.query.userThemes = new Parse.Query(App.Models.Theme).equalTo('user', Parse.User.current());
-
-			// BlogApp.blog = new BlogApp.Models.Blog();
-			// BlogApp.category = new BlogApp.Models.Category();
-			// BlogApp.query = {
-			// 	blog: new Parse.Query(BlogApp.Models.Blog),
-			// 	category: new Parse.Query(BlogApp.Models.Category)
-			// };
+			App.query.blocks = App.fn.query('blocks');
+			App.query.types = App.fn.query('types').order('order');
+			App.query.themes = App.fn.query('themes').eq('is_live', true);
 		},
-		
+
 		start: function(){
 			Backbone.history.start({root: '/'});
-			// Backbone.history.start({root: '/blocks/'});
 		},
 
 		routes: {
@@ -697,33 +745,33 @@ $(function() {
 		},
 
 		build: function(id) {
-			var query = new Parse.Query(App.Models.Page);
-			query.get(id).then(function(page){
-				App.fn.renderView({
-					View: App.Views.EditPageBlocks,
-					data: { model: page }
+			supabase.from('pages').select().eq('id', id).single()
+				.then(function(result) {
+					App.fn.renderView({
+						View: App.Views.EditPageBlocks,
+						data: { model: result.data }
+					});
 				});
-			});
 		},
 
 		edit: function(id) {
-			var query = new Parse.Query(App.Models.Page);
-			query.get(id).then(function(page){
-				App.fn.renderView({
-					View: App.Views.EditPageContent,
-					data: { model: page }
+			supabase.from('pages').select().eq('id', id).single()
+				.then(function(result) {
+					App.fn.renderView({
+						View: App.Views.EditPageContent,
+						data: { model: result.data }
+					});
 				});
-			});
 		},
 
 		page: function(id) {
-			var query = new Parse.Query(App.Models.Page);
-			query.get(id).then(function(page){
-				App.fn.renderView({
-					View: App.Views.Page,
-					data: { model: page }
+			supabase.from('pages').select().eq('id', id).single()
+				.then(function(result) {
+					App.fn.renderView({
+						View: App.Views.Page,
+						data: { model: result.data }
+					});
 				});
-			});
 		},
 
 		login: function() {
@@ -733,30 +781,36 @@ $(function() {
 		},
 
 		dev: function() {
-			App.fn.checkLogin();
-			var currentUser = Parse.User.current();
-			App.fn.renderView({
-				View: App.Views.Dev,
-				data: { model: currentUser }
+			App.fn.checkLogin(function(user) {
+				App.fn.renderView({
+					View: App.Views.Dev,
+					data: { model: user }
+				});
 			});
 		},
 
 		addBlock: function() {
-			App.fn.checkLogin();
-			App.fn.renderView({
-				View: App.Views.UpdateBlock,
+			App.fn.checkLogin(function() {
+				App.fn.renderView({
+					View: App.Views.UpdateBlock,
+				});
 			});
 		},
 
 	});
 
-	App.fn.checkLogin = function() {
-		var currentUser = Parse.User.current();
-		if (!currentUser) {
-			Backbone.history.navigate('#/login', { trigger: true });
-		} else {
-			return;
-		}
+	// =========================================================
+	// Utility functions
+	// =========================================================
+
+	App.fn.checkLogin = function(callback) {
+		supabase.auth.getUser().then(function(resp) {
+			if (!resp.data.user) {
+				Backbone.history.navigate('#/login', { trigger: true });
+			} else {
+				if (callback) callback(resp.data.user);
+			}
+		});
 	};
 
 	App.fn.generateView = function(options) {
@@ -775,7 +829,6 @@ $(function() {
 						break;
 				}
 				data = _.extend({}, options.data, data);
-				// console.log(data);
 				this.$el.html(this.template(data));
 			}
 		});
@@ -788,6 +841,8 @@ $(function() {
 			$container = options.$container || App.$app, // container to put the view
 			notInsert = options.notInsert, // put the el in the container or return el as HTML
 			view = new View(data);
+		// Preserve extra data as view.options for backwards compat
+		view.options = _.extend({}, view.options, data);
 		view.render();
 		if (notInsert) {
 			return view.el.outerHTML;
@@ -797,9 +852,6 @@ $(function() {
 	};
 
 	App.fn.loadComponent = function(options) {
-
-		// TODO - Check don't fetch if fetched
-		// console.log(options.collection);
 
 		options.collection.find().then(function(collection){
 
@@ -814,13 +866,13 @@ $(function() {
 
 			if (options.callback) options.callback(collection);
 		});
-	
+
 	}
 
 	App.fn.findThemeBlocks = function(theme, callback) {
 
-		var query = new Parse.Query(App.Models.Block).equalTo('theme', theme).equalTo('isLive', true);
-		
+		var query = App.fn.query('blocks').eq('theme_id', theme.id).eq('is_live', true);
+
 		callback(query);
 	}
 
@@ -864,21 +916,21 @@ $(function() {
 
 			_.each(page.blocks, function(b) {
 
-				App.fn.findBlock(b.objectId, function(block) {
+				App.fn.findBlock(b.blockId, function(block) {
 
 					var jsonBlock = {
 						id: block.id,
-						content: block.attributes.content,
-						html: block.attributes.html,
-						css: block.attributes.css,
-						fields: block.attributes.fields,
-						theme: block.attributes.theme,
-						imgUrl: block.attributes.imgUrl,
+						content: block.content,
+						html: block.html,
+						css: block.css,
+						fields: block.fields,
+						theme: { id: block.theme_id },
+						img_url: block.img_url,
 					};
 
 					// Update block content with page content
 					if (b.content) jsonBlock.content = b.content;
-					
+
 					_.each(jsonBlock.fields.fields, function(field) {
 
 						// Copy content into fields
@@ -941,14 +993,14 @@ $(function() {
 				// Only push the # of blocks with in options.blocks
 				style.blocks.push(i);
 			}
-			
+
 			if (style.themes.indexOf(themeId) === -1) {
 				style.themes.push(themeId);
 			}
-			
+
 		});
 
-		// Load HTMl
+		// Load HTML
 		$container.append(html);
 
 		// Load CSS
@@ -969,9 +1021,9 @@ $(function() {
 					return t.id === themeId;
 				})[0];
 
-				css += theme.attributes.css;
+				css += theme.css;
 			});
-			
+
 			// Blocks
 			_.each(style.blocks, function(num, i) {
 				css += blocks[num].css;

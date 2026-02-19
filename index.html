@@ -6,7 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Premade.io - Drag & drop webpage builder with thousands of pre-made content blocks</title>
 	<!-- Stylesheet -->
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="stylesheets/site.css">
 	<style id="page-styles"></style>
@@ -155,7 +156,7 @@
 	<script id="page-edit-blocks-with-content" type="text/x-handlebars-template">
 		{{#each items}}
 			<li class="block" id="{{id}}" data-id="{{id}}" data-content="{{content}}">
-				<img class="block-img" src="{{imgUrl}}" alt="{{name}}"/>
+				<img class="block-img" src="{{img_url}}" alt="{{name}}"/>
 			</li>
 		{{/each}}
 	</script>
@@ -163,7 +164,7 @@
 	<script id="page-edit-blocks" type="text/x-handlebars-template">
 		{{#each items}}
 			<li class="block" id="{{id}}" data-id="{{id}}">
-				<img class="block-img" src="{{attributes.imgUrl}}" alt="{{attributes.name}}"/>
+				<img class="block-img" src="{{img_url}}" alt="{{name}}"/>
 			</li>
 		{{/each}}
 	</script>
@@ -171,7 +172,7 @@
 	<script id="page-edit-types" type="text/x-handlebars-template">
 		{{#each items}}
 			<li class="type" data-id="{{id}}">
-				<div class="type-label">{{attributes.name}}</div>
+				<div class="type-label">{{name}}</div>
 				<ul class="blocks"id="{{id}}"></ul>
 			</li>
 		{{/each}}
@@ -181,11 +182,11 @@
 		{{#each items}}
 			<li class="theme" data-id="{{id}}">
 				<div class="theme-title">
-					<span class="theme-name">{{attributes.name}}</span>
+					<span class="theme-name">{{name}}</span>
 					by
-					<a href="{{attributes.authorUrl}}" target="_blank">{{attributes.author}}</a>
+					<a href="{{author_url}}" target="_blank">{{author}}</a>
 				</div>
-				<img class="theme-img" src="{{attributes.imgUrl}}" alt="{{attributes.name}}"/>
+				<img class="theme-img" src="{{img_url}}" alt="{{name}}"/>
 			</li>
 		{{/each}}
 	</script>
@@ -206,14 +207,14 @@
 
 	<script id="login-tpl" type="text/x-handlebars-template">
 		<form class="login-form">
-			<input type="text" name="username" placeholder="Username" required="required" autofocus="">
+			<input type="email" name="email" placeholder="Email" required="required" autofocus="">
 			<input type="password" name="password" placeholder="Password" required="required">
 			<button type="submit">Sign in</button>
 		</form>
 	</script>
 
 	<script id="dev-tpl" type="text/x-handlebars-template">
-		<a href="#/add">Add Block</a>
+		<a href="#/add-block">Add Block</a>
 	</script>
 
 	<script id="update-block-tpl" type="text/x-handlebars-template">
@@ -245,7 +246,7 @@
 			</div>
 			<div class="form-group">
 				<label for="update-block-fields">Define Fields</label>
-				<textarea class="form-control" id="update-block-help" name="help" rows="3"></textarea>
+				<textarea class="form-control" id="update-block-fields" name="fields" rows="3"></textarea>
 				<p class="help-block">in JSON</p>
 			</div>
 			<div class="form-group">
@@ -258,7 +259,7 @@
 		<label for="update-block-{{field}}">{{label}}</label>
 		<select class="form-control" id="update-block-{{field}}" name="{{field}}">
 			{{#each items}}
-				<option value="{{objectId}}">{{name}}</option>
+				<option value="{{id}}">{{name}}</option>
 			{{/each}}
 		</select>
 	</script>
@@ -268,7 +269,7 @@
 	<script src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
-	<script src="//npmcdn.com/parse/dist/parse.min.js"></script> <!-- v1.9.2 -->
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 	<script src="//cdn.jsdelivr.net/handlebarsjs/3.0.3/handlebars.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="js/site.js"></script>
