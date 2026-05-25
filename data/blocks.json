@@ -1,0 +1,677 @@
+[
+  {
+    "id": "dcd4c1c3-052c-48e8-a5f8-b59455abbde7",
+    "type_id": "52f9f9e0-acda-42a6-a7e5-08af42a9ef91",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "88cdbd2b-3c28-41d5-8103-e7c5222012ea",
+    "content": {
+      "logo": "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
+      "heading": "Centered hero",
+      "description": "Quickly design and customize responsive mobile-first sites with Bootstrap, the world's most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.",
+      "primary_btn": "Primary button",
+      "secondary_btn": "Secondary"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "logo",
+          "name": "Logo Image",
+          "type": "img"
+        },
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        },
+        {
+          "key": "primary_btn",
+          "name": "Primary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_btn",
+          "name": "Secondary Button Text",
+          "type": "txt"
+        }
+      ]
+    },
+    "html": "<div class=\"px-4 py-5 my-5 text-center\">\n  <img class=\"d-block mx-auto mb-4 logo\" src=\"{{logo}}\" alt=\"\" width=\"72\" height=\"57\">\n  <h1 class=\"display-5 fw-bold text-body-emphasis heading\">{{heading}}</h1>\n  <div class=\"col-lg-6 mx-auto\">\n    <p class=\"lead mb-4 description\">{{description}}</p>\n    <div class=\"d-grid gap-2 d-sm-flex justify-content-sm-center\">\n      <button type=\"button\" class=\"btn btn-primary btn-lg px-4 gap-3 primary_btn\">{{primary_btn}}</button>\n      <button type=\"button\" class=\"btn btn-outline-secondary btn-lg px-4 secondary_btn\">{{secondary_btn}}</button>\n    </div>\n  </div>\n</div>",
+    "css": "",
+    "img_url": "img/uploads/getbootstrap.com_docs_5.3_examples_heroes_ (1).png",
+    "is_live": true,
+    "name": "Centered hero",
+    "created_at": "2026-02-17T20:09:05.736387+00:00"
+  },
+  {
+    "id": "42daed53-75b6-4d85-9c46-a156f167534a",
+    "type_id": "52f9f9e0-acda-42a6-a7e5-08af42a9ef91",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "4b93fcaf-c400-4773-9f3f-b5661bd608d0",
+    "content": {
+      "heading": "Responsive left-aligned hero with image",
+      "hero_image": "https://getbootstrap.com/docs/5.3/examples/heroes/bootstrap-themes.png",
+      "description": "Quickly design and customize responsive mobile-first sites with Bootstrap, the world''s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.",
+      "primary_btn": "Primary",
+      "primary_url": "#",
+      "secondary_btn": "Default",
+      "secondary_url": "#"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        },
+        {
+          "key": "hero_image",
+          "name": "Hero Image",
+          "type": "img"
+        },
+        {
+          "key": "primary_btn",
+          "name": "Primary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "primary_url",
+          "name": "Primary Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_btn",
+          "name": "Secondary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_url",
+          "name": "Secondary Button URL",
+          "type": "txt"
+        }
+      ]
+    },
+    "html": "<div class=\"row flex-lg-row-reverse align-items-center g-5 py-5\">\n    <div class=\"col-10 col-sm-8 col-lg-6\">\n      <img src=\"{{hero_image}}\" class=\"d-block mx-lg-auto img-fluid hero_image\" alt=\"Hero Image\" width=\"700\" height=\"500\" loading=\"lazy\">\n    </div>\n    <div class=\"col-lg-6\">\n      <h1 class=\"display-5 fw-bold text-body-emphasis lh-1 mb-3 heading\">{{heading}}</h1>\n      <p class=\"lead description\">{{description}}</p>\n      <div class=\"d-grid gap-2 d-md-flex justify-content-md-start\">\n        <a href=\"{{primary_url}}\" class=\"btn btn-primary btn-lg px-4 me-md-2 primary_btn\">{{primary_btn}}</a>\n        <a href=\"{{secondary_url}}\" class=\"btn btn-outline-secondary btn-lg px-4 secondary_btn\">{{secondary_btn}}</a>\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771384577721_Responsive left-aligned hero with image.png",
+    "is_live": true,
+    "name": "Left-Aligned Hero with Image",
+    "created_at": "2026-02-18T03:16:19.250824+00:00"
+  },
+  {
+    "id": "6104c885-140a-41b3-8c6b-ebf631ee7a3c",
+    "type_id": "52f9f9e0-acda-42a6-a7e5-08af42a9ef91",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "15fee762-5042-4d97-a792-661a0b06812e",
+    "content": {
+      "heading": "Centered screenshot",
+      "screenshot": "https://getbootstrap.com/docs/5.3/examples/heroes/bootstrap-docs.png",
+      "description": "Quickly design and customize responsive mobile-first sites with Bootstrap, the world''s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.",
+      "primary_btn": "Primary button",
+      "primary_url": "#",
+      "secondary_btn": "Secondary",
+      "secondary_url": "#"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        },
+        {
+          "key": "primary_btn",
+          "name": "Primary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "primary_url",
+          "name": "Primary Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_btn",
+          "name": "Secondary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_url",
+          "name": "Secondary Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "screenshot",
+          "name": "Screenshot Image",
+          "type": "img"
+        }
+      ]
+    },
+    "html": "<div class=\"px-4 pt-5 my-5 text-center border-bottom\">\n    <h1 class=\"display-4 fw-bold text-body-emphasis heading\">{{heading}}</h1>\n    <div class=\"col-lg-6 mx-auto\">\n      <p class=\"lead mb-4 description\">{{description}}</p>\n      <div class=\"d-grid gap-2 d-sm-flex justify-content-sm-center mb-5\">\n        <a href=\"{{primary_url}}\" class=\"btn btn-primary btn-lg px-4 me-sm-3 primary_btn\">{{primary_btn}}</a>\n        <a href=\"{{secondary_url}}\" class=\"btn btn-outline-secondary btn-lg px-4 secondary_btn\">{{secondary_btn}}</a>\n      </div>\n    </div>\n    <div class=\"overflow-hidden\" style=\"max-height: 30vh;\">\n      <div class=\"container px-5\">\n        <img src=\"{{screenshot}}\" class=\"img-fluid border rounded-3 shadow-lg mb-4 screenshot\" alt=\"Example image\" width=\"700\" height=\"500\" loading=\"lazy\">\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771383636234_centered-screenshot.png",
+    "is_live": true,
+    "name": "Centered screenshot",
+    "created_at": "2026-02-18T03:00:37.688616+00:00"
+  },
+  {
+    "id": "a752ec0f-cf97-46eb-b32d-5bb77455e9e1",
+    "type_id": "52f9f9e0-acda-42a6-a7e5-08af42a9ef91",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "e3c5b18d-8e2d-424e-98f2-f32b997f7758",
+    "content": {
+      "heading": "Border hero with cropped image and shadows",
+      "hero_image": "https://getbootstrap.com/docs/5.3/examples/heroes/bootstrap-docs.png",
+      "description": "Quickly design and customize responsive mobile-first sites with Bootstrap, the world''s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.",
+      "primary_btn": "Primary",
+      "primary_url": "#",
+      "secondary_btn": "Default",
+      "secondary_url": "#"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        },
+        {
+          "key": "primary_btn",
+          "name": "Primary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "primary_url",
+          "name": "Primary Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_btn",
+          "name": "Secondary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_url",
+          "name": "Secondary Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "hero_image",
+          "name": "Hero Image",
+          "type": "img"
+        }
+      ]
+    },
+    "html": "<div class=\"container my-5\">\n    <div class=\"row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg\">\n      <div class=\"col-lg-7 p-3 p-lg-5 pt-lg-3\">\n        <h1 class=\"display-4 fw-bold lh-1 text-body-emphasis heading\">{{heading}}</h1>\n        <p class=\"lead description\">{{description}}</p>\n        <div class=\"d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3\">\n          <a href=\"{{primary_url}}\" class=\"btn btn-primary btn-lg px-4 me-md-2 fw-bold primary_btn\">{{primary_btn}}</a>\n          <a href=\"{{secondary_url}}\" class=\"btn btn-outline-secondary btn-lg px-4 secondary_btn\">{{secondary_btn}}</a>\n        </div>\n      </div>\n      <div class=\"col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg\">\n        <img class=\"rounded-lg-3 hero_image\" src=\"{{hero_image}}\" alt=\"\" width=\"720\">\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771384879866_Border hero with cropped image and shadows.png",
+    "is_live": true,
+    "name": "Border Hero with Cropped Image",
+    "created_at": "2026-02-18T03:21:21.305846+00:00"
+  },
+  {
+    "id": "95bd4179-68ce-44bb-a8f9-da2d980d66b6",
+    "type_id": "10bcc07c-17c9-44b5-830d-1739de23d31c",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "d69958c8-a552-4e6a-828c-1c3ac9859110",
+    "content": {
+      "col1_url": "#",
+      "col2_url": "#",
+      "col3_url": "#",
+      "col1_icon": "img/assets/placeholder-icon.png",
+      "col1_link": "Call to action",
+      "col1_text": "Paragraph of text beneath the heading to explain the heading. We''ll add onto it with another sentence and probably just keep going until we run out of words.",
+      "col2_icon": "img/assets/placeholder-icon.png",
+      "col2_link": "Call to action",
+      "col2_text": "Paragraph of text beneath the heading to explain the heading. We''ll add onto it with another sentence and probably just keep going until we run out of words.",
+      "col3_icon": "img/assets/placeholder-icon.png",
+      "col3_link": "Call to action",
+      "col3_text": "Paragraph of text beneath the heading to explain the heading. We''ll add onto it with another sentence and probably just keep going until we run out of words.",
+      "col1_title": "Featured title",
+      "col2_title": "Featured title",
+      "col3_title": "Featured title",
+      "section_title": "Columns with icons"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "section_title",
+          "name": "Section Title",
+          "type": "txt"
+        },
+        {
+          "key": "col1_icon",
+          "name": "Column 1 Icon",
+          "type": "img"
+        },
+        {
+          "key": "col1_title",
+          "name": "Column 1 Title",
+          "type": "txt"
+        },
+        {
+          "key": "col1_text",
+          "name": "Column 1 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "col1_link",
+          "name": "Column 1 Link Text",
+          "type": "txt"
+        },
+        {
+          "key": "col1_url",
+          "name": "Column 1 Link URL",
+          "type": "txt"
+        },
+        {
+          "key": "col2_icon",
+          "name": "Column 2 Icon",
+          "type": "img"
+        },
+        {
+          "key": "col2_title",
+          "name": "Column 2 Title",
+          "type": "txt"
+        },
+        {
+          "key": "col2_text",
+          "name": "Column 2 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "col2_link",
+          "name": "Column 2 Link Text",
+          "type": "txt"
+        },
+        {
+          "key": "col2_url",
+          "name": "Column 2 Link URL",
+          "type": "txt"
+        },
+        {
+          "key": "col3_icon",
+          "name": "Column 3 Icon",
+          "type": "img"
+        },
+        {
+          "key": "col3_title",
+          "name": "Column 3 Title",
+          "type": "txt"
+        },
+        {
+          "key": "col3_text",
+          "name": "Column 3 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "col3_link",
+          "name": "Column 3 Link Text",
+          "type": "txt"
+        },
+        {
+          "key": "col3_url",
+          "name": "Column 3 Link URL",
+          "type": "txt"
+        }
+      ]
+    },
+    "html": "<div class=\"container px-4 py-5\">\n    <h2 class=\"pb-2 border-bottom section_title\">{{section_title}}</h2>\n    <div class=\"row g-4 py-5 row-cols-1 row-cols-lg-3\">\n      <div class=\"feature col\">\n        <img src=\"{{col1_icon}}\" class=\"mb-3 col1_icon\" width=\"48\" height=\"48\" alt=\"\">\n        <h3 class=\"fs-2 text-body-emphasis col1_title\">{{col1_title}}</h3>\n        <p class=\"col1_text\">{{col1_text}}</p>\n        <a href=\"{{col1_url}}\" class=\"icon-link col1_link\">{{col1_link}} &rarr;</a>\n      </div>\n      <div class=\"feature col\">\n        <img src=\"{{col2_icon}}\" class=\"mb-3 col2_icon\" width=\"48\" height=\"48\" alt=\"\">\n        <h3 class=\"fs-2 text-body-emphasis col2_title\">{{col2_title}}</h3>\n        <p class=\"col2_text\">{{col2_text}}</p>\n        <a href=\"{{col2_url}}\" class=\"icon-link col2_link\">{{col2_link}} &rarr;</a>\n      </div>\n      <div class=\"feature col\">\n        <img src=\"{{col3_icon}}\" class=\"mb-3 col3_icon\" width=\"48\" height=\"48\" alt=\"\">\n        <h3 class=\"fs-2 text-body-emphasis col3_title\">{{col3_title}}</h3>\n        <p class=\"col3_text\">{{col3_text}}</p>\n        <a href=\"{{col3_url}}\" class=\"icon-link col3_link\">{{col3_link}} &rarr;</a>\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771386264288_Columns with icons.png",
+    "is_live": true,
+    "name": "Columns with Icons",
+    "created_at": "2026-02-18T03:44:25.49329+00:00"
+  },
+  {
+    "id": "826283cd-5754-41cc-933d-d056066cf008",
+    "type_id": "10bcc07c-17c9-44b5-830d-1739de23d31c",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "b0d8d2ea-f6ab-451d-b46c-55bccdcaa7a0",
+    "content": {
+      "heading": "Left-aligned title explaining these awesome features",
+      "feat1_icon": "img/assets/placeholder-icon.png",
+      "feat1_text": "Paragraph of text beneath the heading to explain the heading.",
+      "feat2_icon": "img/assets/placeholder-icon.png",
+      "feat2_text": "Paragraph of text beneath the heading to explain the heading.",
+      "feat3_icon": "img/assets/placeholder-icon.png",
+      "feat3_text": "Paragraph of text beneath the heading to explain the heading.",
+      "feat4_icon": "img/assets/placeholder-icon.png",
+      "feat4_text": "Paragraph of text beneath the heading to explain the heading.",
+      "description": "Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.",
+      "feat1_title": "Featured title",
+      "feat2_title": "Featured title",
+      "feat3_title": "Featured title",
+      "feat4_title": "Featured title",
+      "primary_btn": "Primary button",
+      "primary_url": "#",
+      "section_title": "Features with title"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "section_title",
+          "name": "Section Title",
+          "type": "txt"
+        },
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        },
+        {
+          "key": "primary_btn",
+          "name": "Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "primary_url",
+          "name": "Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "feat1_icon",
+          "name": "Feature 1 Icon",
+          "type": "img"
+        },
+        {
+          "key": "feat1_title",
+          "name": "Feature 1 Title",
+          "type": "txt"
+        },
+        {
+          "key": "feat1_text",
+          "name": "Feature 1 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "feat2_icon",
+          "name": "Feature 2 Icon",
+          "type": "img"
+        },
+        {
+          "key": "feat2_title",
+          "name": "Feature 2 Title",
+          "type": "txt"
+        },
+        {
+          "key": "feat2_text",
+          "name": "Feature 2 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "feat3_icon",
+          "name": "Feature 3 Icon",
+          "type": "img"
+        },
+        {
+          "key": "feat3_title",
+          "name": "Feature 3 Title",
+          "type": "txt"
+        },
+        {
+          "key": "feat3_text",
+          "name": "Feature 3 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "feat4_icon",
+          "name": "Feature 4 Icon",
+          "type": "img"
+        },
+        {
+          "key": "feat4_title",
+          "name": "Feature 4 Title",
+          "type": "txt"
+        },
+        {
+          "key": "feat4_text",
+          "name": "Feature 4 Text",
+          "type": "longtxt"
+        }
+      ]
+    },
+    "html": "<div class=\"container px-4 py-5\">\n    <h2 class=\"pb-2 border-bottom section_title\">{{section_title}}</h2>\n    <div class=\"row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5\">\n      <div class=\"col d-flex flex-column align-items-start gap-2\">\n        <h2 class=\"fw-bold text-body-emphasis heading\">{{heading}}</h2>\n        <p class=\"text-body-secondary description\">{{description}}</p>\n        <a href=\"{{primary_url}}\" class=\"btn btn-primary btn-lg primary_btn\">{{primary_btn}}</a>\n      </div>\n      <div class=\"col\">\n        <div class=\"row row-cols-1 row-cols-sm-2 g-4\">\n          <div class=\"col d-flex flex-column gap-2\">\n            <img src=\"{{feat1_icon}}\" class=\"feat1_icon\" width=\"32\" height=\"32\" alt=\"\">\n            <h4 class=\"fw-semibold mb-0 text-body-emphasis feat1_title\">{{feat1_title}}</h4>\n            <p class=\"text-body-secondary feat1_text\">{{feat1_text}}</p>\n          </div>\n          <div class=\"col d-flex flex-column gap-2\">\n            <img src=\"{{feat2_icon}}\" class=\"feat2_icon\" width=\"32\" height=\"32\" alt=\"\">\n            <h4 class=\"fw-semibold mb-0 text-body-emphasis feat2_title\">{{feat2_title}}</h4>\n            <p class=\"text-body-secondary feat2_text\">{{feat2_text}}</p>\n          </div>\n          <div class=\"col d-flex flex-column gap-2\">\n            <img src=\"{{feat3_icon}}\" class=\"feat3_icon\" width=\"32\" height=\"32\" alt=\"\">\n            <h4 class=\"fw-semibold mb-0 text-body-emphasis feat3_title\">{{feat3_title}}</h4>\n            <p class=\"text-body-secondary feat3_text\">{{feat3_text}}</p>\n          </div>\n          <div class=\"col d-flex flex-column gap-2\">\n            <img src=\"{{feat4_icon}}\" class=\"feat4_icon\" width=\"32\" height=\"32\" alt=\"\">\n            <h4 class=\"fw-semibold mb-0 text-body-emphasis feat4_title\">{{feat4_title}}</h4>\n            <p class=\"text-body-secondary feat4_text\">{{feat4_text}}</p>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771386560982_Features with title.png",
+    "is_live": true,
+    "name": "Features with Title",
+    "created_at": "2026-02-18T03:49:21.778631+00:00"
+  },
+  {
+    "id": "772a7393-0569-4776-b070-67c2492b17b5",
+    "type_id": "10bcc07c-17c9-44b5-830d-1739de23d31c",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "cc306072-2808-4438-82ca-fcaad82598e4",
+    "content": {
+      "col1_btn": "Primary button",
+      "col1_url": "#",
+      "col2_btn": "Primary button",
+      "col2_url": "#",
+      "col3_btn": "Primary button",
+      "col3_url": "#",
+      "col1_icon": "img/assets/placeholder-icon.png",
+      "col1_text": "Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.",
+      "col2_icon": "img/assets/placeholder-icon.png",
+      "col2_text": "Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.",
+      "col3_icon": "img/assets/placeholder-icon.png",
+      "col3_text": "Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.",
+      "col1_title": "Featured title",
+      "col2_title": "Featured title",
+      "col3_title": "Featured title",
+      "section_title": "Hanging icons"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "section_title",
+          "name": "Section Title",
+          "type": "txt"
+        },
+        {
+          "key": "col1_icon",
+          "name": "Column 1 Icon",
+          "type": "img"
+        },
+        {
+          "key": "col1_title",
+          "name": "Column 1 Title",
+          "type": "txt"
+        },
+        {
+          "key": "col1_text",
+          "name": "Column 1 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "col1_btn",
+          "name": "Column 1 Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "col1_url",
+          "name": "Column 1 Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "col2_icon",
+          "name": "Column 2 Icon",
+          "type": "img"
+        },
+        {
+          "key": "col2_title",
+          "name": "Column 2 Title",
+          "type": "txt"
+        },
+        {
+          "key": "col2_text",
+          "name": "Column 2 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "col2_btn",
+          "name": "Column 2 Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "col2_url",
+          "name": "Column 2 Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "col3_icon",
+          "name": "Column 3 Icon",
+          "type": "img"
+        },
+        {
+          "key": "col3_title",
+          "name": "Column 3 Title",
+          "type": "txt"
+        },
+        {
+          "key": "col3_text",
+          "name": "Column 3 Text",
+          "type": "longtxt"
+        },
+        {
+          "key": "col3_btn",
+          "name": "Column 3 Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "col3_url",
+          "name": "Column 3 Button URL",
+          "type": "txt"
+        }
+      ]
+    },
+    "html": "<div class=\"container px-4 py-5\">\n    <h2 class=\"pb-2 border-bottom section_title\">{{section_title}}</h2>\n    <div class=\"row g-4 py-5 row-cols-1 row-cols-lg-3\">\n      <div class=\"col d-flex align-items-start\">\n        <img src=\"{{col1_icon}}\" class=\"flex-shrink-0 me-3 col1_icon\" width=\"48\" height=\"48\" alt=\"\">\n        <div>\n          <h3 class=\"fs-2 text-body-emphasis col1_title\">{{col1_title}}</h3>\n          <p class=\"col1_text\">{{col1_text}}</p>\n          <a href=\"{{col1_url}}\" class=\"btn btn-primary col1_btn\">{{col1_btn}}</a>\n        </div>\n      </div>\n      <div class=\"col d-flex align-items-start\">\n        <img src=\"{{col2_icon}}\" class=\"flex-shrink-0 me-3 col2_icon\" width=\"48\" height=\"48\" alt=\"\">\n        <div>\n          <h3 class=\"fs-2 text-body-emphasis col2_title\">{{col2_title}}</h3>\n          <p class=\"col2_text\">{{col2_text}}</p>\n          <a href=\"{{col2_url}}\" class=\"btn btn-primary col2_btn\">{{col2_btn}}</a>\n        </div>\n      </div>\n      <div class=\"col d-flex align-items-start\">\n        <img src=\"{{col3_icon}}\" class=\"flex-shrink-0 me-3 col3_icon\" width=\"48\" height=\"48\" alt=\"\">\n        <div>\n          <h3 class=\"fs-2 text-body-emphasis col3_title\">{{col3_title}}</h3>\n          <p class=\"col3_text\">{{col3_text}}</p>\n          <a href=\"{{col3_url}}\" class=\"btn btn-primary col3_btn\">{{col3_btn}}</a>\n        </div>\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771386299722_Hanging icons.png",
+    "is_live": true,
+    "name": "Hanging Icons",
+    "created_at": "2026-02-18T03:45:01.015488+00:00"
+  },
+  {
+    "id": "b9f781e9-d69e-4daa-83f1-861b89847942",
+    "type_id": "6616a4ac-e6fb-4c54-8f14-ca4ec0333dbb",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "9527319a-c8d1-404c-bd01-640e7cfc5a96",
+    "content": {
+      "icon": "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
+      "heading": "Jumbotron with icon",
+      "description": "This is a custom jumbotron featuring an SVG image at the top, some longer text that wraps early thanks to a responsive column class, and a customized call to action.",
+      "primary_btn": "Call to action",
+      "primary_url": "#",
+      "secondary_btn": "Secondary link",
+      "secondary_url": "#"
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "icon",
+          "name": "Icon Image",
+          "type": "img"
+        },
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        },
+        {
+          "key": "primary_btn",
+          "name": "Primary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "primary_url",
+          "name": "Primary Button URL",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_btn",
+          "name": "Secondary Button Text",
+          "type": "txt"
+        },
+        {
+          "key": "secondary_url",
+          "name": "Secondary Button URL",
+          "type": "txt"
+        }
+      ]
+    },
+    "html": "<div class=\"container my-5\">\n    <div class=\"p-5 text-center bg-body-tertiary rounded-3\">\n      <img src=\"{{icon}}\" class=\"mt-4 mb-3 icon\" width=\"100\" height=\"100\" alt=\"\">\n      <h1 class=\"text-body-emphasis heading\">{{heading}}</h1>\n      <p class=\"col-lg-8 mx-auto fs-5 text-muted description\">{{description}}</p>\n      <div class=\"d-inline-flex gap-2 mb-5\">\n        <a href=\"{{primary_url}}\" class=\"d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill primary_btn\">{{primary_btn}} &rarr;</a>\n        <a href=\"{{secondary_url}}\" class=\"btn btn-outline-secondary btn-lg px-4 rounded-pill secondary_btn\">{{secondary_btn}}</a>\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771388659686_Jumbotron with icon.png",
+    "is_live": true,
+    "name": "Jumbotron with Icon",
+    "created_at": "2026-02-18T04:24:20.59807+00:00"
+  },
+  {
+    "id": "874aaf2b-74f5-4735-83f4-aa51927698d4",
+    "type_id": "6616a4ac-e6fb-4c54-8f14-ca4ec0333dbb",
+    "theme_id": "46bd81f8-30d9-4245-b943-f628ffe0e194",
+    "user_id": "6c9266d6-2df8-49b7-aae0-7d8cccdf15c8",
+    "img_id": "be01c53d-977c-4f46-83a4-b167b7c9f3ae",
+    "content": {
+      "heading": "Full-width jumbotron",
+      "description": "This takes the basic jumbotron above and makes its background edge-to-edge with a container inside to align content. Similar to above, it's been recreated with built-in grid and utility classes."
+    },
+    "fields": {
+      "fields": [
+        {
+          "key": "heading",
+          "name": "Heading",
+          "type": "txt"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "type": "longtxt"
+        }
+      ]
+    },
+    "html": "<div class=\"my-5\">\n    <div class=\"p-5 text-center bg-body-tertiary\">\n      <div class=\"container py-5\">\n        <h1 class=\"text-body-emphasis heading\">{{heading}}</h1>\n        <p class=\"col-lg-8 mx-auto lead description\">{{description}}</p>\n      </div>\n    </div>\n  </div>",
+    "css": "",
+    "img_url": "img/uploads/1771388958435_Full-width jumbotron.png",
+    "is_live": true,
+    "name": "Full-width Jumbotron",
+    "created_at": "2026-02-18T04:29:19.327334+00:00"
+  }
+]

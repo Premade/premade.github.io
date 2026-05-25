@@ -1,5 +1,6 @@
 $(function() {
-	// Initialize Supabase client
+	// Supabase client — kept for auth, block uploads, and best-effort page sync.
+	// Primary data source is now local JSON files + localStorage.
 	var supabase = window.supabase.createClient(
 		'https://cvdglclcryqdchgdqlmx.supabase.co',
 		'sb_publishable_shhKnTSQFE6-a2bXUGj6iw_clyHbXp7'
@@ -11,6 +12,7 @@ $(function() {
 		Views: {},
 		query: {},
 		fn: {},
+		localData: { blocks: [], themes: [], types: [] },
 
 		start: function() {
 			this.$app = this.$el.find('#app');
@@ -21,11 +23,99 @@ $(function() {
 	}))({el: document.body});
 
 	// =========================================================
-	// Query builder — lightweight wrapper around supabase queries.
-	// Supports .eq(), .order(), .find(), .first(), .get(id)
-	// so that App.fn.loadComponent can call .find() on it.
+	// Local JSON data loading — static data lives in data/*.json
 	// =========================================================
-	App.fn.query = function(table) {
+
+	App.fn.initLocalData = function() {
+		return $.when(
+			$.getJSON('data/blocks.json').done(function(d) { App.localData.blocks = d || []; }),
+			$.getJSON('data/themes.json').done(function(d) { App.localData.themes = d || []; }),
+			$.getJSON('data/types.json').done(function(d) { App.localData.types = d || []; }),
+			$.getJSON('data/pages.json').done(function(d) {
+				_.each(d || [], function(page) {
+					if (!App.fn.localPages.get(page.id)) {
+						App.fn.localPages.save(page.id, page);
+					}
+				});
+			})
+		);
+	};
+
+	// =========================================================
+	// Local page storage — pages live in localStorage
+	// =========================================================
+
+	App.fn.localPages = {
+		_key: 'premade_pages',
+		all: function() {
+			try { return JSON.parse(localStorage.getItem(App.fn.localPages._key) || '{}'); }
+			catch(e) { return {}; }
+		},
+		get: function(id) {
+			return App.fn.localPages.all()[id] || null;
+		},
+		save: function(id, data) {
+			var pages = App.fn.localPages.all();
+			if (!id) {
+				id = 'p_' + Date.now();
+			}
+			pages[id] = _.extend({}, pages[id] || {}, data, { id: id });
+			localStorage.setItem(App.fn.localPages._key, JSON.stringify(pages));
+			return pages[id];
+		}
+	};
+
+	// =========================================================
+	// Local query builder — same chainable interface as the old
+	// Supabase wrapper but reads from App.localData.
+	// Returns jQuery Deferred promises so .then() still works.
+	// =========================================================
+
+	App.fn.localQuery = function(tableName) {
+		var _filters = [];
+		var _order = null;
+
+		var q = {
+			eq: function(col, val) {
+				_filters.push({ col: col, val: val });
+				return q;
+			},
+			order: function(col, opts) {
+				_order = { col: col, opts: opts || {} };
+				return q;
+			},
+			_run: function() {
+				var data = (App.localData[tableName] || []).slice();
+				_.each(_filters, function(f) {
+					data = _.filter(data, function(row) { return String(row[f.col]) === String(f.val); });
+				});
+				if (_order) {
+					data = _.sortBy(data, _order.col);
+					if (_order.opts && _order.opts.ascending === false) { data = data.reverse(); }
+				}
+				return data;
+			},
+			find: function() {
+				return $.Deferred().resolve(q._run()).promise();
+			},
+			first: function() {
+				return $.Deferred().resolve(q._run()[0] || null).promise();
+			},
+			get: function(id) {
+				var found = _.find(App.localData[tableName] || [], function(row) {
+					return String(row.id) === String(id);
+				}) || null;
+				return $.Deferred().resolve(found).promise();
+			}
+		};
+		return q;
+	};
+
+	// =========================================================
+	// Supabase query builder — kept for admin writes only
+	// =========================================================
+
+	App.fn.supaQuery = function(table) {
 		var _table = table;
 		var _filters = [];
 		var _order = null;
@@ -41,12 +131,8 @@ $(function() {
 			},
 			find: function() {
 				var query = supabase.from(_table).select();
-				_.each(_filters, function(f) {
-					query = query.eq(f.col, f.val);
-				});
-				if (_order) {
-					query = query.order(_order.col, _order.opts);
-				}
+				_.each(_filters, function(f) { query = query.eq(f.col, f.val); });
+				if (_order) { query = query.order(_order.col, _order.opts); }
 				return query.then(function(result) {
 					if (result.error) { console.log(result.error); return []; }
 					return result.data;
@@ -54,12 +140,8 @@ $(function() {
 			},
 			first: function() {
 				var query = supabase.from(_table).select();
-				_.each(_filters, function(f) {
-					query = query.eq(f.col, f.val);
-				});
-				if (_order) {
-					query = query.order(_order.col, _order.opts);
-				}
+				_.each(_filters, function(f) { query = query.eq(f.col, f.val); });
+				if (_order) { query = query.order(_order.col, _order.opts); }
 				return query.limit(1).single().then(function(result) {
 					if (result.error) { console.log(result.error); return null; }
 					return result.data;
@@ -77,7 +159,7 @@ $(function() {
 	};
 
 	// =========================================================
-	// Data helper functions (replacing Parse model methods)
+	// Data helper functions
 	// =========================================================
 
 	App.fn.blockPreProcess = function(blockId, data) {
@@ -113,17 +195,15 @@ $(function() {
 		});
 	};
 
+	// Pages saved to localStorage first; Supabase gets a best-effort sync.
 	App.fn.pageSave = function(pageId, data, callback) {
-		var query;
-		if (pageId) {
-			query = supabase.from('pages').update(data).eq('id', pageId).select();
-		} else {
-			query = supabase.from('pages').insert(data).select();
-		}
-		query.then(function(result) {
-			if (result.error) { console.log(result.error); }
-			else { callback(result.data[0]); }
-		});
+		var page = App.fn.localPages.save(pageId, data);
+		callback(page);
+
+		var q = pageId
+			? supabase.from('pages').update(data).eq('id', pageId).select()
+			: supabase.from('pages').insert(_.extend({}, data, { id: page.id })).select();
+		q.then(null, function(e) { console.log('Supabase page sync skipped:', e); });
 	};
 
 	App.fn.imageUpload = function(file, callback) {
@@ -193,7 +273,6 @@ $(function() {
 
 			var self = this;
 
-			// If it's a new page
 			if (!self.model) {
 				self.getDefaultTheme();
 				return;
@@ -202,20 +281,18 @@ $(function() {
 			self.page = self.model.json;
 
 			App.fn.findBlock(self.page.blocks[0].blockId, function(block) {
-				supabase.from('themes').select().eq('id', block.theme_id).single()
-					.then(function(result) {
-						self.loadPage(result.data);
-					});
+				var theme = _.find(App.localData.themes, function(t) {
+					return String(t.id) === String(block.theme_id);
+				}) || null;
+				self.loadPage(theme);
 			});
 
 		},
 
 		getDefaultTheme: function() {
 			var self = this;
-			supabase.from('themes').select().eq('is_default', true).limit(1).single()
-				.then(function(result) {
-					self.loadPage(result.data);
-				});
+			var theme = _.find(App.localData.themes, function(t) { return t.is_default; }) || null;
+			self.loadPage(theme);
 		},
 
 		loadPage: function(theme) {
@@ -229,11 +306,9 @@ $(function() {
 				self.collection = blocks;
 				self.$el.html(self.template(self.currTheme));
 
-				// Load Theme
 				self.loadThemes();
 				self.loadBlocks(self.collection);
 
-				// Load existing blocks if any
 				if (self.page) {
 					self.loadExistingBlocks(self.page);
 				}
@@ -283,7 +358,7 @@ $(function() {
 				}),
 				callback: function(types) {
 					_.each(self.blocks, function(block, i) {
-						$('#' + block.id).appendTo($('#' + block.type_id));
+						self.$el.find('[id="' + block.id + '"]').appendTo(self.$el.find('[id="' + block.type_id + '"]'));
 					});
 					_.each(self.$el.find('.blocks'), function(block, i) {
 						if ($(block).find('.block').length === 0) {
@@ -294,21 +369,20 @@ $(function() {
 			});
 		},
 
-		changeTheme: function (e) {
+		changeTheme: function(e) {
 			var self = this,
 				id = $(e.target).closest('.theme').data('id');
 
-			if (id === self.currTheme.id) return;
+			if (String(id) === String(self.currTheme && self.currTheme.id)) { return; }
 
-			supabase.from('themes').select().eq('id', id).single()
-				.then(function(result) {
-					var theme = result.data;
-					self.currTheme = theme;
-					App.fn.findThemeBlocks(theme, function(blocks){
-						self.loadBlocks(blocks);
-					});
-					self.$el.find('.theme-curr-name').html(theme.name);
-				});
+			var theme = _.find(App.localData.themes, function(t) { return String(t.id) === String(id); }) || null;
+			if (!theme) { return; }
+
+			self.currTheme = theme;
+			App.fn.findThemeBlocks(theme, function(blocks) {
+				self.loadBlocks(blocks);
+			});
+			self.$el.find('.theme-curr-name').html(theme.name);
 		},
 
 		loadExistingBlocks: function(page) {
@@ -318,7 +392,6 @@ $(function() {
 
 			App.fn.getBlocks(page, function(blocks) {
 
-				// Get content on to it.
 				_.each(blocks, function(block, i){
 					block.content = JSON.stringify(page.blocks[i].content);
 				});
@@ -558,7 +631,6 @@ $(function() {
 
 				self.blocks = blocks;
 
-				// Hide back when the page has not been published before
 				if (!self.model.id) {
 					self.$el.find('.back').hide();
 				}
@@ -663,7 +735,6 @@ $(function() {
 
 			self.$el.html(self.template());
 
-			// Load Types
 			App.fn.loadComponent({
 				collection: App.query.types,
 				View: App.Views.Select,
@@ -674,7 +745,6 @@ $(function() {
 				}
 			});
 
-			// Load Themes
 			App.fn.loadComponent({
 				collection: App.query.themes,
 				View: App.Views.Select,
@@ -712,9 +782,10 @@ $(function() {
 
 			App.$pageStyles = $('#page-styles');
 
-			App.query.blocks = App.fn.query('blocks');
-			App.query.types = App.fn.query('types').order('order');
-			App.query.themes = App.fn.query('themes').eq('is_live', true);
+			// Use local JSON data for all read queries
+			App.query.blocks = App.fn.localQuery('blocks');
+			App.query.types = App.fn.localQuery('types').order('order');
+			App.query.themes = App.fn.localQuery('themes').eq('is_live', true);
 		},
 
 		start: function(){
@@ -745,33 +816,20 @@ $(function() {
 		},
 
 		build: function(id) {
-			supabase.from('pages').select().eq('id', id).single()
-				.then(function(result) {
-					App.fn.renderView({
-						View: App.Views.EditPageBlocks,
-						data: { model: result.data }
-					});
-				});
+			var page = App.fn.localPages.get(id);
+			App.fn.renderView({ View: App.Views.EditPageBlocks, data: { model: page } });
 		},
 
 		edit: function(id) {
-			supabase.from('pages').select().eq('id', id).single()
-				.then(function(result) {
-					App.fn.renderView({
-						View: App.Views.EditPageContent,
-						data: { model: result.data }
-					});
-				});
+			var page = App.fn.localPages.get(id);
+			if (!page) { Backbone.history.navigate('#/new', { trigger: true }); return; }
+			App.fn.renderView({ View: App.Views.EditPageContent, data: { model: page } });
 		},
 
 		page: function(id) {
-			supabase.from('pages').select().eq('id', id).single()
-				.then(function(result) {
-					App.fn.renderView({
-						View: App.Views.Page,
-						data: { model: result.data }
-					});
-				});
+			var page = App.fn.localPages.get(id);
+			if (!page) { Backbone.history.navigate('#/new', { trigger: true }); return; }
+			App.fn.renderView({ View: App.Views.Page, data: { model: page } });
 		},
 
 		login: function() {
@@ -834,14 +892,12 @@ $(function() {
 		});
 	};
 
-	// Render View Function - render data in a View Object
 	App.fn.renderView = function(options) {
-		var View = options.View, // type of View
-			data = options.data || null, // data obj to render in the view
-			$container = options.$container || App.$app, // container to put the view
-			notInsert = options.notInsert, // put the el in the container or return el as HTML
+		var View = options.View,
+			data = options.data || null,
+			$container = options.$container || App.$app,
+			notInsert = options.notInsert,
 			view = new View(data);
-		// Preserve extra data as view.options for backwards compat
 		view.options = _.extend({}, view.options, data);
 		view.render();
 		if (notInsert) {
@@ -867,14 +923,12 @@ $(function() {
 			if (options.callback) options.callback(collection);
 		});
 
-	}
+	};
 
 	App.fn.findThemeBlocks = function(theme, callback) {
-
-		var query = App.fn.query('blocks').eq('theme_id', theme.id).eq('is_live', true);
-
-		callback(query);
-	}
+		if (!theme) { callback(App.fn.localQuery('blocks').eq('is_live', true)); return; }
+		callback(App.fn.localQuery('blocks').eq('theme_id', theme.id).eq('is_live', true));
+	};
 
 	App.fn.fetchThemes = function(callback) {
 		if (!App.themes) {
@@ -885,7 +939,7 @@ $(function() {
 		} else {
 			callback();
 		}
-	}
+	};
 
 	App.fn.fetchBlocks = function(callback) {
 		if (!App.blocks) {
@@ -896,17 +950,17 @@ $(function() {
 		} else {
 			callback();
 		}
-	}
+	};
 
 	App.fn.findBlock = function(id, callback) {
 		App.fn.fetchBlocks(function(){
 			_.each(App.blocks, function(block){
-				if (id === block.id) {
+				if (String(id) === String(block.id)) {
 					callback(block);
 				}
-			})
+			});
 		});
-	}
+	};
 
 	App.fn.getBlocks = function(page, callback) {
 
@@ -928,15 +982,12 @@ $(function() {
 						img_url: block.img_url,
 					};
 
-					// Update block content with page content
 					if (b.content) jsonBlock.content = b.content;
 
 					_.each(jsonBlock.fields.fields, function(field) {
 
-						// Copy content into fields
 						field.content = jsonBlock.content[field.key];
 
-						// Make field types into binaries
 						field.isTxt = false;
 						field.isLongTxt = false;
 						field.isImg = false;
@@ -964,7 +1015,7 @@ $(function() {
 			callback(blocks);
 
 		});
-	}
+	};
 
 	App.fn.renderBlocks = function(options) {
 
@@ -990,7 +1041,6 @@ $(function() {
 			html += $block[0].outerHTML;
 
 			if (style.blocks.indexOf(blockId) === -1) {
-				// Only push the # of blocks with in options.blocks
 				style.blocks.push(i);
 			}
 
@@ -1000,13 +1050,11 @@ $(function() {
 
 		});
 
-		// Load HTML
 		$container.append(html);
 
-		// Load CSS
 		App.fn.getCSS(options.blocks, style);
 
-	}
+	};
 
 	App.fn.getCSS = function(blocks, style) {
 
@@ -1014,17 +1062,15 @@ $(function() {
 
 		App.fn.fetchThemes(function() {
 
-			// Themes
 			_.each(style.themes, function(themeId, i) {
 
 				theme = App.themes.filter(function(t){
-					return t.id === themeId;
+					return String(t.id) === String(themeId);
 				})[0];
 
 				css += theme.css;
 			});
 
-			// Blocks
 			_.each(style.blocks, function(num, i) {
 				css += blocks[num].css;
 			});
@@ -1032,8 +1078,14 @@ $(function() {
 			App.$pageStyles.html(css);
 		});
 
-	}
+	};
 
-	App.start();
+	// =========================================================
+	// Boot: load local JSON data (blocks, themes, types, pages),
+	// seed legacy pages into localStorage, then start the app.
+	// =========================================================
+	App.fn.initLocalData().always(function() {
+		App.start();
+	});
 
 });

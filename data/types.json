@@ -1,0 +1,26 @@
+[
+    {
+        "id": "478fdefe-d8ce-4b25-bf64-1f7b31ed4d63",
+        "name": "Header",
+        "order": 0,
+        "created_at": "2026-02-17T18:23:56.390447+00:00"
+    },
+    {
+        "id": "52f9f9e0-acda-42a6-a7e5-08af42a9ef91",
+        "name": "Hero",
+        "order": 1,
+        "created_at": "2026-02-17T18:32:31.690235+00:00"
+    },
+    {
+        "id": "10bcc07c-17c9-44b5-830d-1739de23d31c",
+        "name": "Feature",
+        "order": 2,
+        "created_at": "2026-02-18T03:24:19.007161+00:00"
+    },
+    {
+        "id": "6616a4ac-e6fb-4c54-8f14-ca4ec0333dbb",
+        "name": "Jumbotron",
+        "order": 3,
+        "created_at": "2026-02-18T04:16:35.734189+00:00"
+    }
+]
